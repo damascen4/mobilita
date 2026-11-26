@@ -26,6 +26,7 @@
 
 3. **Configure o Caddy**:
    - Use `deploy/Caddyfile.damascena.dev` como referência.
+   - A raiz de `damascena.dev` serve `/robots.txt` e `/sitemap.xml` inline via diretiva `respond` no Caddyfile (listando `https://damascena.dev/projetos/mobilita/`), dispensando arquivos extras fora de `/opt/sites/mobilita`. O build também inclui `sitemap.xml` em `/projetos/mobilita/sitemap.xml`.
    - Se o `/etc/caddy/Caddyfile` já tiver o bloco global `{ servers { trusted_proxies ... } }` do `screenshare`, **não duplique o bloco global** — adicione apenas o bloco `damascena.dev { ... }` (diretamente ou via `import /etc/caddy/sites-enabled/*.caddy`).
    - Valide e recarregue sem downtime:
 
@@ -84,4 +85,6 @@ Após o deploy na VPS:
 curl -I https://damascena.dev/projetos/mobilita      # esperado: 308 -> /projetos/mobilita/
 curl -I https://damascena.dev/projetos/mobilita/     # esperado: 200 + headers de segurança
 curl -I https://damascena.dev/                       # esperado: 200 (placeholder)
+curl -s https://damascena.dev/robots.txt             # esperado: 200 (User-agent: *, Sitemap: https://damascena.dev/sitemap.xml)
+curl -s https://damascena.dev/sitemap.xml            # esperado: 200 (lista https://damascena.dev/projetos/mobilita/)
 ```
