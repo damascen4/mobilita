@@ -74,14 +74,12 @@ if grep -rn -- "__mobilitaNavigate" "${DIST_DIR}" >/dev/null 2>&1; then
   exit 1
 fi
 
-if grep -rn -- "WEB3FORMS_ACCESS_KEY_AQUI" "${DIST_DIR}" >/dev/null 2>&1; then
+if [[ "${ALLOW_MISSING_WEB3FORMS}" != "1" ]] && grep -rn -- "WEB3FORMS_ACCESS_KEY_AQUI" "${DIST_DIR}" >/dev/null 2>&1; then
   echo "Erro: '${DIST_DIR}' contém placeholder 'WEB3FORMS_ACCESS_KEY_AQUI'." >&2
   exit 1
 fi
 
-tar -cf - -C "${DIST_DIR}" . \
-  | ssh "${SSH_OPTS[@]}" "${DEPLOY_HOST}" bash -s -- \
-      "${APP}" "${DEPLOY_DIR}" "${BACKUP_DIR}" "${KEEP_BACKUPS}" "${RELEASE_TAG}" "${CADDYFILE}" <<'REMOTE'
+read -r -d '' REMOTE_SCRIPT <<'REMOTE' || true
 set -euo pipefail
 
 APP="$1"
@@ -145,5 +143,9 @@ run_privileged systemctl reload caddy
 
 echo "[remote] Release ${RELEASE_TAG} publicada em ${DEPLOY_DIR}"
 REMOTE
+REMOTE_B64="$(printf '%s' "${REMOTE_SCRIPT}" | base64 | tr -d '\n')"
+tar -cf - -C "${DIST_DIR}" . \
+  | ssh "${SSH_OPTS[@]}" "${DEPLOY_HOST}" \
+      "printf %s '${REMOTE_B64}' | base64 -d > /tmp/mobilita-deploy.sh; bash /tmp/mobilita-deploy.sh '${APP}' '${DEPLOY_DIR}' '${BACKUP_DIR}' '${KEEP_BACKUPS}' '${RELEASE_TAG}' '${CADDYFILE}'; rc=\$?; rm -f /tmp/mobilita-deploy.sh; exit \$rc"
 
 echo "[deploy] Concluído: ${APP} (${RELEASE_TAG})."
