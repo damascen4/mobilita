@@ -1,934 +1,314 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Transporte Executivo com Segurança e Conforto - Mobilità Transportes</title>
-  <meta name="description" content="Mobilità Transportes: transporte executivo, corporativo e transfer aeroportuário em Campinas e Grande São Paulo. Pontualidade, segurança, conforto e atendimento 24h.">
-  <meta name="theme-color" content="#508f3b">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transporte Executivo em Campinas e SP | Mobilità</title>
+<link rel="canonical" href="https://damascena.dev/projetos/mobilita/">
+<meta name="description" content="A Mobilità é especializada em transporte corporativo e executivo de passageiros em Campinas, Grande São Paulo e interior. Pontualidade, segurança e conforto.">
+<meta name="theme-color" content="#468232">
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="pt_BR">
-  <meta property="og:site_name" content="Mobilità Transportes">
-  <meta property="og:title" content="Transporte Executivo com Segurança e Conforto - Mobilità Transportes">
-  <meta property="og:description" content="Você no seu destino, sem preocupações. Transporte executivo, corporativo e transfer aeroportuário em Campinas e Grande São Paulo.">
-  <meta property="og:image" content="assets/mobilita-showcase-01.jpeg">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://damascena.dev/projetos/mobilita/">
+<meta property="og:title" content="Transporte Executivo em Campinas e SP | Mobilità">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transporte Executivo em Campinas e SP | Mobilità">
+<meta property="og:description" content="Você no seu destino, sem preocupações. Transporte corporativo, recepção em aeroportos, traslados e locação com motorista em Campinas, Grande São Paulo e interior.">
+<meta property="og:image" content="https://damascena.dev/projetos/mobilita/assets/brand/hero-passageiro-executivo.jpeg">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta property="og:image:alt" content="Passageiro executivo em veículo da Mobilità Transportes em Campinas e Grande São Paulo">
+<meta name="twitter:image" content="https://damascena.dev/projetos/mobilita/assets/brand/hero-passageiro-executivo.jpeg">
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Transporte Executivo com Segurança e Conforto - Mobilità Transportes">
-  <meta name="twitter:description" content="Você no seu destino, sem preocupações. Transporte executivo e transfer aeroportuário em Campinas e Grande São Paulo.">
-  <meta name="twitter:image" content="assets/mobilita-showcase-01.jpeg">
+<link rel="shortcut icon" href="assets/brand/favicon-mobilita.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon-mobilita.png">
 
-  <!-- Favicons -->
-  <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon-mobilita.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/ios-favicon-mobilita.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=KoHo:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
 
-  <link rel="preload" as="image" type="image/webp" href="assets/mobilita-showcase-01-640.webp" imagesrcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w" imagesizes="100vw" fetchpriority="high">
-  <script>if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("js-enabled")}</script>
-  <link rel="stylesheet" href="tokens.css">
-  <link rel="stylesheet" href="styles.css">
+<script src="inline.js"></script>
 
-  <!-- JSON-LD LocalBusiness -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Mobilità Transportes",
-    "description": "Empresa especializada em transporte corporativo, transporte executivo de passageiros e transfer aeroportuário em Campinas e Grande São Paulo.",
-    "telephone": [
-      "+55-19-99810-8070",
-      "+55-19-99263-8676"
-    ],
-    "email": "contato@mobilitatransportes.com.br",
-    "areaServed": [
-      {
-        "@type": "City",
-        "name": "Campinas"
-      },
-      {
-        "@type": "AdministrativeArea",
-        "name": "Grande São Paulo"
-      }
-    ],
-    "sameAs": [
-      "https://www.instagram.com/mobilitatransportes/",
-      "https://www.facebook.com/mobilitatransporte/"
-    ]
-  }
-  </script>
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "LocalBusiness",
+"name": "Mobilità Transportes",
+"alternateName": "Mobilità Transporte Executivo",
+"url": "https://damascena.dev/projetos/mobilita/",
+"image": "https://damascena.dev/projetos/mobilita/assets/brand/hero-passageiro-executivo.jpeg",
+"logo": "https://damascena.dev/projetos/mobilita/assets/brand/logo-mobilita-cor.png",
+"description": "Transporte corporativo e executivo de passageiros em Campinas, Grande São Paulo e interior.",
+"email": "contato@mobilitatransportes.com.br",
+"telephone": ["+55-19-99810-8070", "+55-19-99263-8676"],
+"areaServed": ["Campinas", "Grande São Paulo", "Interior"],
+"sameAs": [
+"https://www.facebook.com/mobilitatransporte/",
+"https://www.instagram.com/mobilitatransportes/"
+]
+}
+</script>
 </head>
 <body>
-  <a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
 
-  <!-- Header fixo -->
-  <header class="site-header" id="topo">
-    <div class="container header-inner">
-      <a class="brand-link" href="#topo" aria-label="Mobilità Transportes — Voltar ao início">
-        <picture class="brand-picture brand-picture--light">
-          <source type="image/webp" srcset="assets/mobilita-logo-branco.webp">
-          <img
-            src="assets/mobilita-logo-branco.png"
-            alt="Mobilità Transportes"
-            width="200"
-            height="53"
-            class="brand-logo"
-          >
-        </picture>
-        <picture class="brand-picture brand-picture--color">
-          <source type="image/webp" srcset="assets/mobilita-logo-cor.webp">
-          <img
-            src="assets/mobilita-logo-cor.png"
-            alt="Mobilità Transportes"
-            width="200"
-            height="53"
-            class="brand-logo"
-          >
-        </picture>
-      </a>
+<div class="topbar"><div class="container topbar-in"><a class="topbar-link" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20informacoes%20sobre%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de informações sobre transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp: <span class="phone-nowrap">(19) 99810-8070</span></a></div></div>
+<header class="site-header" id="topo">
+<div class="header-bar">
+<a class="brand-link" href="#inicio" aria-label="Mobilità Transporte Executivo — Início">
+<img class="brand-logo" src="assets/brand/logo-mobilita-cor.svg" alt="Mobilità Transporte Executivo" width="200" height="53" decoding="async">
+</a>
+<nav class="main-nav" aria-label="Navegação principal">
+<ul class="nav-list">
+<li><a class="nav-link is-active" href="#inicio">Início</a></li>
+<li><a class="nav-link" href="#quemsomos">Quem somos</a></li>
+<li><a class="nav-link" href="#oquefazemos">O que fazemos</a></li>
+<li><a class="nav-link" href="#diferenciais">Diferenciais</a></li>
+<li><a class="nav-link" href="#frota">Frota</a></li>
+<li><a class="nav-link" href="#contato">Contato</a></li>
+</ul>
+</nav>
+<a class="btn btn-primary btn-magnetic header-cta" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20informacoes%20sobre%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de informações sobre transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+<button type="button" id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menu de navegação">
+<span class="menu-toggle-bars" aria-hidden="true"><span></span><span></span></span>
+</button>
+</div>
+</header>
 
-      <nav class="main-nav" aria-label="Navegação principal">
-        <ul class="nav-list">
-          <li><a href="#quem-somos">Quem somos</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#diferenciais">Diferenciais</a></li>
-          <li><a href="#frota">Frota</a></li>
-          <li><a href="#como-funciona">Como funciona</a></li>
-          <li><a href="#orcamento">Orçamento</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
-      </nav>
+<div id="mobile-nav" class="mobile-nav" role="dialog" aria-modal="true" aria-label="Menu de navegação" hidden>
+<div class="mobile-nav-backdrop" data-close-menu></div>
+<div class="mobile-nav-panel">
+<div class="mobile-nav-head">
+<img src="assets/brand/logo-mobilita-cor.svg" alt="Mobilità Transporte Executivo" width="175" height="44" decoding="async">
+<button type="button" id="menu-close" class="menu-close" aria-label="Fechar menu de navegação">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+</div>
+<nav aria-label="Navegação mobile">
+<ul class="mobile-nav-list">
+<li><a class="mobile-nav-link" href="#inicio">Início</a></li>
+<li><a class="mobile-nav-link" href="#quemsomos">Quem somos</a></li>
+<li><a class="mobile-nav-link" href="#oquefazemos">O que fazemos</a></li>
+<li><a class="mobile-nav-link" href="#diferenciais">Diferenciais</a></li>
+<li><a class="mobile-nav-link" href="#frota">Frota</a></li>
+<li><a class="mobile-nav-link" href="#contato">Contato</a></li>
+</ul>
+</nav>
+<div class="mobile-nav-foot">
+<a class="btn btn-primary btn-full" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20informacoes%20sobre%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de informações sobre transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp <span class="phone-nowrap">(19) 99810-8070</span></a>
+</div>
+</div>
+</div>
 
-      <div class="header-actions">
-        <a
-          class="btn btn--whatsapp header-whatsapp"
-          href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20um%20or%C3%A7amento."
-          data-wa-phone="5519998108070"
-          data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de um orçamento."
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Falar no WhatsApp (19) 99810-8070"
-        >
-          <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-            <path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/>
-          </svg>
-          <span>WhatsApp</span>
-        </a>
+<main id="conteudo">
+<section id="inicio" class="hero" aria-labelledby="hero-title" data-parallax="0.12">
+<picture class="hero-media">
+<source media="(max-width: 719px)" srcset="assets/brand/hero-passageiro-executivo-960.webp 960w" sizes="100vw" type="image/webp">
+<source srcset="assets/brand/hero-passageiro-executivo-480.webp 480w, assets/brand/hero-passageiro-executivo-960.webp 960w, assets/brand/hero-passageiro-executivo-1600.webp 1600w" sizes="100vw" type="image/webp">
+<img class="hero-img" src="assets/brand/hero-passageiro-executivo.jpeg" alt="Executivo sorrindo ao telefone no banco traseiro de um veículo da Mobilità" width="1920" height="1080" fetchpriority="high" decoding="async">
+</picture>
+<div class="hero-shade" aria-hidden="true"></div>
+<div class="hero-leaf" data-draw aria-hidden="true">
+<svg class="hero-leaf-svg" viewBox="0 0 1191 1080" fill="none" aria-hidden="true">
+<path class="leaf-blade" style="--blade:0" pathLength="1" d="M1030.9 27Q1134.4 29 1140.2 29.7L1146 30.4L1141.5 50.5Q1137 70.6 1118.5 108.7Q1099.9 146.8 1078.9 168.9Q1057.8 190.9 1029.8 208.4Q1001.8 225.9 971.7 237.5Q941.6 249 901.6 258.5Q861.6 268 684.5 289Q507.4 310 426.4 327.5Q345.4 345 301.8 361Q258.2 377.1 222.7 395.6Q187.2 414.1 150.7 440.6Q114.2 467.1 89 492.5L63.8 517.9L66.9 503.1Q70.1 488.2 88.6 446.7Q107.1 405.2 126.1 373.7Q145.1 342.2 168.6 312.2Q192.1 282.2 243.6 236.1Q295.2 190.1 352.7 157.1Q410.2 124.1 485.3 97.5Q560.4 71 640.4 55.5Q720.4 40 823.9 32.5Q927.4 25 1030.9 27Z"/>
+<path class="leaf-blade" style="--blade:1" pathLength="1" d="M977.3 366.6Q977.1 377.2 973 404.4Q969 431.6 953.5 463.7Q937.9 495.8 918.9 515.4Q899.8 534.9 868.3 553.4Q836.8 571.9 779.2 589.5Q721.6 607 559.5 631.5Q397.4 656 334.9 670.5Q272.4 685 232.8 699.5Q193.2 714.1 161.2 731.1Q129.2 748.1 106.2 765.1Q83.2 782.1 63 803L42.8 823.9L41.9 814Q41 804.1 47 750.3Q53 696.4 61.5 672.8Q70.1 649.2 84.6 624.2Q99.1 599.2 134.6 562.6Q170.2 526.1 221.7 495.6Q273.2 465.1 360.8 436.5Q448.4 408 540.4 392.5Q632.4 377 805 366.5L977.6 356L977.3 366.6Z"/>
+<path class="leaf-blade" style="--blade:2" pathLength="1" d="M329.4 781L300.3 804.5Q271.2 828.1 237.6 867.1Q204.1 906.2 184.6 942.2Q165.1 978.2 152.7 1018.1L140.4 1058L124.2 1028.4Q108.1 998.8 99.5 970.2Q91 941.6 91 919.5Q91 897.4 100 876.3Q109.1 855.2 123.1 841.6Q137.2 828.1 158.2 817.1Q179.2 806.1 213.3 797Q247.4 788 288.4 784.5Z"/>
+</svg>
+</div>
+<div class="container hero-wrap">
+<div class="hero-copy">
+<h1 id="hero-title" class="hero-title">
+<span class="w"><span style="--i:0">Você</span></span>
+<span class="w"><span style="--i:1">no</span></span>
+<span class="w"><span style="--i:2">seu</span></span>
+<span class="w"><span style="--i:3">destino,</span></span>
+<span class="w"><span style="--i:4">sem</span></span>
+<span class="w"><span style="--i:5">preocupações</span></span>
+</h1>
+<p class="hero-lead hero-enter" style="--d: 950ms">Transporte executivo e corporativo em Campinas, Grande São Paulo e interior.</p>
+<div class="hero-actions hero-enter" style="--d: 1100ms">
+<a class="btn btn-light btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+<a class="btn btn-outline-light" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20de%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de solicitar um orçamento de transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+</div>
+<ul class="hero-chips" data-stagger aria-label="Diferenciais">
+<li>Plantão 24h</li><li>Motoristas bilíngues</li><li>Percursos via GPS</li>
+</ul>
+</div>
+</div>
+<a class="hero-scroll" href="#quemsomos" aria-label="Rolar para a próxima seção"><span class="hero-scroll-dot" aria-hidden="true"></span></a>
+</section>
 
-        <button
-          type="button"
-          class="menu-toggle"
-          id="menu-toggle"
-          aria-expanded="false"
-          aria-controls="nav-mobile"
-          aria-label="Abrir menu de navegação"
-        >
-          <span class="menu-toggle-bars" aria-hidden="true"></span>
-          <span class="menu-toggle-label">Menu</span>
-        </button>
-      </div>
-    </div>
+<section id="quemsomos" class="section section-about band-green" data-parallax="0.1" aria-labelledby="quemsomos-title">
+<div class="container about-grid">
+<div class="about-copy reveal">
+<h2 id="quemsomos-title" class="section-title">Mobilità Transporte Executivo</h2>
+<div class="about-text">
+<p>A Mobilità é uma empresa especializada em transporte corporativo, planejamento e execução de transporte executivo de passageiros, trazemos facilidades e soluções.</p>
+<p>Contamos com profissionais altamente qualificados e com vasta experiência no mercado. Nossos motoristas possuem cursos específicos e passam por treinamentos constantemente.</p>
+<p>Prezamos pela pontualidade, segurança e conforto de nossos passageiros. Mobilità é você no seu destino, sem preocupações.</p>
+</div>
+<div class="section-cta"><a class="btn btn-light btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
+<div class="about-card reveal" style="--delay: 120ms" aria-hidden="true">
+<div class="img-skel img-skel--transparent about-leaf-wrap">
+<img class="about-leaf" src="assets/brand/simbolo-folha-branco.svg" alt="" width="1191" height="1080" loading="lazy" decoding="async">
+</div>
+</div>
+</div>
+</section>
 
-    <!-- Menu mobile simples -->
-    <nav class="mobile-nav" id="nav-mobile" aria-label="Menu mobile" hidden>
-      <ul class="mobile-nav-list">
-        <li><a href="#quem-somos">Quem somos</a></li>
-        <li><a href="#servicos">Serviços</a></li>
-        <li><a href="#diferenciais">Diferenciais</a></li>
-        <li><a href="#frota">Frota</a></li>
-        <li><a href="#como-funciona">Como funciona</a></li>
-        <li><a href="#orcamento">Pedir orçamento</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-      <div class="mobile-nav-cta">
-        <a
-          class="btn btn--whatsapp btn--block"
-          href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20pedir%20um%20or%C3%A7amento."
-          data-wa-phone="5519998108070"
-          data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de pedir um orçamento."
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Pedir orçamento no WhatsApp
-        </a>
-        <a class="btn btn--outline-dark btn--block" href="tel:+5519998108070">
-          Ligar agora: <span class="nowrap">(19) 99810-8070</span>
-        </a>
-      </div>
-    </nav>
-    <span class="scroll-progress" aria-hidden="true"></span>
-  </header>
+<section id="oquefazemos" class="section section-services" aria-labelledby="servicos-title">
+<picture class="services-bg">
+<source srcset="assets/brand/servicos-onibus-estrada-480.webp 480w, assets/brand/servicos-onibus-estrada-960.webp 960w, assets/brand/servicos-onibus-estrada-1600.webp 1600w" sizes="100vw" type="image/webp">
+<img src="assets/brand/servicos-onibus-estrada.jpeg" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+</picture>
+<div class="container">
+<header class="section-head section-head--center reveal">
+<h2 id="servicos-title" class="section-title">Nossos serviços</h2>
+<p class="section-sub">Facilidades e soluções que te levam onde você quer chegar.</p>
+<p class="section-intro">Nossos serviços são pensados e planejados para que você tenha a melhor experiência possível em sua viagem. Soluções completas em transporte de pessoas para eventos corporativos, traslados ou diárias para aeroportos, hotéis, shows, casamentos, feiras, teatros, convenções, locação de veículos com motorista. Atendemos toda a região de Campinas, Grande São Paulo e interior.</p>
+</header>
+<div class="services-grid">
+<article class="service-card spot reveal"><h3 class="service-title">Transporte corporativo</h3><p class="service-desc">Aeroportos, hotéis, restaurantes, palestras, feiras e quaisquer outros tipos de roteiros pré-definidos pelos passageiros.</p></article>
+<article class="service-card spot reveal" style="--delay: 60ms"><h3 class="service-title">Recepção em aeroportos</h3><p class="service-desc">Desembarque e chegue ao seu destino com segurança, sem preocupações.</p></article>
+<article class="service-card spot reveal" style="--delay: 120ms"><h3 class="service-title">Traslados</h3><p class="service-desc">Eventos, viagens em grupo e todo o tipo de programação que necessite de transporte especializado.</p></article>
+<article class="service-card spot service-card--wide reveal"><h3 class="service-title">Locação de veículo</h3><p class="service-desc">Defina seu itinerário e contrate um de nossos carros e motoristas para atender às suas necessidades.</p></article>
+<article class="service-card spot service-card--wide reveal" style="--delay: 60ms"><h3 class="service-title">Assessoria e coordenação para eventos</h3><p class="service-desc">Nossos profissionais estão prontos para te auxiliar na realização de seu evento. Para que tudo saia dentro do planejado e cumpra o cronograma, recorra à Mobilità.</p></article>
+</div>
+</div>
+</section>
 
-  <main id="conteudo-principal">
-    <!-- Hero Mobile-First -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-media" aria-hidden="true">
-        <picture class="hero-picture">
-          <source
-            type="image/webp"
-            srcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w"
-            sizes="100vw"
-          >
-          <img
-            src="assets/mobilita-showcase-01.jpeg"
-            alt=""
-            width="1920"
-            height="1080"
-            fetchpriority="high"
-            class="hero-bg-img"
-          >
-        </picture>
-        <div class="hero-overlay"></div>
-        <picture>
-          <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-          <img
-            src="assets/mobilita-elemento-logo-branco.png"
-            alt=""
-            width="1024"
-            height="929"
-            class="hero-leaf-motif"
-          >
-        </picture>
-      </div>
+<section id="diferenciais" class="section section-diff" data-parallax="0.08" aria-labelledby="diferenciais-title">
+<div class="container">
+<header class="section-head reveal">
+<h2 id="diferenciais-title" class="section-title">Qualidade e compromisso</h2>
+<p class="section-sub">Diferenciais que fazem a sua viagem ser muito melhor.</p>
+</header>
+<ul class="diff-grid">
+<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="18" width="8" height="22" rx="1" pathLength="1"/><rect x="48" y="18" width="8" height="22" rx="1" pathLength="1"/><path d="M16 20l5 2-5 15M48 20l-5 2 5 15" pathLength="1"/><path d="M21 23l13 1M43 23l-10 2-9 4c1 3 4 4 7 2l4-1 10 10c2 2 0 5-2 4l-3-2" pathLength="1"/><path d="M16 37l4 3m20 3c1 2-1 4-3 3l-5-4m4 5c1 2-1 4-3 3l-5-3" pathLength="1"/><path d="M20 42l3-4a2 2 0 0 1 3 0l1 1-3 4a2 2 0 0 1-3 0zm5 3l3-4a2 2 0 0 1 3 0l1 1-3 4a2 2 0 0 1-3 0zm5 3l2-3a2 2 0 0 1 3 0l1 1-2 3a2 2 0 0 1-3 0z" pathLength="1"/></svg></span><p class="diff-label">Atendimento humanizado</p></li>
+<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 36V20a4 4 0 0 1 4-4h30a3 3 0 0 1 2.7 1.7L51 29l2.5.6A3 3 0 0 1 56 32.5V36h1v5a2 2 0 0 1-2 2h-2a8 8 0 0 0-15 0H26a8 8 0 0 0-15 0h-1a2 2 0 0 1-2-2v-5h1z" pathLength="1"/><path d="M37 20h6.5l4.5 9H37z" pathLength="1"/><line x1="13" y1="30" x2="25" y2="30" pathLength="1"/><circle cx="18.5" cy="43.5" r="5" pathLength="1"/><circle cx="18.5" cy="43.5" r="2" pathLength="1"/><circle cx="45.5" cy="43.5" r="5" pathLength="1"/><circle cx="45.5" cy="43.5" r="2" pathLength="1"/></svg></span><p class="diff-label">Frota moderna e segura</p></li>
+<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 51S11 38.5 11 24.5C11 17.5 16.5 12 22.8 12c4.2 0 7.7 2.5 9.2 6.8 1.5-4.3 5-6.8 9.2-6.8C47.5 12 53 17.5 53 24.5 53 38.5 32 51 32 51z" pathLength="1"/></svg></span><p class="diff-label">Conforto</p></li>
+<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="21" pathLength="1"/><circle cx="32" cy="32" r="17" pathLength="1"/><path d="M22.5 26l2-2.5 10 8-2 2.5z" pathLength="1"/><line x1="33" y1="31" x2="42" y2="22" pathLength="1"/><line x1="31.5" y1="28" x2="34" y2="45" pathLength="1"/></svg></span><p class="diff-label">Pontualidade</p></li>
+<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 23v-6c0-6 4-9 11-9s11 3 11 9v6" pathLength="1"/><path d="M14 23c1.5-2 1-5 2.5-6.5 2-1.5 5 1 8.5 1s6.5-2.5 8.5-1C35 18 34.5 21 36 23c0 7-4.5 13-11 13s-11-6-11-13z" pathLength="1"/><path d="M19 35v4l-7 3a7 7 0 0 0-4 6.5V54a2 2 0 0 0 2 2h30a2 2 0 0 0 2-2v-5.5a7 7 0 0 0-4-6.5l-7-3v-4" pathLength="1"/><path d="M18 40c2.5 3 11.5 3 14 0" pathLength="1"/><path d="M40 10h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H46l-4 3.5V23h-2a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z" pathLength="1"/><path d="M38 26h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H44l-5 4 1-4h-2a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z" pathLength="1"/></svg></span><p class="diff-label">Motoristas bilíngues e experientes</p></li>
+<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 15a2 2 0 0 1 2.3-2L24 15l16-2 12.7 2a2 2 0 0 1 1.7 2v30a2 2 0 0 1-2.3 2L40 51l-16-2-11.7 2a2 2 0 0 1-2.3-2V15z" pathLength="1"/><line x1="24" y1="15" x2="24" y2="49" pathLength="1"/><line x1="40" y1="13" x2="40" y2="51" pathLength="1"/><circle cx="19" cy="41" r="2.6" pathLength="1"/><circle cx="31" cy="26" r="2.6" pathLength="1"/><circle cx="46" cy="23" r="2.6" pathLength="1"/><path d="M21 39l8.2-10.8M33.6 26l6.4-.4 3.6-1.5" pathLength="1"/></svg></span><p class="diff-label">Percursos traçados via GPS</p></li>
+<li class="diff-item reveal" style="--delay: 180ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 29v-2a17 17 0 0 1 34 0v2M19 29v-2a13 13 0 0 1 26 0v2" pathLength="1"/><path d="M19 28h-3a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h3zM45 28h3a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4h-3z" pathLength="1"/><rect x="19" y="27" width="4" height="18" rx="1" pathLength="1"/><rect x="41" y="27" width="4" height="18" rx="1" pathLength="1"/><path d="M46 44c0 6-3 9-8 9h-2" pathLength="1"/><rect x="31" y="50" width="5" height="5" rx="0.5" pathLength="1"/></svg></span><p class="diff-label">Assessoria e plantão 24h</p></li>
+</ul>
+<div class="section-cta reveal"><a class="btn btn-primary btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
+</section>
 
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-badge hero-in" style="--i:0">
-            <span class="hero-badge-dot" aria-hidden="true"></span>
-            <span>Campinas e Grande São Paulo &bull; Plantão 24h</span>
-          </div>
+<section id="frota" class="section section-fleet band-green" data-parallax="0.1" aria-labelledby="frota-title">
+<div class="container fleet-grid">
+<div class="fleet-media reveal">
+<div class="img-skel img-skel--transparent fleet-img-wrap">
+<picture>
+<source srcset="assets/brand/frota-veiculos-recorte-480.webp 480w, assets/brand/frota-veiculos-recorte-960.webp 960w, assets/brand/frota-veiculos-recorte-1600.webp 1600w" sizes="(min-width: 960px) 52vw, 92vw" type="image/webp">
+<img class="fleet-img" src="assets/brand/frota-veiculos-recorte.png" alt="Frota da Mobilità composta por sedã executivo, van Sprinter e ônibus rodoviário" width="1200" height="600" loading="lazy" decoding="async">
+</picture>
+</div>
+</div>
+<div class="fleet-copy reveal" style="--delay: 100ms">
+<h2 id="frota-title" class="section-title">Nossa frota</h2>
+<p class="section-sub">O melhor do conforto e segurança para você.</p>
+<p>Todos os veículos da nossa frota possuem ar-condicionado, são amplos, confortáveis e constantemente inspecionados. Nossas vans, micro-ônibus e ônibus são equipados com TV Digital, DVD e aparelho de som, além de assentos reclináveis para maior conforto dos passageiros.</p>
+<ul class="pill-list" data-stagger aria-label="Itens a bordo">
+<li>Ar-condicionado</li><li>TV Digital</li><li>DVD</li><li>Aparelho de som</li><li>Assentos reclináveis</li><li>Inspeção constante</li>
+</ul>
+</div>
+</div>
+</section>
 
-          <h1 class="hero-title" id="hero-title">
-            <span class="w"><span style="--i:0">Você</span></span>
-            <span class="w"><span style="--i:1">no</span></span>
-            <span class="w"><span style="--i:2">seu</span></span>
-            <span class="w"><span style="--i:3">destino,</span></span>
-            <span class="w"><span style="--i:4">sem</span></span>
-            <span class="w"><span style="--i:5">preocupações</span></span>
-          </h1>
+<section id="contato" class="section section-contact" aria-labelledby="contato-title">
+<div class="container">
+<div class="contact-grid">
+<div class="contact-info reveal">
+<h2 id="contato-title" class="section-title">Fale conosco</h2>
+<p class="section-sub">Entre em contato e tire suas dúvidas.</p>
+<p class="contact-lead">Atendemos Campinas, Grande São Paulo e interior. Envie uma mensagem pelo formulário ou fale diretamente pelo WhatsApp.</p>
+<ul class="contact-channels">
+<li><a id="contact-whatsapp-1" class="contact-channel" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20a%20Mobilit%C3%A0%20Transportes." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de falar com a Mobilità Transportes." target="_blank" rel="noopener noreferrer"><svg class="channel-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>WhatsApp <strong class="phone-nowrap">(19) 99810-8070</strong></span></a></li>
+<li><a id="contact-whatsapp-2" class="contact-channel" href="https://wa.me/5519992638676?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20a%20Mobilit%C3%A0%20Transportes." data-wa-phone="5519992638676" data-wa-text="Olá, gostaria de falar com a Mobilità Transportes." target="_blank" rel="noopener noreferrer"><svg class="channel-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>WhatsApp <strong class="phone-nowrap">(19) 99263-8676</strong></span></a></li>
+<li><a class="contact-channel" href="mailto:contato@mobilitatransportes.com.br"><svg class="channel-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>contato@mobilitatransportes.com.br</span></a></li>
+</ul>
+</div>
 
-          <p class="hero-subtitle hero-in" style="--i:7">
-            Transporte executivo, corporativo e transfer aeroportuário com pontualidade, segurança e conforto em cada trajeto.
-          </p>
+<div class="contact-panel reveal" style="--delay: 90ms">
+<h3 class="form-title">Mande uma mensagem</h3>
+<form id="contact-form" class="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+<input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY_AQUI">
+<input type="hidden" name="subject" value="Novo contato pelo site — Mobilità Transportes">
+<input type="hidden" name="from_name" value="Site Mobilità Transportes">
+<input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+<div class="form-row">
+<div class="field">
+<label class="field-label" for="nome">Nome</label>
+<input id="nome" name="nome" type="text" autocomplete="name" required aria-required="true" aria-describedby="nome-erro" placeholder="Seu nome completo">
+<p id="nome-erro" class="field-error" role="alert" hidden></p>
+</div>
+<div class="field">
+<label class="field-label" for="telefone">Telefone</label>
+<input id="telefone" name="telefone" type="tel" inputmode="tel" autocomplete="tel" required aria-required="true" aria-describedby="telefone-erro" placeholder="(19) 99999-9999">
+<p id="telefone-erro" class="field-error" role="alert" hidden></p>
+</div>
+</div>
+<div class="field">
+<label class="field-label" for="email">E-mail</label>
+<input id="email" name="email" type="email" inputmode="email" autocomplete="email" required aria-required="true" aria-describedby="email-erro" placeholder="voce@empresa.com.br">
+<p id="email-erro" class="field-error" role="alert" hidden></p>
+</div>
+<div class="field">
+<label class="field-label" for="mensagem">Mensagem</label>
+<textarea id="mensagem" name="mensagem" rows="4" required aria-required="true" aria-describedby="mensagem-erro" placeholder="Informe data, origem, destino ou sua dúvida"></textarea>
+<p id="mensagem-erro" class="field-error" role="alert" hidden></p>
+</div>
+<button type="submit" id="contact-submit" class="btn btn-primary btn-full">Enviar mensagem</button>
+<p class="form-wa-alt">Prefere falar agora? <a id="form-whatsapp-shortcut" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20de%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de solicitar um orçamento de transporte executivo." target="_blank" rel="noopener noreferrer">Enviar pelo WhatsApp</a></p>
+<div id="form-status" class="form-status" role="status" aria-live="polite" hidden></div>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
 
-          <div class="hero-ctas hero-in" style="--i:8">
-            <a
-              class="btn btn--whatsapp btn--lg"
-              id="hero-whatsapp-cta"
-              href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento%20de%20transporte%20executivo."
-              data-wa-phone="5519998108070"
-              data-wa-text="Olá! Vim pelo site e gostaria de um orçamento de transporte executivo."
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
-                <path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/>
-              </svg>
-              Pedir orçamento no WhatsApp
-            </a>
+<footer class="site-footer" data-parallax="0.08">
+<div class="container footer-grid">
+<div class="footer-brand">
+<div class="img-skel img-skel--transparent footer-logo-wrap">
+<img class="footer-logo" src="assets/brand/logo-mobilita-branco.svg" alt="Mobilità Transporte Executivo" width="200" height="53" loading="lazy" decoding="async">
+</div>
+<p class="footer-tag">Você no seu destino, sem preocupações.</p>
+<div class="footer-social">
+<a class="social-btn" href="https://www.facebook.com/mobilitatransporte/" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Mobilità Transportes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+<a class="social-btn" href="https://www.instagram.com/mobilitatransportes/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Mobilità Transportes"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+</div>
+</div>
+<nav class="footer-nav" aria-label="Rodapé">
+<h2 class="footer-heading">Navegação</h2>
+<ul class="footer-list">
+<li><a class="footer-link" href="#quemsomos">Quem somos</a></li>
+<li><a class="footer-link" href="#oquefazemos">O que fazemos</a></li>
+<li><a class="footer-link" href="#diferenciais">Diferenciais</a></li>
+<li><a class="footer-link" href="#frota">Frota</a></li>
+<li><a class="footer-link" href="#contato">Contato</a></li>
+</ul>
+</nav>
+<div class="footer-contact">
+<h2 class="footer-heading">Contato</h2>
+<ul class="footer-list">
+<li><a class="footer-link" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20informacoes%20sobre%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de informações sobre transporte executivo." target="_blank" rel="noopener noreferrer"><svg class="icon-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="phone-nowrap">(19) 99810-8070</span></a></li>
+<li><a class="footer-link" href="https://wa.me/5519992638676?text=Ol%C3%A1%2C%20gostaria%20de%20informacoes%20sobre%20transporte%20executivo." data-wa-phone="5519992638676" data-wa-text="Olá, gostaria de informações sobre transporte executivo." target="_blank" rel="noopener noreferrer"><svg class="icon-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="phone-nowrap">(19) 99263-8676</span></a></li>
+<li><a class="footer-link" href="mailto:contato@mobilitatransportes.com.br"><svg class="icon-inline" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>contato@mobilitatransportes.com.br</span></a></li>
+</ul>
+</div>
+</div>
+<div class="container footer-bottom"><p>Mobilità Transporte Executivo — Campinas, Grande São Paulo e interior</p></div>
+</footer>
 
-            <a class="btn btn--outline-light btn--lg" href="tel:+5519998108070">
-              <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-                <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-              </svg>
-              Ligar agora
-            </a>
-          </div>
-
-          <p class="hero-phone-note hero-in" style="--i:9">
-            Atendimento direto: <strong class="nowrap">(19) 99810-8070</strong> ou <strong class="nowrap">(19) 99263-8676</strong>
-          </p>
-        </div>
-      </div>
-      <ul class="hero-facts" aria-label="Destaques da Mobilità">
-        <li><strong>24h</strong><span>Plantão e assessoria</span></li>
-        <li><strong>Campinas</strong><span>e Grande São Paulo</span></li>
-        <li><strong>Bilíngues</strong><span>Motoristas experientes</span></li>
-      </ul>
-    <a class="scroll-cue" href="#quem-somos" aria-label="Rolar para conhecer a Mobilità"><span class="scroll-cue-line" aria-hidden="true"></span></a>
-    </section>
-
-    <div class="marquee" aria-hidden="true"><div class="marquee-track"><div class="marquee-set"><span>Transporte executivo</span><i aria-hidden="true"></i><span>Transfer aeroporto</span><i aria-hidden="true"></i><span>Transporte corporativo</span><i aria-hidden="true"></i><span>Eventos e traslados</span><i aria-hidden="true"></i><span>Plantão 24h</span><i aria-hidden="true"></i><span>Motoristas bilíngues</span><i aria-hidden="true"></i></div><div class="marquee-set"><span>Transporte executivo</span><i aria-hidden="true"></i><span>Transfer aeroporto</span><i aria-hidden="true"></i><span>Transporte corporativo</span><i aria-hidden="true"></i><span>Eventos e traslados</span><i aria-hidden="true"></i><span>Plantão 24h</span><i aria-hidden="true"></i><span>Motoristas bilíngues</span><i aria-hidden="true"></i></div></div></div>
-
-    <!-- Quem somos -->
-    <section class="section section--about" id="quem-somos" aria-labelledby="about-title">
-      <div class="container about-editorial">
-        <header class="about-head reveal">
-          <p class="section-eyebrow">Quem somos</p>
-          <h2 class="section-title" id="about-title">Experiência, cuidado e tranquilidade em cada viagem</h2>
-        </header>
-
-        <div class="about-body">
-          <div class="about-text reveal">
-            <p class="about-lead">
-              A Mobilità é uma empresa especializada em transporte corporativo, planejamento e execução de transporte executivo de passageiros, trazemos facilidades e soluções. Contamos com profissionais altamente qualificados e com vasta experiência no mercado.
-            </p>
-            <p>
-              Nossos motoristas possuem cursos específicos e passam por treinamentos constantemente. Prezamos pela pontualidade, segurança e conforto de nossos passageiros. <strong>Mobilità é você no seu destino, sem preocupações.</strong>
-            </p>
-            <div class="about-highlights">
-              <div class="about-pill">Motoristas qualificados e treinados</div>
-              <div class="about-pill">Campinas e Grande São Paulo</div>
-            </div>
-          </div>
-
-          <figure class="about-figure reveal">
-            <span class="about-shape" aria-hidden="true"></span>
-            <div class="media media--about">
-              <picture>
-              <source type="image/webp" srcset="assets/stock/chauffeur-porta-800.webp 800w, assets/stock/chauffeur-porta-1600.webp 1600w" sizes="(min-width: 1024px) 40vw, 100vw">
-              <img src="assets/stock/chauffeur-porta-1600.webp" alt="Motorista de terno abrindo a porta de um sedan executivo preto" width="1600" height="1068" loading="lazy" decoding="async" class="about-image">
-            </picture>
-            </div>
-            <div class="media media--about-2" aria-hidden="true">
-              <picture>
-              <source type="image/webp" srcset="assets/stock/interior-executivo-800.webp 800w, assets/stock/interior-executivo-1600.webp 1600w" sizes="22vw">
-              <img src="assets/stock/interior-executivo-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async" class="about-image-2">
-            </picture>
-            </div>
-            <figcaption class="about-caption">
-              <picture>
-                <source type="image/webp" srcset="assets/mobilita-elemento-logo-cor.webp">
-                <img src="assets/mobilita-elemento-logo-cor.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="about-caption-leaf">
-              </picture>
-              <span>Pontualidade, segurança e conforto com atenção a cada detalhe.</span>
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- Serviços -->
-    <section class="section section--tinted" id="servicos" aria-labelledby="services-title">
-      <div class="container">
-        <header class="services-intro">
-          <div class="services-intro-text reveal">
-            <p class="section-eyebrow">Serviços</p>
-            <h2 class="section-title" id="services-title">Facilidades e soluções que te levam onde você quer chegar.</h2>
-            <p class="section-lead">
-              Nossos serviços são pensados e planejados para que você tenha a melhor experiência possível em sua viagem. Soluções completas em transporte de pessoas para eventos corporativos, traslados ou diárias para aeroportos, hotéis, shows, casamentos, feiras, teatros, convenções, locação de veículos com motorista. Atendemos toda a região de Campinas e Grande São Paulo.
-            </p>
-          </div>
-          <figure class="services-photo reveal">
-            <div class="media media--services">
-              <picture>
-              <source type="image/webp" srcset="assets/stock/aeroporto-corredor-800.webp 800w, assets/stock/aeroporto-corredor-1600.webp 1600w" sizes="(min-width: 1024px) 48vw, 100vw">
-              <img src="assets/stock/aeroporto-corredor-1600.webp" alt="Executivo caminhando com mala de viagem em corredor de aeroporto" width="1600" height="1067" loading="lazy" decoding="async" class="services-photo-img">
-            </picture>
-            </div>
-            <figcaption class="services-photo-tag">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
-              <span>Campinas e Grande São Paulo</span>
-            </figcaption>
-          </figure>
-        </header>
-
-        <!-- Destaque Transfer Aeroporto -->
-        <article class="service-featured reveal" aria-labelledby="service-airport-title">
-          <picture aria-hidden="true"><source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp"><img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" class="featured-leaf"></picture>
-          <div class="service-featured-body">
-            <span class="service-badge">Serviço em destaque</span>
-            <h3 class="service-featured-title" id="service-airport-title">Transfer Aeroporto e Recepção em Aeroportos</h3>
-            <p class="service-featured-text">
-              Desembarque e chegue ao seu destino com segurança, sem preocupações. Recepção dedicada e acompanhamento do seu trajeto do embarque ao desembarque.
-            </p>
-            <ul class="featured-perks">
-              <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5M17 11l2 2 3.5-4"/></svg><span>Recepção no desembarque</span></li>
-              <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Pontualidade</span></li>
-              <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5M12 8v4l2.5 1.5"/></svg><span>Plantão 24h</span></li>
-            </ul>
-            <div class="airport-examples">
-              <p class="airport-examples-label">Exemplos de destinos atendidos:</p>
-              <ul class="airport-chips" aria-label="Exemplos de aeroportos atendidos">
-                <li><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>Aeroporto de Viracopos (Campinas)</li>
-                <li><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>Aeroporto de Guarulhos (GRU)</li>
-                <li><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>Aeroporto de Congonhas (CGH)</li>
-              </ul>
-            </div>
-          </div>
-          <div class="featured-photo media" aria-hidden="true">
-            <picture>
-              <source type="image/webp" srcset="assets/stock/aeroporto-bagagem-800.webp 800w, assets/stock/aeroporto-bagagem-1600.webp 1600w" sizes="(min-width: 1024px) 24vw, 1px">
-              <img src="assets/stock/aeroporto-bagagem-1600.webp" alt="" width="800" height="1200" loading="lazy" decoding="async" class="featured-photo-img">
-            </picture>
-          </div>
-          <div class="service-featured-action">
-            <span class="featured-plane" aria-hidden="true"><svg viewBox="0 0 24 24" width="72" height="72" fill="currentColor" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></span>
-            <a
-              class="btn btn--cta"
-              id="transfer-whatsapp-cta"
-              href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento%20de%20transfer."
-              data-wa-phone="5519998108070"
-              data-wa-text="Olá! Vim pelo site e gostaria de um orçamento de transfer."
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
-              <span>Agendar pelo WhatsApp</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Demais Serviços -->
-        <div class="services-grid">
-          <article class="service-card reveal">
-            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18v11H3zM8 8V5h8v3M3 13h18"/></svg></span>
-            <h3 class="service-card-title">Transporte corporativo</h3>
-            <p>Aeroportos, hotéis, restaurantes, palestras, feiras e quaisquer outros tipos de roteiros pré-definidos pelos passageiros.</p>
-          </article>
-
-          <article class="service-card reveal">
-            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg></span>
-            <h3 class="service-card-title">Traslados</h3>
-            <p>Eventos, viagens em grupo e todo o tipo de programação que necessite de transporte especializado.</p>
-          </article>
-
-          <article class="service-card reveal">
-            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg></span>
-            <h3 class="service-card-title">Locação de veículo</h3>
-            <p>Defina seu itinerário e contrate um de nossos carros e motoristas para atender às suas necessidades.</p>
-          </article>
-
-          <article class="service-card reveal">
-            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15l2.5 2.5L16 13"/></svg></span>
-            <h3 class="service-card-title">Assessoria e coordenação para eventos</h3>
-            <p>Nossos profissionais estão prontos para te auxiliar na realização de seu evento. Para que tudo saia dentro do planejado e cumpra o cronograma, recorra à Mobilità.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Diferenciais -->
-    <section class="section section--differentials" id="diferenciais" aria-labelledby="diff-title">
-      <div class="container diff-layout">
-        <header class="section-header reveal">
-          <p class="section-eyebrow">Qualidade e compromisso</p>
-          <h2 class="section-title" id="diff-title">Diferenciais que fazem a sua viagem ser muito melhor.</h2>
-        </header>
-
-        <figure class="diff-photo reveal" aria-hidden="true">
-          <div class="media media--diff">
-            <picture>
-              <source type="image/webp" srcset="assets/stock/cliente-corporativa-800.webp 800w, assets/stock/cliente-corporativa-1600.webp 1600w" sizes="(min-width: 1024px) 36vw, 1px">
-              <img src="assets/stock/cliente-corporativa-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async" class="diff-photo-img">
-            </picture>
-          </div>
-        </figure>
-
-        <ul class="diff-grid">
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/atendimento-humanizado.webp">
-              <img src="assets/atendimento-humanizado.png" alt="Ícone de atendimento humanizado" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Atendimento humanizado</h3>
-          </li>
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/frota.webp">
-              <img src="assets/frota.png" alt="Ícone de frota moderna e segura" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Frota moderna e segura</h3>
-          </li>
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/conforto.webp">
-              <img src="assets/conforto.png" alt="Ícone de conforto" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Conforto</h3>
-          </li>
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/pontualidade.webp">
-              <img src="assets/pontualidade.png" alt="Ícone de pontualidade" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Pontualidade</h3>
-          </li>
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/bilingue.webp">
-              <img src="assets/bilingue.png" alt="Ícone de motoristas bilíngues e experientes" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Motoristas bilíngues e experientes</h3>
-          </li>
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/gps.webp">
-              <img src="assets/gps.png" alt="Ícone de percursos traçados via GPS" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Percursos traçados via GPS</h3>
-          </li>
-          <li class="diff-card reveal">
-            <span class="diff-icon-wrap"><picture>
-              <source type="image/webp" srcset="assets/atendimento24h.webp">
-              <img src="assets/atendimento24h.png" alt="Ícone de assessoria e plantão 24h" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture></span>
-            <h3>Assessoria e plantão 24h</h3>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Frota -->
-    <section class="section section--fleet" id="frota" aria-labelledby="fleet-title">
-      <div class="bg-photo" aria-hidden="true">
-        <picture>
-          <source type="image/webp" srcset="assets/mobilita-fundo-sessao-01-480.webp 480w, assets/mobilita-fundo-sessao-01-960.webp 960w, assets/mobilita-fundo-sessao-01.webp 1920w" sizes="100vw">
-          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.1">
-        </picture>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-      <picture>
-        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--fleet" data-parallax="-0.08">
-      </picture>
-      <div class="container fleet-layout">
-        <header class="section-header reveal">
-          <p class="section-eyebrow">Frota</p>
-          <h2 class="section-title" id="fleet-title">O melhor do conforto e segurança para você.</h2>
-          <p class="section-lead">
-            Todos os veículos da nossa frota possuem ar-condicionado, são amplos, confortáveis e constantemente inspecionados. Nossas vans, micro-ônibus e ônibus são equipados com TV Digital, DVD e aparelho de som, além de assentos reclináveis para maior conforto dos passageiros.
-          </p>
-        </header>
-
-        <ul class="fleet-chips reveal" aria-label="Categorias de veículos da frota">
-          <li><span class="fleet-chip">Sedan</span></li>
-          <li><span class="fleet-chip">Van</span></li>
-          <li><span class="fleet-chip">Micro-ônibus</span></li>
-          <li><span class="fleet-chip">Ônibus</span></li>
-        </ul>
-
-        <figure class="fleet-photo reveal" aria-hidden="true">
-          <div class="media media--fleet">
-            <picture>
-              <source type="image/webp" srcset="assets/stock/van-sprinter-800.webp 800w, assets/stock/van-sprinter-1600.webp 1600w" sizes="(min-width: 1024px) 28vw, 1px">
-              <img src="assets/stock/van-sprinter-1600.webp" alt="" width="800" height="1000" loading="lazy" decoding="async" class="fleet-photo-img">
-            </picture>
-          </div>
-        </figure>
-
-        <div class="fleet-stage" id="fleet-parallax-stage">
-          <picture>
-            <source
-              type="image/webp"
-              srcset="assets/mobilita-carros-480.webp 480w, assets/mobilita-carros-900.webp 900w, assets/mobilita-carros.webp 1200w"
-              sizes="(min-width: 900px) 1040px, 92vw"
-            >
-            <img
-              src="assets/mobilita-carros.png"
-              alt="Frota da Mobilità Transportes composta por sedan executivo, van e ônibus"
-              width="1200"
-              height="600"
-              loading="lazy"
-              class="fleet-image"
-              id="fleet-parallax-img"
-            >
-          </picture>
-        </div>
-      </div>
-    </section>
-
-    <!-- Como funciona -->
-    <section class="section section--steps" id="como-funciona" aria-labelledby="steps-title">
-      <div class="container steps-layout">
-        <header class="section-header reveal">
-          <p class="section-eyebrow">Simples e rápido</p>
-          <h2 class="section-title" id="steps-title">Como funciona</h2>
-          <p class="section-lead">
-            Agendar o seu transporte com a Mobilità leva apenas 3 passos simples.
-          </p>
-        </header>
-
-        <figure class="steps-photo reveal" aria-hidden="true">
-          <div class="media media--steps">
-            <picture>
-              <source type="image/webp" srcset="assets/stock/chauffeur-sedan-800.webp 800w, assets/stock/chauffeur-sedan-1600.webp 1600w" sizes="(min-width: 1024px) 40vw, 1px">
-              <img src="assets/stock/chauffeur-sedan-1600.webp" alt="" width="1600" height="1068" loading="lazy" decoding="async" class="steps-photo-img">
-            </picture>
-          </div>
-        </figure>
-
-        <div class="steps-wrap">
-        <div class="steps-route" aria-hidden="true"><span class="route-track"></span><span class="route-fill"></span><span class="route-dot"></span></div>
-        <ol class="steps-grid">
-          <li class="step-card reveal">
-            <span class="step-number" aria-hidden="true">1</span>
-            <h3 class="step-title">Peça</h3>
-            <p>
-              Preencha o formulário abaixo ou chame no WhatsApp informando origem, destino, data e número de passageiros.
-            </p>
-          </li>
-          <li class="step-card reveal">
-            <span class="step-number" aria-hidden="true">2</span>
-            <h3 class="step-title">Confirmamos</h3>
-            <p>
-              Nossa equipe envia rapidamente o orçamento e confirma todos os detalhes da sua viagem com você.
-            </p>
-          </li>
-          <li class="step-card reveal">
-            <span class="step-number" aria-hidden="true">3</span>
-            <h3 class="step-title">Buscamos você</h3>
-            <p>
-              Nosso motorista chega no horário combinado para levar você ao seu destino com tranquilidade.
-            </p>
-          </li>
-        </ol>
-        </div>
-      </div>
-    </section>
-
-    <!-- Formulário de Orçamento -->
-    <section class="section section--quote" id="orcamento" aria-labelledby="quote-title">
-      <div class="bg-photo" aria-hidden="true">
-        <picture>
-          <source type="image/webp" srcset="assets/stock/estrada-palmeiras-800.webp 800w, assets/stock/estrada-palmeiras-1600.webp 1600w" sizes="100vw">
-          <img src="assets/stock/estrada-palmeiras-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async" class="bg-photo-img" data-parallax="0.08">
-        </picture>
-      </div>
-      <div class="bg-overlay bg-overlay--quote" aria-hidden="true"></div>
-      <div class="container quote-wrapper">
-        <div class="quote-intro reveal">
-          <p class="section-eyebrow">Orçamento sem compromisso</p>
-          <h2 class="section-title" id="quote-title">Peça seu orçamento pelo WhatsApp</h2>
-          <p class="quote-lead">
-            Preencha os dados da sua viagem. Ao clicar no botão, montamos a mensagem automaticamente e abrimos o seu WhatsApp pronta para enviar.
-          </p>
-          <ul class="quote-points">
-            <li><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg><span>Sem compromisso</span></li>
-            <li><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Mensagem pronta, é só enviar</span></li>
-            <li><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Plantão 24h</span></li>
-          </ul>
-          <div class="quote-reassurance">
-            <picture>
-              <source type="image/webp" srcset="assets/mobilita-elemento-logo-cor.webp">
-              <img src="assets/mobilita-elemento-logo-cor.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="quote-leaf">
-            </picture>
-            <p>
-              Prefere falar por telefone?<br>
-              Ligue para <a href="tel:+5519998108070" class="nowrap"><strong class="nowrap">(19) 99810-8070</strong></a>
-            </p>
-          </div>
-        </div>
-
-        <form class="quote-form reveal" id="quote-form" novalidate>
-          <div class="form-head">
-            <span class="form-head-mark" aria-hidden="true"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19c0-8 5-14 15-14 0 9-5 14-13 14M5 19c2-5 5-8 9-10"/></svg></span>
-            <div>
-              <h3 class="form-head-title">Dados da sua viagem</h3>
-              <p class="form-head-sub">Leva menos de um minuto. Campos com <span class="required-mark" aria-hidden="true">*</span> são obrigatórios.</p>
-            </div>
-          </div>
-
-          <div class="form-body">
-          <fieldset class="form-group">
-            <legend><span class="group-num" aria-hidden="true">1</span>Contato</legend>
-            <div class="form-grid">
-              <div class="field has-icon">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
-                <input type="text" id="nome" name="nome" autocomplete="name" placeholder="Ex.: Maria Silva" required>
-                <label for="nome">Seu nome <span class="required-mark" aria-hidden="true">*</span></label>
-              </div>
-              <div class="field has-icon">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-                <input type="tel" id="telefone" name="telefone" inputmode="tel" autocomplete="tel" placeholder="Ex.: (19) 99999-9999" required>
-                <label for="telefone">WhatsApp / telefone <span class="required-mark" aria-hidden="true">*</span></label>
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset class="form-group">
-            <legend><span class="group-num" aria-hidden="true">2</span>Viagem</legend>
-            <div class="form-grid">
-              <div class="field has-icon">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
-                <input type="text" id="origem" name="origem" placeholder="Ex.: Campinas - Cambuí" required>
-                <label for="origem">Origem (onde buscamos) <span class="required-mark" aria-hidden="true">*</span></label>
-              </div>
-              <div class="field has-icon">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>
-                <input type="text" id="destino" name="destino" placeholder="Ex.: Aeroporto de Viracopos" required>
-                <label for="destino">Destino <span class="required-mark" aria-hidden="true">*</span></label>
-              </div>
-
-              <div class="field field--picker has-icon" id="data-field">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-                <span class="field-label" id="data-label">Data da viagem <span class="required-mark" aria-hidden="true">*</span></span>
-                <button type="button" class="picker-btn" id="data-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="cal" aria-labelledby="data-label data-value">
-                  <span class="picker-value is-empty" id="data-value">Escolher data</span>
-                  <svg class="chev" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg>
-                </button>
-                <input type="hidden" id="data" name="data" value="">
-                <div class="popover cal" id="cal" role="dialog" aria-label="Escolher a data da viagem" hidden>
-                  <div class="cal-head">
-                    <button type="button" class="cal-nav" id="cal-prev" aria-label="Mês anterior"><svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg></button>
-                    <p class="cal-title" id="cal-title" aria-live="polite"></p>
-                    <button type="button" class="cal-nav" id="cal-next" aria-label="Próximo mês"><svg class="chan-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg></button>
-                  </div>
-                  <div class="cal-week" aria-hidden="true"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
-                  <div class="cal-grid" id="cal-grid" role="grid" aria-labelledby="cal-title"></div>
-                  <div class="cal-foot"><p class="cal-hint">Setas do teclado mudam o dia. Esc fecha.</p><button type="button" class="cal-close" id="cal-close">Fechar</button></div>
-                </div>
-              </div>
-
-              <div class="field field--select has-icon">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                <label class="field-label" for="hora">Horário <span class="required-mark" aria-hidden="true">*</span></label>
-                <select id="hora" name="hora" required>
-                  <option value="" selected disabled>Escolher horário</option>
-                </select>
-                <svg class="chev" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset class="form-group">
-            <legend><span class="group-num" aria-hidden="true">3</span>Detalhes</legend>
-            <div class="form-grid">
-              <div class="field field--stepper has-icon">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2.2.6 3.5 2.3 3.5 5.2"/></svg>
-                <span class="field-label" id="pax-label">Passageiros <span class="required-mark" aria-hidden="true">*</span></span>
-                <div class="stepper">
-                  <button type="button" class="step-btn" id="pax-minus" aria-label="Diminuir número de passageiros" aria-controls="passageiros">−</button>
-                  <input type="number" id="passageiros" name="passageiros" inputmode="numeric" min="1" max="60" value="1" aria-labelledby="pax-label" required>
-                  <button type="button" class="step-btn" id="pax-plus" aria-label="Aumentar número de passageiros" aria-controls="passageiros">+</button>
-                </div>
-              </div>
-              <div class="field field--area has-icon form-field--full">
-                <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v11H9l-5 4z"/></svg>
-                <textarea id="observacao" name="observacao" rows="3" placeholder="Malas, nº do voo, cadeirinha, parada extra…"></textarea>
-                <label for="observacao">Observação (opcional)</label>
-              </div>
-            </div>
-          </fieldset>
-
-          <p class="form-error" id="form-error" role="alert" hidden></p>
-
-          <button type="submit" class="btn btn--cta btn--block" id="quote-submit">
-            <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
-            <span>Enviar orçamento pelo WhatsApp</span>
-          </button>
-
-          <div class="form-result" id="form-result" aria-live="polite" hidden>
-            <p>Mensagem pronta! Se o WhatsApp não abriu automaticamente, clique no botão abaixo:</p>
-            <a id="whatsapp-generated-link" class="btn btn--outline-dark btn--block" href="https://wa.me/5519998108070" data-wa-phone="5519998108070" data-wa-text="" target="_blank" rel="noopener noreferrer">
-              Abrir mensagem no WhatsApp
-            </a>
-          </div>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- Contato -->
-    <section class="section section--contact" id="contato" aria-labelledby="contact-title">
-      <div class="bg-photo" aria-hidden="true">
-        <picture>
-          <source type="image/webp" srcset="assets/stock/chauffeur-predio-800.webp 800w, assets/stock/chauffeur-predio-1600.webp 1600w" sizes="100vw">
-          <img src="assets/stock/chauffeur-predio-1600.webp" alt="" width="1600" height="1068" loading="lazy" decoding="async" class="bg-photo-img" data-parallax="0.1">
-        </picture>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-      <picture>
-        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--contact" data-parallax="-0.06">
-      </picture>
-
-      <div class="container contact-layout">
-        <div class="contact-intro reveal">
-          <p class="section-eyebrow">Fale conosco</p>
-          <h2 class="section-title" id="contact-title">Entre em contato e tire suas dúvidas.</h2>
-          <p class="contact-lead">Escolha o canal que for mais confortável para você. Nossa equipe responde com atenção e agilidade.</p>
-          <div class="contact-ctas">
-            <a
-              class="btn btn--cta btn--lg"
-              id="contact-cta-whatsapp"
-              href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20contato%20do%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
-              data-wa-phone="5519998108070"
-              data-wa-text="Olá! Vim pela página de contato do site e gostaria de mais informações."
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
-              <span>Chamar no WhatsApp</span>
-            </a>
-            <a class="btn btn--outline-light btn--lg" href="tel:+5519998108070">
-              <svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-              <span>Ligar agora</span>
-            </a>
-          </div>
-          <p class="contact-hours"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Atendimento e plantão 24 horas</span></p>
-        </div>
-
-        <ul class="contact-channels reveal" aria-label="Canais de contato">
-          <li>
-            <a class="channel" id="contact-whatsapp-1"
-               href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20contato%20do%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
-               data-wa-phone="5519998108070" data-wa-text="Olá! Vim pela página de contato do site e gostaria de mais informações."
-               target="_blank" rel="noopener noreferrer">
-              <span class="channel-icon channel-icon--wa"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg></span>
-              <span class="channel-text"><span class="channel-label">WhatsApp</span><span class="channel-value nowrap">(19) 99810-8070</span></span>
-              <svg class="chan-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </li>
-          <li>
-            <a class="channel" id="contact-whatsapp-2"
-               href="https://wa.me/5519992638676?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20contato%20do%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
-               data-wa-phone="5519992638676" data-wa-text="Olá! Vim pela página de contato do site e gostaria de mais informações."
-               target="_blank" rel="noopener noreferrer">
-              <span class="channel-icon channel-icon--wa"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg></span>
-              <span class="channel-text"><span class="channel-label">WhatsApp</span><span class="channel-value nowrap">(19) 99263-8676</span></span>
-              <svg class="chan-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </li>
-          <li>
-            <a class="channel" href="tel:+5519998108070">
-              <span class="channel-icon"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
-              <span class="channel-text"><span class="channel-label">Telefone</span><span class="channel-value nowrap">(19) 99810-8070</span></span>
-              <svg class="chan-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </li>
-          <li>
-            <a class="channel" href="mailto:contato@mobilitatransportes.com.br">
-              <span class="channel-icon"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
-              <span class="channel-text"><span class="channel-label">E-mail</span><span class="channel-value channel-value--email">contato@mobilitatransportes.com.br</span></span>
-              <svg class="chan-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </li>
-          <li>
-            <a class="channel" href="https://www.instagram.com/mobilitatransportes/" target="_blank" rel="noopener noreferrer">
-              <span class="channel-icon"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></span>
-              <span class="channel-text"><span class="channel-label">Instagram</span><span class="channel-value">@mobilitatransportes</span></span>
-              <svg class="chan-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>
-            </a>
-          </li>
-          <li>
-            <div class="channel channel--static">
-              <span class="channel-icon"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg></span>
-              <span class="channel-text"><span class="channel-label">Área atendida</span><span class="channel-value">Campinas e Grande São Paulo</span></span>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <picture aria-hidden="true">
-      <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-      <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" class="footer-leaf-decor">
-    </picture>
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a href="#conteudo-principal" class="footer-logo-link" aria-label="Mobilità Transportes — voltar ao topo">
-          <img src="assets/mobilita-logo-branco-grande.webp" srcset="assets/mobilita-logo-branco-grande.webp 1x, assets/mobilita-logo-branco-grande@2x.webp 2x" alt="Mobilità Transportes" width="220" height="59" loading="lazy" class="footer-logo">
-        </a>
-        <p class="footer-slogan">Você no seu destino, sem preocupações.</p>
-        <p class="footer-area">Campinas e Grande São Paulo</p>
-      </div>
-
-      <nav class="footer-col" aria-label="Atalhos do rodapé">
-        <h2>Navegação</h2>
-        <ul class="footer-list">
-          <li><a href="#quem-somos">Quem somos</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#frota">Frota</a></li>
-          <li><a href="#orcamento">Pedir orçamento</a></li>
-        </ul>
-      </nav>
-
-      <div class="footer-col">
-        <h2>Contatos</h2>
-        <ul class="footer-list">
-          <li>
-            <a href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20conversar." data-wa-phone="5519998108070" data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de conversar." target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
-              <span>WhatsApp <span class="nowrap">(19) 99810-8070</span></span>
-            </a>
-          </li>
-          <li>
-            <a href="https://wa.me/5519992638676?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20conversar." data-wa-phone="5519992638676" data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de conversar." target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
-              <span>WhatsApp <span class="nowrap">(19) 99263-8676</span></span>
-            </a>
-          </li>
-          <li>
-            <a href="mailto:contato@mobilitatransportes.com.br">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-              <span>contato@mobilitatransportes.com.br</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h2>Redes sociais</h2>
-        <ul class="footer-social">
-          <li>
-            <a class="social-btn" href="https://www.instagram.com/mobilitatransportes/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Mobilità Transportes"><svg class="field-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-          </li>
-          <li>
-            <a class="social-btn" href="https://www.facebook.com/mobilitatransporte/" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Mobilità Transportes"><svg class="field-icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8.5c0-.3.2-.5.5-.5z"/></svg></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="container footer-bottom-in">
-        <p>&copy; <span id="current-year">2026</span> Mobilità Transportes. Todos os direitos reservados.</p>
-        <p>Feito com cuidado em Campinas</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Barra fixa inferior (mobile-only, alcance do polegar) -->
-  <nav class="mobile-bottom-bar" id="mobile-bottom-bar" aria-label="Ações rápidas de contato">
-    <a
-      class="btn btn--whatsapp mobile-bottom-btn"
-      id="bottom-bar-whatsapp"
-      href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20pelo%20celular%20e%20gostaria%20de%20um%20or%C3%A7amento."
-      data-wa-phone="5519998108070"
-      data-wa-text="Olá! Vim pelo site pelo celular e gostaria de um orçamento."
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-        <path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/>
-      </svg>
-      <span>WhatsApp</span>
-    </a>
-    <a
-      class="btn btn--outline-dark mobile-bottom-btn"
-      id="bottom-bar-call"
-      href="tel:+5519998108070"
-    >
-      <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-        <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-      </svg>
-      <span>Ligar</span>
-    </a>
-  </nav>
-
-  <!-- Botão flutuante WhatsApp (tablet/desktop): compacto, só após rolar, some em contato/rodapé -->
-  <a
-    class="floating-whatsapp"
-    href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20falar%20com%20um%20atendente."
-    data-wa-phone="5519998108070"
-    data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de falar com um atendente."
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Falar com a Mobilità no WhatsApp"
-  >
-    <svg class="icon-svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.47 0 .1 5.37.1 11.96c0 2.11.55 4.17 1.6 5.99L0 24l6.21-1.63a11.9 11.9 0 0 0 5.85 1.5h.01c6.59 0 11.96-5.37 11.96-11.96 0-3.2-1.25-6.2-3.51-8.43zm-8.46 18.37h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.68.97.98-3.59-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.45-9.92 9.93-9.92 2.65 0 5.14 1.03 7.01 2.91a9.86 9.86 0 0 1 2.9 7.01c0 5.47-4.45 9.91-9.96 9.91zm5.44-7.43c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
-  </a>
-
-  <script src="main.js" defer></script>
+<script src="main.js" defer></script>
 </body>
 </html>
