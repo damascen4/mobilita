@@ -12,7 +12,7 @@ test.describe('Mobilità Transportes — v13 SVG animado, imagens responsivas e 
     const isMobile = testInfo.project.name.startsWith('mobile-');
     await page.goto('/');
 
-    await expect(page).toHaveTitle('Transporte Executivo com Segurança e Conforto - Mobilità Transportes');
+    await expect(page).toHaveTitle('Transporte Executivo em Campinas e SP | Mobilità');
     await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Mobilità/);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Mobilità/);

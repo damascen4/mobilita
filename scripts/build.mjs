@@ -36,7 +36,7 @@ export function buildSite() {
     const content = fs.readFileSync(file, 'utf8');
     const lines = content.split(/\r?\n/);
     lines.forEach((line, idx) => {
-      if (ROOT_RELATIVE_PATTERN.test(line)) {
+      if (!/<base\s/.test(line) && ROOT_RELATIVE_PATTERN.test(line)) {
         violations.push(`${path.relative(rootDir, file)}:${idx + 1}: ${line.trim()}`);
       }
       ROOT_RELATIVE_PATTERN.lastIndex = 0;

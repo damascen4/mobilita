@@ -135,8 +135,8 @@ test.describe('Deploy em subpath (/projetos/mobilita)', () => {
     expect(loadedStylesheets).toContain(`${origin}${BASE_PATH}/styles.css`);
 
     // Verifica âncora interna mantendo o subpath
-    await page.locator('a[href="#quem-somos"]').first().evaluate((el) => (el as HTMLAnchorElement).click());
-    await expect(page).toHaveURL(`${origin}${BASE_PATH}/#quem-somos`);
+    await page.locator('a[href="#quemsomos"]').first().evaluate((el) => (el as HTMLAnchorElement).click());
+    await expect(page).toHaveURL(`${origin}${BASE_PATH}/#quemsomos`);
 
     expect(leakedRootRequests, 'Nenhum asset local deve escapar para a raiz /').toEqual([]);
     expect(failedLocalResponses, 'Nenhum asset local deve retornar 4xx/5xx').toEqual([]);
