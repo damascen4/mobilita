@@ -295,4 +295,56 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     await loadAllImages();
     await page.screenshot({ path: 'tests/screenshots/desktop-1440.png', fullPage: true });
   });
+
+  test('reduced-motion desliga animações: conteúdo visível, sem loader e sem scroll horizontal', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.locator('html')).not.toHaveClass(/js-enabled/);
+    await expect(page.locator('.intro-loader')).toHaveCount(0);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    const state = await page.evaluate(() => {
+      const w = document.querySelector('.hero-title .w > span') as HTMLElement;
+      const reveal = document.querySelector('.reveal') as HTMLElement;
+      return {
+        wordAnim: getComputedStyle(w).animationName,
+        wordTransform: getComputedStyle(w).transform,
+        revealOpacity: getComputedStyle(reveal).opacity,
+        bgAnim: getComputedStyle(document.querySelector('.hero-bg-img') as HTMLElement).animationName,
+        overflowX: document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+    expect(state.wordAnim).toBe('none');
+    expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(state.wordTransform);
+    expect(state.revealOpacity).toBe('1');
+    expect(state.bgAnim).toBe('none');
+    expect(state.overflowX).toBe(false);
+  });
+
+  test('com movimento: loader da 1ª visita some, hero anima e seções entram ao rolar', async ({ page }, testInfo) => {
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveClass(/js-enabled/);
+    await expect(page.locator('.intro-loader')).toHaveCount(0, { timeout: 3000 });
+    await expect(page.locator('.hero-title .w').first()).toBeVisible();
+    await page.locator('#diferenciais').scrollIntoViewIfNeeded();
+    await expect(page.locator('#diferenciais .diff-card').first()).toHaveClass(/is-visible/, { timeout: 3000 });
+    const overflowX = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    expect(overflowX).toBe(false);
+  });
+
+  test('screenshots de seções no meio da rolagem', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-chrome', 'Capturas geradas uma única vez no projeto desktop-chrome');
+    for (const [name, vp] of [['mobile', { width: 375, height: 812 }], ['desktop', { width: 1440, height: 900 }]] as const) {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      await page.evaluate(() => document.querySelectorAll('img').forEach((i) => ((i as HTMLImageElement).loading = 'eager')));
+      await page.waitForTimeout(1600);
+      await page.screenshot({ path: `tests/screenshots/hero-${name}.png` });
+      for (const id of ['diferenciais', 'como-funciona', 'frota']) {
+        await page.evaluate((sel) => document.querySelector(sel)!.scrollIntoView({ behavior: 'instant', block: 'start' }), `#${id}`);
+        await page.evaluate(() => window.scrollBy(0, 120));
+        await page.waitForTimeout(1300);
+        await page.screenshot({ path: `tests/screenshots/${id}-${name}.png` });
+      }
+    }
+  });
 });

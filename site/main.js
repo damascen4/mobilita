@@ -136,8 +136,40 @@
     });
   }
 
-  // Gentle reveal on scroll
-  const revealElements = document.querySelectorAll('.reveal');
+  // ---- Cinematic layer ----
+  const root = document.documentElement;
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+  // Loader de marca: só na 1ª visita da sessão, pulável, <=1.1s, nunca bloqueia cliques
+  (function brandLoader() {
+    if (prefersReducedMotion) return;
+    let seen = false;
+    try { seen = sessionStorage.getItem('mobilita-intro') === '1'; sessionStorage.setItem('mobilita-intro', '1'); } catch (_) { seen = true; }
+    if (seen) return;
+    const el = document.createElement('div');
+    el.className = 'intro-loader';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<img src="assets/mobilita-logo-branco-grande.png" alt="" width="220" height="59">';
+    document.body.appendChild(el);
+    let done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      el.classList.add('is-done');
+      window.setTimeout(function () { el.remove(); }, 700);
+    }
+    window.setTimeout(finish, 1000);
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) {
+      window.addEventListener(ev, finish, { once: true, passive: true });
+    });
+  })();
+
+  // Reveal on scroll com stagger entre irmãos
+  const revealElements = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  revealElements.forEach(function (el) {
+    const siblings = Array.prototype.filter.call(el.parentElement.children, function (c) { return c.classList.contains('reveal'); });
+    el.style.setProperty('--d', Math.min(siblings.indexOf(el), 6) * 90 + 'ms');
+  });
   if (!prefersReducedMotion && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
       function (entries) {
@@ -148,44 +180,100 @@
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
-
-    revealElements.forEach(function (el) {
-      observer.observe(el);
-    });
+    revealElements.forEach(function (el) { observer.observe(el); });
   } else {
-    revealElements.forEach(function (el) {
-      el.classList.add('is-visible');
+    revealElements.forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  // Contadores animados (disparam ao entrar na viewport)
+  const counters = document.querySelectorAll('[data-count]');
+  function runCounter(el) {
+    const target = parseInt(el.dataset.count, 10) || 0;
+    const start = performance.now();
+    const dur = 1400;
+    (function tick(now) {
+      const t = Math.min(1, (now - start) / dur);
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) window.requestAnimationFrame(tick);
+    })(start);
+  }
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    const cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { runCounter(entry.target); cio.unobserve(entry.target); }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (c) { c.textContent = '0'; cio.observe(c); });
+  }
+
+  // Tilt sutil nos cards de serviço (só ponteiro fino)
+  if (!prefersReducedMotion && finePointer) {
+    document.querySelectorAll('.service-card').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', (-y * 7).toFixed(2) + 'deg');
+      });
+      card.addEventListener('pointerleave', function () {
+        card.style.setProperty('--ry', '0deg');
+        card.style.setProperty('--rx', '0deg');
+      });
     });
   }
 
-  // Light parallax for fleet image
+  // Parallax (fundos fotográficos, folhas, frota entrando de lado) e rota animada
+  const parallaxEls = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
   const fleetStage = document.getElementById('fleet-parallax-stage');
-  const fleetImg = document.getElementById('fleet-parallax-img');
-  if (!prefersReducedMotion && fleetStage && fleetImg) {
+  const routeEl = document.querySelector('.steps-route');
+  if (!prefersReducedMotion) {
     let ticking = false;
-    function updateParallax() {
+    const vh = function () { return window.innerHeight || 800; };
+
+    function update() {
       ticking = false;
-      const rect = fleetStage.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || 800;
-      if (rect.bottom < 0 || rect.top > viewportHeight) return;
-      const progress = (rect.top + rect.height * 0.5 - viewportHeight * 0.5) / viewportHeight;
-      const offset = Math.max(-18, Math.min(18, progress * -26));
-      fleetImg.style.transform = 'translate3d(0, ' + offset.toFixed(1) + 'px, 0)';
+      const h = vh();
+
+      parallaxEls.forEach(function (el) {
+        const holder = el.closest('section, footer, .hero') || el.parentElement;
+        const rect = holder.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > h + 200) return;
+        const speed = parseFloat(el.dataset.parallax) || 0;
+        const center = rect.top + rect.height / 2 - h / 2;
+        el.style.transform = 'translate3d(0,' + (center * speed * -1).toFixed(1) + 'px,0)';
+      });
+
+      if (fleetStage) {
+        const rect = fleetStage.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < h) {
+          const p = Math.max(0, Math.min(1, (rect.top - h * 0.15) / (h * 0.75)));
+          fleetStage.style.setProperty('--fx', (p * 14).toFixed(2) + '%');
+        }
+      }
+
+      if (routeEl) {
+        const host = routeEl.parentElement.getBoundingClientRect();
+        if (host.bottom > 0 && host.top < h) {
+          const p = Math.max(0, Math.min(1, (h * 0.75 - host.top) / (host.height + h * 0.1)));
+          routeEl.style.setProperty('--route', p.toFixed(3));
+          const horizontal = window.matchMedia('(min-width: 900px)').matches;
+          if (horizontal) {
+            routeEl.style.setProperty('--route-x', (p * routeEl.getBoundingClientRect().width).toFixed(1) + 'px');
+          } else {
+            routeEl.style.setProperty('--route-y', (p * routeEl.getBoundingClientRect().height).toFixed(1) + 'px');
+          }
+        }
+      }
     }
 
-    window.addEventListener(
-      'scroll',
-      function () {
-        if (!ticking) {
-          ticking = true;
-          window.requestAnimationFrame(updateParallax);
-        }
-      },
-      { passive: true }
-    );
-    updateParallax();
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
   }
 
   // Light BR phone mask (permite dígitos livres / internacionais)

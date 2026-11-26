@@ -28,8 +28,10 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@300;500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
+  <link rel="preload" as="image" type="image/webp" href="assets/mobilita-showcase-01-640.webp" imagesrcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w" imagesizes="100vw" fetchpriority="high">
+  <script>if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("js-enabled")}</script>
   <link rel="stylesheet" href="styles.css">
 
   <!-- JSON-LD LocalBusiness -->
@@ -181,6 +183,7 @@
           >
         </picture>
         <div class="hero-overlay"></div>
+        <div class="hero-grain"></div>
         <picture>
           <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
           <img
@@ -195,20 +198,29 @@
 
       <div class="container">
         <div class="hero-content">
-          <div class="hero-badge reveal">
+          <picture class="hero-logo-wrap">
+            <source type="image/webp" srcset="assets/mobilita-logo-branco-grande.webp">
+            <img src="assets/mobilita-logo-branco-grande.png" alt="" width="220" height="59" class="hero-logo" aria-hidden="true">
+          </picture>
+          <div class="hero-badge hero-in" style="--i:0">
             <span class="hero-badge-dot" aria-hidden="true"></span>
             <span>Campinas e Grande São Paulo &bull; Plantão 24h</span>
           </div>
 
-          <h1 class="hero-title reveal" id="hero-title">
-            Você no seu destino, sem preocupações
+          <h1 class="hero-title" id="hero-title">
+            <span class="w"><span style="--i:0">Você</span></span>
+            <span class="w"><span style="--i:1">no</span></span>
+            <span class="w"><span style="--i:2">seu</span></span>
+            <span class="w"><span style="--i:3">destino,</span></span>
+            <span class="w"><span style="--i:4">sem</span></span>
+            <span class="w"><span style="--i:5">preocupações</span></span>
           </h1>
 
-          <p class="hero-subtitle reveal">
+          <p class="hero-subtitle hero-in" style="--i:7">
             Transporte executivo, corporativo e transfer aeroportuário com pontualidade, segurança e conforto em cada trajeto.
           </p>
 
-          <div class="hero-ctas reveal">
+          <div class="hero-ctas hero-in" style="--i:8">
             <a
               class="btn btn--whatsapp btn--lg"
               id="hero-whatsapp-cta"
@@ -232,11 +244,12 @@
             </a>
           </div>
 
-          <p class="hero-phone-note reveal">
+          <p class="hero-phone-note hero-in" style="--i:9">
             Atendimento direto: <strong>(19) 99810-8070</strong> ou <strong>(19) 99263-8676</strong>
           </p>
         </div>
       </div>
+    <a class="scroll-cue" href="#quem-somos" aria-label="Rolar para conhecer a Mobilità"><span class="scroll-cue-line" aria-hidden="true"></span></a>
     </section>
 
     <!-- Quem somos -->
@@ -319,6 +332,7 @@
 
         <!-- Destaque Transfer Aeroporto -->
         <article class="service-featured reveal" aria-labelledby="service-airport-title">
+          <picture aria-hidden="true"><source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp"><img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" class="featured-leaf"></picture>
           <div class="service-featured-body">
             <span class="service-badge">Serviço em destaque</span>
             <h3 class="service-featured-title" id="service-airport-title">Transfer Aeroporto e Recepção em Aeroportos</h3>
@@ -352,28 +366,32 @@
         <!-- Demais Serviços -->
         <div class="services-grid">
           <article class="service-card reveal">
-            <h3 class="service-card-title">Transporte corporativo</h3>
+            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18v11H3zM8 8V5h8v3M3 13h18"/></svg></span>
+                        <h3 class="service-card-title">Transporte corporativo</h3>
             <p>
               Aeroportos, hotéis, restaurantes, palestras, feiras e quaisquer outros tipos de roteiros pré-definidos pelos passageiros.
             </p>
           </article>
 
           <article class="service-card reveal">
-            <h3 class="service-card-title">Traslados</h3>
+            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg></span>
+                        <h3 class="service-card-title">Traslados</h3>
             <p>
               Eventos, viagens em grupo e todo o tipo de programação que necessite de transporte especializado.
             </p>
           </article>
 
           <article class="service-card reveal">
-            <h3 class="service-card-title">Locação de veículo</h3>
+            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg></span>
+                        <h3 class="service-card-title">Locação de veículo</h3>
             <p>
               Defina seu itinerário e contrate um de nossos carros e motoristas para atender às suas necessidades.
             </p>
           </article>
 
           <article class="service-card reveal">
-            <h3 class="service-card-title">Assessoria e coordenação para eventos</h3>
+            <span class="svc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15l2.5 2.5L16 13"/></svg></span>
+                        <h3 class="service-card-title">Assessoria e coordenação para eventos</h3>
             <p>
               Nossos profissionais estão prontos para te auxiliar na realização de seu evento. Para que tudo saia dentro do planejado e cumpra o cronograma, recorra à Mobilità.
             </p>
@@ -384,17 +402,16 @@
 
     <!-- Diferenciais -->
     <section class="section section--differentials" id="diferenciais" aria-labelledby="diff-title">
+      <div class="bg-photo" aria-hidden="true">
+        <picture>
+          <source type="image/webp" srcset="assets/mobilita-fundo-sessao-01-480.webp 480w, assets/mobilita-fundo-sessao-01-960.webp 960w, assets/mobilita-fundo-sessao-01.webp 1920w" sizes="100vw">
+          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.18">
+        </picture>
+      </div>
+      <div class="bg-overlay" aria-hidden="true"></div>
       <picture>
-        <source type="image/webp" srcset="assets/mobilita-elemento-logo-cor.webp">
-        <img
-          src="assets/mobilita-elemento-logo-cor.png"
-          alt=""
-          width="1024"
-          height="929"
-          loading="lazy"
-          aria-hidden="true"
-          class="leaf-decor leaf-decor--diff"
-        >
+        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
+        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--diff" data-parallax="-0.08">
       </picture>
       <div class="container">
         <header class="section-header reveal">
@@ -402,54 +419,61 @@
           <h2 class="section-title" id="diff-title">Diferenciais que fazem a sua viagem ser muito melhor.</h2>
         </header>
 
+        <ul class="stats-strip reveal" aria-label="Mobilità em números">
+          <li><span class="stat-num"><span data-count="24">24</span>h</span><span class="stat-label">de plantão, todos os dias</span></li>
+          <li><span class="stat-num"><span data-count="4">4</span></span><span class="stat-label">categorias de veículos</span></li>
+          <li><span class="stat-num"><span data-count="3">3</span></span><span class="stat-label">aeroportos atendidos</span></li>
+          <li><span class="stat-num"><span data-count="3">3</span></span><span class="stat-label">passos para agendar</span></li>
+        </ul>
+
         <ul class="diff-grid">
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/atendimento-humanizado.webp">
               <img src="assets/atendimento-humanizado.png" alt="Ícone de atendimento humanizado" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Atendimento humanizado</h3>
           </li>
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/frota.webp">
               <img src="assets/frota.png" alt="Ícone de frota moderna e segura" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Frota moderna e segura</h3>
           </li>
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/conforto.webp">
               <img src="assets/conforto.png" alt="Ícone de conforto" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Conforto</h3>
           </li>
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/pontualidade.webp">
               <img src="assets/pontualidade.png" alt="Ícone de pontualidade" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Pontualidade</h3>
           </li>
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/bilingue.webp">
               <img src="assets/bilingue.png" alt="Ícone de motoristas bilíngues e experientes" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Motoristas bilíngues e experientes</h3>
           </li>
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/gps.webp">
               <img src="assets/gps.png" alt="Ícone de percursos traçados via GPS" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Percursos traçados via GPS</h3>
           </li>
           <li class="diff-card reveal">
-            <picture>
+            <span class="diff-icon-wrap"><picture>
               <source type="image/webp" srcset="assets/atendimento24h.webp">
               <img src="assets/atendimento24h.png" alt="Ícone de assessoria e plantão 24h" width="150" height="150" loading="lazy" class="diff-icon">
-            </picture>
+            </picture></span>
             <h3>Assessoria e plantão 24h</h3>
           </li>
         </ul>
@@ -474,7 +498,7 @@
           <li><span class="fleet-chip">Ônibus</span></li>
         </ul>
 
-        <div class="fleet-stage reveal" id="fleet-parallax-stage">
+        <div class="fleet-stage" id="fleet-parallax-stage">
           <picture>
             <source
               type="image/webp"
@@ -497,7 +521,18 @@
 
     <!-- Como funciona -->
     <section class="section section--steps" id="como-funciona" aria-labelledby="steps-title">
-      <div class="container">
+      <div class="bg-photo" aria-hidden="true">
+        <picture>
+          <source type="image/webp" srcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w" sizes="100vw">
+          <img src="assets/mobilita-showcase-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.18">
+        </picture>
+      </div>
+      <div class="bg-overlay" aria-hidden="true"></div>
+      <picture>
+        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
+        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--steps" data-parallax="-0.08">
+      </picture>
+            <div class="container">
         <header class="section-header reveal">
           <p class="section-eyebrow">Simples e rápido</p>
           <h2 class="section-title" id="steps-title">Como funciona</h2>
@@ -506,6 +541,8 @@
           </p>
         </header>
 
+        <div class="steps-wrap">
+        <div class="steps-route" aria-hidden="true"><span class="route-track"></span><span class="route-fill"></span><span class="route-dot"></span></div>
         <ol class="steps-grid">
           <li class="step-card reveal">
             <span class="step-number" aria-hidden="true">1</span>
@@ -529,6 +566,7 @@
             </p>
           </li>
         </ol>
+        </div>
       </div>
     </section>
 
@@ -696,7 +734,14 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <picture>
+    <div class="bg-photo" aria-hidden="true">
+        <picture>
+          <source type="image/webp" srcset="assets/mobilita-fundo-sessao-01-480.webp 480w, assets/mobilita-fundo-sessao-01-960.webp 960w, assets/mobilita-fundo-sessao-01.webp 1920w" sizes="100vw">
+          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.12">
+        </picture>
+      </div>
+      <div class="bg-overlay" aria-hidden="true"></div>
+          <picture>
       <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
       <img
         src="assets/mobilita-elemento-logo-branco.png"
