@@ -1,802 +1,278 @@
-(function () {
+(() => {
   'use strict';
 
-  const WHATSAPP_NUMBER = '5519998108070';
+  const PRIMARY_PHONE = '5519998108070';
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobileUA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-  if (!prefersReducedMotion) {
-    document.documentElement.classList.add('js-enabled');
+  /* 1. Header elevation on scroll */
+  const header = document.getElementById('topo');
+  if (header) {
+    const onScroll = () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   }
 
-  // WhatsApp direct routing helper (mobile deep link + fallback, desktop web.whatsapp.com)
-  function isMobileDevice() {
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
-  }
-
-  function sanitizePhone(phone) {
-    return String(phone || WHATSAPP_NUMBER).replace(/\D/g, '') || WHATSAPP_NUMBER;
-  }
-
-  function navigateTo(url) {
-    if (typeof window.__mobilitaNavigate === 'function') {
-      window.__mobilitaNavigate(url);
-      return;
-    }
-    window.location.href = url;
-  }
-
-  function buildWaMeUrl(phone, text) {
-    const digits = sanitizePhone(phone);
-    const query = text ? '?text=' + encodeURIComponent(text) : '';
-    return 'https://wa.me/' + digits + query;
-  }
-
-  function openWhatsApp(phone, text) {
-    const digits = sanitizePhone(phone);
-    const encoded = encodeURIComponent(text || '');
-    const waMeUrl = buildWaMeUrl(digits, text);
-
-    if (isMobileDevice()) {
-      const deepLink = 'whatsapp://send?phone=' + digits + (encoded ? '&text=' + encoded : '');
-      let leftPage = false;
-
-      function onVisibilityChange() {
-        if (document.hidden || document.visibilityState === 'hidden') {
-          leftPage = true;
-        }
-      }
-
-      function onBlur() {
-        leftPage = true;
-      }
-
-      document.addEventListener('visibilitychange', onVisibilityChange);
-      window.addEventListener('blur', onBlur);
-
-      navigateTo(deepLink);
-
-      window.setTimeout(function () {
-        document.removeEventListener('visibilitychange', onVisibilityChange);
-        window.removeEventListener('blur', onBlur);
-        if (!leftPage && !document.hidden) {
-          navigateTo(waMeUrl);
-        }
-      }, 1500);
-
-      return deepLink;
-    }
-
-    const webUrl = 'https://web.whatsapp.com/send?phone=' + digits + (encoded ? '&text=' + encoded : '');
-    window.open(webUrl, '_blank', 'noopener,noreferrer');
-    return webUrl;
-  }
-
-  window.openWhatsApp = openWhatsApp;
-
-  // Intercept clicks on all WhatsApp links keeping href="https://wa.me/..." as no-JS fallback
-  document.addEventListener('click', function (event) {
-    const link = event.target.closest('a[data-wa-phone], a[href^="https://wa.me/"]');
-    if (!link) return;
-
-    event.preventDefault();
-
-    let phone = link.dataset.waPhone || '';
-    let text = link.dataset.waText || '';
-
-    if (!phone || !text) {
-      try {
-        const parsed = new URL(link.href);
-        if (!phone) phone = parsed.pathname.replace(/\D/g, '');
-        if (!text) text = parsed.searchParams.get('text') || '';
-      } catch (_) {
-        // Ignore malformed href; sanitizePhone falls back to WHATSAPP_NUMBER
-      }
-    }
-
-    openWhatsApp(phone, text);
-  });
-
-  // Header scroll state
-  const header = document.querySelector('.site-header');
-  function updateHeaderState() {
-    if (!header) return;
-    header.classList.toggle('is-scrolled', window.scrollY > 36);
-  }
-  updateHeaderState();
-  window.addEventListener('scroll', updateHeaderState, { passive: true });
-
-  // Mobile menu toggle
+  /* 2. Mobile drawer menu (aria-expanded, Esc closes, focus trap) */
   const menuToggle = document.getElementById('menu-toggle');
-  const mobileNav = document.getElementById('nav-mobile');
+  const mobileNav = document.getElementById('mobile-nav');
+  const menuClose = document.getElementById('menu-close');
 
-  function setMenuOpen(isOpen) {
-    if (!menuToggle || !mobileNav) return;
-    menuToggle.setAttribute('aria-expanded', String(isOpen));
-    menuToggle.setAttribute('aria-label', isOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação');
-    mobileNav.hidden = !isOpen;
-  }
+  if (menuToggle && mobileNav && menuClose) {
+    let lastFocused = null;
+    const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-  if (menuToggle && mobileNav) {
-    menuToggle.addEventListener('click', function () {
-      const currentlyOpen = menuToggle.getAttribute('aria-expanded') === 'true';
-      setMenuOpen(!currentlyOpen);
-    });
-
-    mobileNav.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        setMenuOpen(false);
+    const openMenu = () => {
+      lastFocused = document.activeElement;
+      mobileNav.hidden = false;
+      menuToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        mobileNav.classList.add('is-open');
+        menuClose.focus();
       });
+    };
+
+    const closeMenu = (restoreFocus = true) => {
+      mobileNav.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      const finish = () => {
+        mobileNav.hidden = true;
+        if (restoreFocus && lastFocused instanceof HTMLElement) {
+          lastFocused.focus();
+        }
+      };
+      if (prefersReducedMotion) {
+        finish();
+      } else {
+        window.setTimeout(finish, 220);
+      }
+    };
+
+    menuToggle.addEventListener('click', () => {
+      if (mobileNav.hidden) openMenu();
+      else closeMenu(true);
     });
 
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
-        setMenuOpen(false);
-        menuToggle.focus();
+    menuClose.addEventListener('click', () => closeMenu(true));
+
+    mobileNav.querySelectorAll('[data-close-menu]').forEach((el) => {
+      el.addEventListener('click', () => closeMenu(true));
+    });
+
+    mobileNav.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => closeMenu(false));
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (mobileNav.hidden) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMenu(true);
+        return;
+      }
+      if (event.key === 'Tab') {
+        const focusables = Array.from(mobileNav.querySelectorAll(focusableSelector));
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     });
   }
 
-  // ---- Cinematic layer ----
-  const root = document.documentElement;
-  const finePointer = window.matchMedia('(pointer: fine)').matches;
+  /* 3. Active nav link tracking */
+  const navLinks = Array.from(document.querySelectorAll('.main-nav .nav-link'));
+  const trackedSections = navLinks
+    .map((link) => {
+      const id = link.getAttribute('href')?.slice(1);
+      const section = id ? document.getElementById(id) : null;
+      return section ? { link, section } : null;
+    })
+    .filter(Boolean);
 
-  // Loader de marca: só na 1ª visita da sessão, pulável, <=1.1s, nunca bloqueia cliques
-  (function brandLoader() {
-    if (prefersReducedMotion) return;
-    let seen = false;
-    try { seen = sessionStorage.getItem('mobilita-intro') === '1'; sessionStorage.setItem('mobilita-intro', '1'); } catch (_) { seen = true; }
-    if (seen) return;
-    const el = document.createElement('div');
-    el.className = 'intro-loader';
-    el.setAttribute('aria-hidden', 'true');
-    el.innerHTML = '<img src="assets/mobilita-logo-branco-grande.png" alt="" width="220" height="59">';
-    document.body.appendChild(el);
-    let done = false;
-    function finish() {
-      if (done) return;
-      done = true;
-      el.classList.add('is-done');
-      window.setTimeout(function () { el.remove(); }, 700);
-    }
-    window.setTimeout(finish, 1000);
-    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) {
-      window.addEventListener(ev, finish, { once: true, passive: true });
-    });
-  })();
-
-  // Reveal on scroll com stagger entre irmãos (exclui frota e passos, que têm coreografia própria)
-  const revealElements = Array.prototype.filter.call(document.querySelectorAll('.reveal'), function (el) {
-    return el.id !== 'fleet-parallax-stage' && !el.closest('.steps-wrap');
-  });
-  revealElements.forEach(function (el) {
-    const siblings = Array.prototype.filter.call(el.parentElement.children, function (c) { return c.classList.contains('reveal'); });
-    el.style.setProperty('--d', Math.min(siblings.indexOf(el), 6) * 65 + 'ms');
-  });
-  // Só revela a moldura depois que a foto decodificou: máscara/clip-path nunca mostra moldura vazia nem imagem "estourando" depois (anti-flicker)
-  function whenImagesReady(el, cb) {
-    const pending = Array.prototype.filter.call(el.querySelectorAll('.media img'), function (img) {
-      return !(img.complete && img.naturalWidth > 0) && img.getClientRects().length > 0;
-    });
-    if (!pending.length || el.classList.contains('is-visible')) { cb(); return; }
-    let fired = false;
-    function go() { if (!fired) { fired = true; cb(); } }
-    pending.forEach(function (img) { img.loading = 'eager'; });
-    Promise.all(pending.map(function (img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); })).then(go);
-    window.setTimeout(go, 1500);
+  if (trackedSections.length && 'IntersectionObserver' in window) {
+    const navObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        navLinks.forEach((l) => l.classList.remove('is-active'));
+        const match = trackedSections.find((item) => item.section === visible.target);
+        if (match) match.link.classList.add('is-active');
+      },
+      { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.25, 0.5] }
+    );
+    trackedSections.forEach(({ section }) => navObserver.observe(section));
   }
-  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            const target = entry.target;
-            observer.unobserve(target);
-            whenImagesReady(target, function () { target.classList.add('is-visible'); });
-          }
+
+  /* 4. Scroll reveal (progressive enhancement) */
+  const reveals = Array.from(document.querySelectorAll('.reveal'));
+  if (!prefersReducedMotion && 'IntersectionObserver' in window && reveals.length) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
         });
       },
       { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
-    revealElements.forEach(function (el) { observer.observe(el); });
+    reveals.forEach((el) => revealObserver.observe(el));
   } else {
-    revealElements.forEach(function (el) { el.classList.add('is-visible'); });
+    reveals.forEach((el) => el.classList.add('is-visible'));
   }
 
-  // Frota: imagem sempre visível (inclusive em file:// e cache), entrada cinemática com fallback garantido
-  (function initFleetReveal() {
-    const stage = document.getElementById('fleet-parallax-stage');
-    const section = document.getElementById('frota');
-    const img = document.getElementById('fleet-parallax-img');
-    if (!stage) return;
+  /* 5. Skeleton shimmer resolution for lazy images */
+  document.querySelectorAll('.img-skel').forEach((wrapper) => {
+    const img = wrapper.querySelector('img');
+    if (!img) {
+      wrapper.classList.add('is-loaded');
+      return;
+    }
+    const markLoaded = () => wrapper.classList.add('is-loaded');
+    if (img.complete && img.naturalWidth > 0) {
+      markLoaded();
+    } else {
+      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('error', markLoaded, { once: true });
+    }
+  });
 
-    function markLoaded() { stage.classList.add('is-loaded'); }
-    function revealFleet() { stage.classList.add('is-visible'); }
+  /* 6. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */
+  const openWhatsApp = (phone, text) => {
+    const encoded = encodeURIComponent(text);
+    const mobileUrl = `whatsapp://send?phone=${phone}&text=${encoded}`;
+    const desktopUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
 
-    if (img) {
-      if (img.complete && img.naturalWidth > 0) {
-        markLoaded();
+    if (isMobileUA) {
+      if (typeof window.__mobilitaNavigate === 'function') {
+        window.__mobilitaNavigate(mobileUrl);
       } else {
-        img.addEventListener('load', markLoaded, { once: true });
-        img.addEventListener('error', markLoaded, { once: true });
+        window.location.href = mobileUrl;
       }
+      return mobileUrl;
     }
+    window.open(desktopUrl, '_blank', 'noopener,noreferrer');
+    return desktopUrl;
+  };
 
-    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-      revealFleet();
-      return;
-    }
-
-    const target = section || stage;
-    const fleetIO = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            fleetIO.disconnect();
-            if (img && !(img.complete && img.naturalWidth > 0)) {
-              img.loading = 'eager';
-              let done = false;
-              function go() { if (!done) { done = true; revealFleet(); } }
-              img.addEventListener('load', go, { once: true });
-              img.addEventListener('error', go, { once: true });
-              window.setTimeout(go, 600);
-            } else {
-              revealFleet();
-            }
-          }
-        });
-      },
-      { threshold: 0.01, rootMargin: '120px 0px 120px 0px' }
-    );
-    fleetIO.observe(target);
-
-    // Fallback de segurança: garante estado final mesmo se IO não disparar (ex. file:// ou janela já posicionada)
-    window.setTimeout(revealFleet, 1800);
-  })();
-
-  // Como funciona: coreografia de entrada na viewport (cards stagger + círculos pop + linha desenhando)
-  (function initStepsAnimation() {
-    const wrap = document.querySelector('.steps-wrap');
-    if (!wrap) return;
-    const cards = Array.prototype.slice.call(wrap.querySelectorAll('.step-card'));
-
-    function activate() {
-      wrap.classList.add('is-animated');
-      cards.forEach(function (c) { c.classList.add('is-visible'); });
-    }
-
-    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-      activate();
-      return;
-    }
-
-    const stepsIO = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            stepsIO.disconnect();
-            activate();
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -30px 0px' }
-    );
-    stepsIO.observe(wrap);
-  })();
-
-  // Skeleton: imagens lazy ainda não carregadas ganham shimmer e entram com fade (sem layout shift: width/height + aspect-ratio)
-  (function initSkeleton() {
-    document.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
-      if (img.getAttribute('aria-hidden') === 'true') return;
-      if (img.closest('.media, .fleet-stage')) return;
-      if (img.complete && img.naturalWidth > 0) return;
-      const pic = img.closest('picture');
-      img.setAttribute('data-skel', '');
-      img.classList.add('is-loading');
-      if (pic) pic.classList.add('is-skel');
-      function done() {
-        img.classList.remove('is-loading');
-        if (pic) window.setTimeout(function () { pic.classList.remove('is-skel'); }, 700);
-      }
-      img.addEventListener('load', done, { once: true });
-      img.addEventListener('error', done, { once: true });
-    });
-  })();
-
-  // Títulos de seção: máscara por palavra (só com movimento permitido)
-  if (!prefersReducedMotion) {
-    document.querySelectorAll('.reveal .section-title').forEach(function (h) {
-      const words = h.textContent.trim().split(/\s+/);
-      h.textContent = '';
-      words.forEach(function (w, i) {
-        const outer = document.createElement('span');
-        outer.className = 'hw';
-        outer.style.setProperty('--wi', String(i));
-        const inner = document.createElement('span');
-        inner.textContent = w;
-        outer.appendChild(inner);
-        h.appendChild(outer);
-        if (i < words.length - 1) h.appendChild(document.createTextNode(' '));
-      });
-    });
-  }
-
-  // Desktop: barra de progresso + scrollspy no header, cortina do hero, parallax dentro das molduras
-  const desktopMQ = window.matchMedia('(min-width: 1024px)');
-  (function initDesktopFx() {
-    const bar = header && header.querySelector('.scroll-progress');
-    const links = Array.prototype.slice.call(document.querySelectorAll('.nav-list a[href^="#"]'));
-    const targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
-    const hero = document.querySelector('.hero');
-    const heroContent = hero && hero.querySelector('.hero-content');
-    const heroMedia = hero && hero.querySelector('.hero-media');
-    const frames = Array.prototype.slice.call(document.querySelectorAll('.media > picture > img'));
-    let ticking = false;
-
-    function run() {
-      ticking = false;
-      const y = window.scrollY;
-      const vh = window.innerHeight || 800;
-
-      if (bar) {
-        const max = document.documentElement.scrollHeight - vh;
-        bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0).toFixed(4) + ')';
-      }
-
-      let cur = -1;
-      targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top <= vh * 0.4) cur = i; });
-      links.forEach(function (a, i) {
-        a.classList.toggle('is-active', i === cur);
-        if (i === cur) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
-      });
-
-      if (!desktopMQ.matches || prefersReducedMotion) return;
-
-      if (hero && heroContent && heroMedia) {
-        const p = Math.min(1, Math.max(0, y / vh));
-        heroContent.style.transform = 'translate3d(0,' + (-p * 64).toFixed(1) + 'px,0)';
-        heroContent.style.opacity = String(Math.max(0, 1 - p * 1.3).toFixed(3));
-        heroMedia.style.transform = 'scale(' + (1 + p * 0.07).toFixed(4) + ')';
-        hero.classList.toggle('is-away', y > vh * 1.05);
-      }
-
-      frames.forEach(function (img) {
-        const frame = img.parentElement.parentElement;
-        const r = frame.getBoundingClientRect();
-        if (!r.width || r.bottom < -100 || r.top > vh + 100) return;
-        const p = (r.top + r.height / 2 - vh / 2) / vh;
-        img.style.transform = 'translate3d(0,' + (p * -r.height * 0.07).toFixed(1) + 'px,0) scale(1.12)';
-      });
-    }
-
-    function onScroll() { if (!ticking) { ticking = true; window.requestAnimationFrame(run); } }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    run();
-  })();
-
-  // Interações finas (mouse): botões magnéticos e brilho que segue o ponteiro nos cards de serviço
-  if (finePointer && !prefersReducedMotion) {
-    document.querySelectorAll('.btn--lg, .header-whatsapp').forEach(function (btn) {
-      btn.addEventListener('pointermove', function (e) {
-        if (!desktopMQ.matches) return;
-        const r = btn.getBoundingClientRect();
-        const x = (e.clientX - r.left - r.width / 2) / r.width;
-        const y = (e.clientY - r.top - r.height / 2) / r.height;
-        btn.style.translate = (x * 12).toFixed(1) + 'px ' + (y * 8).toFixed(1) + 'px';
-      });
-      btn.addEventListener('pointerleave', function () { btn.style.translate = ''; });
-    });
-    document.querySelectorAll('.service-card').forEach(function (card) {
-      const spot = document.createElement('span');
-      spot.className = 'spot';
-      spot.setAttribute('aria-hidden', 'true');
-      card.appendChild(spot);
-      card.addEventListener('pointermove', function (e) {
-        const r = card.getBoundingClientRect();
-        spot.style.transform = 'translate3d(' + (e.clientX - r.left).toFixed(0) + 'px,' + (e.clientY - r.top).toFixed(0) + 'px,0)';
-      });
-    });
-  }
-
-  // Parallax (fundos fotográficos, folhas, frota entrando de lado)
-  const parallaxEls = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
-  const fleetStage = document.getElementById('fleet-parallax-stage');
-  if (!prefersReducedMotion) {
-    let ticking = false;
-    const vh = function () { return window.innerHeight || 800; };
-
-    function update() {
-      ticking = false;
-      const h = vh();
-
-      parallaxEls.forEach(function (el) {
-        const holder = el.closest('section, footer, .hero') || el.parentElement;
-        const rect = holder.getBoundingClientRect();
-        if (rect.bottom < -200 || rect.top > h + 200) return;
-        const speed = parseFloat(el.dataset.parallax) || 0;
-        const center = rect.top + rect.height / 2 - h / 2;
-        el.style.transform = 'translate3d(0,' + (center * speed * -1).toFixed(1) + 'px,0)';
-      });
-
-      if (fleetStage) {
-        const rect = fleetStage.getBoundingClientRect();
-        if (rect.bottom > 0 && rect.top < h) {
-          const p = Math.max(0, Math.min(1, (rect.top - h * 0.15) / (h * 0.75)));
-          fleetStage.style.setProperty('--fx', (p * 4).toFixed(2) + '%');
-        }
-      }
-    }
-
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
-    }, { passive: true });
-    window.addEventListener('resize', update);
-    update();
-  }
-
-  // Light BR phone mask (permite dígitos livres / internacionais)
-  function formatBrPhone(raw) {
-    const trimmed = String(raw || '');
-    if (trimmed.trim().startsWith('+')) {
-      return trimmed.replace(/[^\d+\s()-]/g, '');
-    }
-
-    const digits = trimmed.replace(/\D/g, '');
-    if (!digits) return '';
-    if (digits.length > 11) {
-      return digits;
-    }
-    if (digits.length <= 2) {
-      return '(' + digits;
-    }
-    if (digits.length <= 6) {
-      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2);
-    }
-    if (digits.length <= 10) {
-      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 6) + '-' + digits.slice(6);
-    }
-    return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 7) + '-' + digits.slice(7);
-  }
-
-  const phoneInput = document.getElementById('telefone');
-  if (phoneInput) {
-    phoneInput.addEventListener('input', function () {
-      const formatted = formatBrPhone(phoneInput.value);
-      if (phoneInput.value !== formatted) {
-        phoneInput.value = formatted;
-      }
-    });
-  }
-
-  // Local today string YYYY-MM-DD and min date on #data
-  function getLocalTodayIso() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return year + '-' + month + '-' + day;
-  }
-
-  const dateInput = document.getElementById('data');
-  const todayIso = getLocalTodayIso();
-  if (dateInput) {
-    dateInput.min = todayIso;
-  }
-
-  const MONTHS_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-  const WEEKDAYS_PT = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
-  function pad2(n) { return String(n).padStart(2, '0'); }
-  function toIso(y, m, d) { return y + '-' + pad2(m + 1) + '-' + pad2(d); }
-  function fromIso(iso) { const p = iso.split('-'); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
-
-  // Seletor de data custom (popover acessível, teclado e aria)
-  (function initCalendar() {
-    const btn = document.getElementById('data-btn');
-    const pop = document.getElementById('cal');
-    const grid = document.getElementById('cal-grid');
-    const title = document.getElementById('cal-title');
-    const prev = document.getElementById('cal-prev');
-    const next = document.getElementById('cal-next');
-    const closeBtn = document.getElementById('cal-close');
-    const valueEl = document.getElementById('data-value');
-    if (!btn || !pop || !grid || !dateInput) return;
-
-    const today = fromIso(todayIso);
-    let viewY = today.getFullYear();
-    let viewM = today.getMonth();
-    let focusIso = todayIso;
-
-    function isOpen() { return !pop.hidden; }
-
-    function render() {
-      title.textContent = MONTHS_PT[viewM] + ' de ' + viewY;
-      prev.disabled = viewY === today.getFullYear() && viewM === today.getMonth();
-      grid.textContent = '';
-      const first = new Date(viewY, viewM, 1).getDay();
-      const days = new Date(viewY, viewM + 1, 0).getDate();
-      for (let i = 0; i < first; i++) {
-        const pad = document.createElement('span');
-        pad.className = 'cal-pad';
-        grid.appendChild(pad);
-      }
-      for (let d = 1; d <= days; d++) {
-        const iso = toIso(viewY, viewM, d);
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'cal-day' + (iso === todayIso ? ' is-today' : '');
-        b.textContent = String(d);
-        b.dataset.iso = iso;
-        b.setAttribute('aria-label', d + ' de ' + MONTHS_PT[viewM] + ' de ' + viewY + ', ' + WEEKDAYS_PT[new Date(viewY, viewM, d).getDay()]);
-        b.setAttribute('aria-pressed', String(dateInput.value === iso));
-        b.tabIndex = iso === focusIso ? 0 : -1;
-        if (iso < todayIso) b.disabled = true;
-        grid.appendChild(b);
-      }
-    }
-
-    function focusDay() {
-      const el = grid.querySelector('[data-iso="' + focusIso + '"]');
-      if (el && !el.disabled) el.focus();
-    }
-
-    function moveFocus(deltaDays) {
-      const d = fromIso(focusIso);
-      d.setDate(d.getDate() + deltaDays);
-      let iso = toIso(d.getFullYear(), d.getMonth(), d.getDate());
-      if (iso < todayIso) iso = todayIso;
-      focusIso = iso;
-      const t = fromIso(iso);
-      viewY = t.getFullYear();
-      viewM = t.getMonth();
-      render();
-      focusDay();
-    }
-
-    function open() {
-      const base = dateInput.value ? fromIso(dateInput.value) : today;
-      viewY = base.getFullYear();
-      viewM = base.getMonth();
-      focusIso = dateInput.value || todayIso;
-      render();
-      pop.hidden = false;
-      btn.setAttribute('aria-expanded', 'true');
-      focusDay();
-    }
-
-    function close(returnFocus) {
-      if (!isOpen()) return;
-      pop.hidden = true;
-      btn.setAttribute('aria-expanded', 'false');
-      if (returnFocus) btn.focus();
-    }
-
-    function choose(iso) {
-      dateInput.value = iso;
-      const d = fromIso(iso);
-      valueEl.textContent = pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear() + ' · ' + WEEKDAYS_PT[d.getDay()];
-      valueEl.classList.remove('is-empty');
-      const field = btn.closest('.field');
-      if (field) field.classList.remove('is-invalid');
-      close(true);
-    }
-
-    btn.addEventListener('click', function () { if (isOpen()) close(false); else open(); });
-    prev.addEventListener('click', function () {
-      viewM -= 1;
-      if (viewM < 0) { viewM = 11; viewY -= 1; }
-      focusIso = toIso(viewY, viewM, 1) < todayIso ? todayIso : toIso(viewY, viewM, 1);
-      render();
-    });
-    next.addEventListener('click', function () {
-      viewM += 1;
-      if (viewM > 11) { viewM = 0; viewY += 1; }
-      focusIso = toIso(viewY, viewM, 1);
-      render();
-    });
-    if (closeBtn) closeBtn.addEventListener('click', function () { close(true); });
-    grid.addEventListener('click', function (e) {
-      const b = e.target.closest('.cal-day');
-      if (b && !b.disabled) choose(b.dataset.iso);
-    });
-    pop.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { e.stopPropagation(); close(true); return; }
-      if (!e.target.classList || !e.target.classList.contains('cal-day')) return;
-      const map = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
-      if (map[e.key] !== undefined) { e.preventDefault(); focusIso = e.target.dataset.iso; moveFocus(map[e.key]); }
-      else if (e.key === 'PageDown' || e.key === 'PageUp') {
-        e.preventDefault();
-        const d = fromIso(e.target.dataset.iso);
-        d.setMonth(d.getMonth() + (e.key === 'PageDown' ? 1 : -1));
-        focusIso = toIso(d.getFullYear(), d.getMonth(), d.getDate());
-        moveFocus(0);
-      }
-    });
-    document.addEventListener('click', function (e) {
-      if (isOpen() && !e.target.closest('#data-field')) close(false);
-    });
-  })();
-
-  // Horário: opções de 15 em 15 minutos agrupadas por período
-  (function initTime() {
-    const sel = document.getElementById('hora');
-    if (!sel) return;
-    const groups = [['Madrugada', 0, 6], ['Manhã', 6, 12], ['Tarde', 12, 18], ['Noite', 18, 24]];
-    groups.forEach(function (g) {
-      const og = document.createElement('optgroup');
-      og.label = g[0];
-      for (let h = g[1]; h < g[2]; h++) {
-        for (let m = 0; m < 60; m += 15) {
-          const v = pad2(h) + ':' + pad2(m);
-          const o = document.createElement('option');
-          o.value = v;
-          o.textContent = v;
-          og.appendChild(o);
-        }
-      }
-      sel.appendChild(og);
-    });
-    sel.addEventListener('change', function () {
-      const field = sel.closest('.field');
-      if (field) field.classList.remove('is-invalid');
-    });
-  })();
-
-  // Passageiros: stepper − / +
-  (function initStepper() {
-    const input = document.getElementById('passageiros');
-    const minus = document.getElementById('pax-minus');
-    const plus = document.getElementById('pax-plus');
-    if (!input || !minus || !plus) return;
-    const MIN = 1;
-    const MAX = 60;
-    function clamp() {
-      let n = parseInt(input.value, 10);
-      if (isNaN(n)) n = MIN;
-      n = Math.max(MIN, Math.min(MAX, n));
-      input.value = String(n);
-      minus.disabled = n <= MIN;
-      plus.disabled = n >= MAX;
-    }
-    minus.addEventListener('click', function () { input.value = String((parseInt(input.value, 10) || MIN) - 1); clamp(); });
-    plus.addEventListener('click', function () { input.value = String((parseInt(input.value, 10) || MIN) + 1); clamp(); });
-    input.addEventListener('change', clamp);
-    input.addEventListener('input', function () { const n = parseInt(input.value, 10); if (!isNaN(n)) { minus.disabled = n <= MIN; plus.disabled = n >= MAX; } });
-    clamp();
-  })();
-
-  // Botão flutuante: só após rolar e escondido sobre contato/rodapé
-  (function initFab() {
-    const fab = document.querySelector('.floating-whatsapp');
-    if (!fab) return;
-    let pastHero = window.scrollY > 520;
-    let overEnd = false;
-    function apply() { fab.classList.toggle('is-hidden', !pastHero || overEnd); }
-    window.addEventListener('scroll', function () { pastHero = window.scrollY > 520; apply(); }, { passive: true });
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { en.target.__vis = en.isIntersecting; });
-        overEnd = Array.prototype.some.call(document.querySelectorAll('#contato, .site-footer'), function (el) { return el.__vis; });
-        apply();
-      }, { threshold: 0.05 });
-      document.querySelectorAll('#contato, .site-footer').forEach(function (el) { io.observe(el); });
-    }
-    apply();
-  })();
-
-  // Format YYYY-MM-DD + HH:MM for readable Portuguese message
-  function formatDateAndTime(dateVal, timeVal) {
-    const parts = String(dateVal || '').split('-');
-    const formattedDate = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : dateVal;
-    return timeVal ? formattedDate + ' às ' + timeVal : formattedDate;
-  }
-
-  // Build WhatsApp message text from form fields
-  function buildQuoteText(data) {
-    const lines = [
-      'Olá, Mobilità! Gostaria de solicitar um orçamento:',
-      '',
-      'Nome: ' + data.nome,
-      'Telefone: ' + data.telefone,
-      'Origem: ' + data.origem,
-      'Destino: ' + data.destino,
-      'Data e horário: ' + formatDateAndTime(data.data, data.hora),
-      'Nº de passageiros: ' + data.passageiros,
-    ];
-
-    if (data.observacao) {
-      lines.push('Observação: ' + data.observacao);
-    }
-
-    return lines.join('\n');
-  }
-
-  // Quote form handling
-  const quoteForm = document.getElementById('quote-form');
-  const formError = document.getElementById('form-error');
-  const formResult = document.getElementById('form-result');
-  const generatedLink = document.getElementById('whatsapp-generated-link');
-
-  if (quoteForm) {
-    quoteForm.addEventListener('input', function (e) {
-      const f = e.target.closest && e.target.closest('.field');
-      if (f) f.classList.remove('is-invalid');
-    });
-    quoteForm.addEventListener('submit', function (event) {
+  document.querySelectorAll('a[data-wa-phone]').forEach((link) => {
+    link.addEventListener('click', (event) => {
       event.preventDefault();
+      const phone = link.getAttribute('data-wa-phone') || PRIMARY_PHONE;
+      const text = link.getAttribute('data-wa-text') || 'Olá, gostaria de informações sobre transporte executivo.';
+      openWhatsApp(phone, text);
+    });
+  });
 
-      const data = {
-        nome: quoteForm.nome.value.trim(),
-        telefone: quoteForm.telefone.value.trim(),
-        origem: quoteForm.origem.value.trim(),
-        destino: quoteForm.destino.value.trim(),
-        data: quoteForm.data.value.trim(),
-        hora: quoteForm.hora.value.trim(),
-        passageiros: quoteForm.passageiros.value.trim(),
-        observacao: quoteForm.observacao.value.trim(),
-      };
-
-      const requiredFields = [
-        { key: 'nome', label: 'Seu nome' },
-        { key: 'telefone', label: 'Seu telefone / WhatsApp' },
-        { key: 'origem', label: 'Origem' },
-        { key: 'destino', label: 'Destino' },
-        { key: 'data', label: 'Data da viagem' },
-        { key: 'hora', label: 'Horário' },
-        { key: 'passageiros', label: 'Nº de passageiros' },
-      ];
-
-      const missing = requiredFields.find(function (field) {
-        return !data[field.key];
-      });
-
-      if (missing) {
-        if (formError) {
-          formError.textContent = 'Por favor, preencha o campo "' + missing.label + '" para continuar.';
-          formError.hidden = false;
-        }
-        if (formResult) formResult.hidden = true;
-        quoteForm.querySelectorAll('.field.is-invalid').forEach(function (f) { f.classList.remove('is-invalid'); });
-        const target = missing.key === 'data' ? document.getElementById('data-btn') : quoteForm[missing.key];
-        if (target.closest('.field')) target.closest('.field').classList.add('is-invalid');
-        target.focus();
-        return;
+  /* 7. Light BR phone mask */
+  const phoneInput = document.getElementById('telefone');
+  if (phoneInput instanceof HTMLInputElement) {
+    phoneInput.addEventListener('input', () => {
+      const digits = phoneInput.value.replace(/\D/g, '');
+      if (digits.length === 11) {
+        phoneInput.value = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+      } else if (digits.length === 10) {
+        phoneInput.value = `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
       }
-
-      if (data.data < getLocalTodayIso()) {
-        if (formError) {
-          formError.textContent = 'Por favor, escolha uma data igual ou posterior a hoje.';
-          formError.hidden = false;
-        }
-        if (formResult) formResult.hidden = true;
-        document.getElementById('data-btn').focus();
-        return;
-      }
-
-      if (formError) {
-        formError.textContent = '';
-        formError.hidden = true;
-      }
-
-      const text = buildQuoteText(data);
-      const waMeUrl = buildWaMeUrl(WHATSAPP_NUMBER, text);
-      quoteForm.dataset.lastWhatsappUrl = waMeUrl;
-
-      if (generatedLink) {
-        generatedLink.href = waMeUrl;
-        generatedLink.dataset.waPhone = WHATSAPP_NUMBER;
-        generatedLink.dataset.waText = text;
-      }
-      if (formResult) {
-        formResult.hidden = false;
-      }
-
-      openWhatsApp(WHATSAPP_NUMBER, text);
     });
   }
 
-  // Footer year
-  const yearEl = document.getElementById('current-year');
-  if (yearEl) {
-    yearEl.textContent = String(new Date().getFullYear());
+  /* 8. Accessible contact form validation + WhatsApp handoff */
+  const form = document.getElementById('contact-form');
+  const statusEl = document.getElementById('form-status');
+
+  if (form instanceof HTMLFormElement && statusEl) {
+    const fields = {
+      nome: {
+        el: document.getElementById('nome'),
+        err: document.getElementById('nome-erro'),
+        validate: (v) => (v.trim().length >= 2 ? '' : 'Informe seu nome para podermos responder.'),
+      },
+      telefone: {
+        el: document.getElementById('telefone'),
+        err: document.getElementById('telefone-erro'),
+        validate: (v) => (v.replace(/\D/g, '').length >= 8 ? '' : 'Informe um telefone com DDD (ex.: (19) 99999-9999).'),
+      },
+      email: {
+        el: document.getElementById('email'),
+        err: document.getElementById('email-erro'),
+        validate: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Informe um e-mail válido (ex.: nome@empresa.com.br).'),
+      },
+      mensagem: {
+        el: document.getElementById('mensagem'),
+        err: document.getElementById('mensagem-erro'),
+        validate: (v) => (v.trim().length >= 5 ? '' : 'Escreva sua mensagem ou detalhes da viagem.'),
+      },
+    };
+
+    const setFieldError = (field, message) => {
+      if (!field.el || !field.err) return;
+      if (message) {
+        field.el.setAttribute('aria-invalid', 'true');
+        field.err.textContent = message;
+        field.err.hidden = false;
+      } else {
+        field.el.removeAttribute('aria-invalid');
+        field.err.textContent = '';
+        field.err.hidden = true;
+      }
+    };
+
+    Object.values(fields).forEach((field) => {
+      field.el?.addEventListener('input', () => {
+        if (field.el.getAttribute('aria-invalid') === 'true') {
+          setFieldError(field, field.validate(field.el.value));
+        }
+      });
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      let firstInvalid = null;
+
+      Object.values(fields).forEach((field) => {
+        const msg = field.validate(field.el?.value || '');
+        setFieldError(field, msg);
+        if (msg && !firstInvalid) firstInvalid = field.el;
+      });
+
+      if (firstInvalid) {
+        statusEl.hidden = true;
+        firstInvalid.focus();
+        return;
+      }
+
+      const nome = fields.nome.el.value.trim();
+      const telefone = fields.telefone.el.value.trim();
+      const email = fields.email.el.value.trim();
+      const mensagem = fields.mensagem.el.value.trim();
+
+      const composed = [
+        'Olá, Mobilità Transportes!',
+        `Nome: ${nome}`,
+        `Telefone: ${telefone}`,
+        `E-mail: ${email}`,
+        `Mensagem: ${mensagem}`,
+      ].join('\n');
+
+      openWhatsApp(PRIMARY_PHONE, composed);
+
+      const fallbackHref = `https://wa.me/${PRIMARY_PHONE}?text=${encodeURIComponent(composed)}`;
+      statusEl.innerHTML = `Mensagem preparada para envio. Caso o WhatsApp não abra automaticamente, <a id="whatsapp-fallback-link" href="${fallbackHref}" target="_blank" rel="noopener noreferrer">clique aqui para abrir no WhatsApp</a>.`;
+      statusEl.hidden = false;
+    });
   }
 })();
