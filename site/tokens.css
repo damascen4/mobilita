@@ -1,0 +1,65 @@
+/* Mobilità — design tokens (fonte: docs/brand-manual.md). Ainda não consumido pelo site. */
+:root {
+  /* Cor — marca */
+  --mb-green: #508f3b;          /* primária (original) */
+  --mb-green-deep: #3c6b2c;     /* texto/botão pequeno sobre branco: AA 6.30 */
+  --mb-green-light: #55b944;    /* secundária / acento (sem texto branco) */
+  --mb-green-success: #3dc372;  /* feedback positivo */
+  --mb-green-tint: #eef5ea;     /* fundo suave derivado */
+  /* Cor — neutros */
+  --mb-ink: #2d2e33;            /* grafite: títulos, fundo escuro */
+  --mb-text: #6c6d74;           /* texto corrente (AA 5.15 s/ branco) */
+  --mb-text-soft: #b4b5ba;      /* só decorativo / meta sobre escuro */
+  --mb-line: #e5e5e7;
+  --mb-surface: #f7f7f7;
+  --mb-white: #ffffff;
+  --mb-danger: #e44e56;
+  --mb-warn: #ff9e45;
+  /* Overlays */
+  --mb-overlay-green: rgba(80, 143, 59, .85);
+  --mb-overlay-green-strong: rgba(80, 143, 59, .88);
+  --mb-overlay-dark: rgba(0, 0, 0, .31);
+  --mb-overlay-white: rgba(255, 255, 255, .96);
+
+  /* Tipografia */
+  --mb-font-display: 'KoHo', system-ui, sans-serif;
+  --mb-font-body: 'Open Sans', system-ui, sans-serif;
+  --mb-fw-regular: 400; --mb-fw-medium: 500; --mb-fw-semibold: 600; --mb-fw-bold: 700;
+  /* Escala modular (mobile; desktop via clamp) — razão ~1.25 */
+  --mb-fs-body: 1.125rem;                                   /* 18px */
+  --mb-fs-lead: clamp(1.25rem, 1.15rem + .5vw, 1.5rem);     /* 20–24 */
+  --mb-fs-h4: 1.25rem;                                      /* 20 */
+  --mb-fs-h3: clamp(1.5rem, 1.3rem + .9vw, 1.75rem);        /* 24–28 */
+  --mb-fs-h2: clamp(2rem, 1.6rem + 1.8vw, 2.75rem);         /* 32–44 */
+  --mb-fs-h1: clamp(2.5rem, 1.9rem + 2.8vw, 4rem);          /* 40–64 */
+  --mb-fs-display: clamp(3rem, 2rem + 4.5vw, 6rem);         /* 48–96 */
+  --mb-fs-label: .8125rem;                                  /* 13 (original: 11) */
+  --mb-lh-tight: 1.1; --mb-lh-head: 1.2; --mb-lh-body: 1.625; --mb-lh-lead: 1.5;
+  --mb-ls-label: .125em;   /* ≈2px em 16px: botões, nav, h4, meta */
+  --mb-measure: 64ch;
+
+  /* Espaço (4/8) */
+  --mb-s-1: .25rem; --mb-s-2: .5rem; --mb-s-3: .75rem; --mb-s-4: 1rem; --mb-s-5: 1.5rem;
+  --mb-s-6: 2rem; --mb-s-7: 3rem; --mb-s-8: 4rem; --mb-s-9: 6rem; --mb-s-10: 8.75rem;
+  --mb-section-y: clamp(4.375rem, 3rem + 6vw, 8.75rem);     /* 70 → 140 (original) */
+  --mb-container: 1200px;
+  --mb-gutter: clamp(1.25rem, 1rem + 1.2vw, 2.5rem);        /* 20 → 40 */
+
+  /* Raio e sombra */
+  --mb-r-0: 0; --mb-r-sm: 2px; --mb-r-md: 5px; --mb-r-pill: 500px; --mb-r-circle: 50%;
+  --mb-shadow-1: 0 1px 4px rgba(0, 0, 0, .14);
+  --mb-shadow-2: 0 5px 15px rgba(0, 0, 0, .08);
+  --mb-shadow-3: 0 28px 50px rgba(0, 0, 0, .16);
+
+  /* Motion */
+  --mb-ease-out: cubic-bezier(.23, 1, .32, 1);
+  --mb-ease-in-out: cubic-bezier(.77, 0, .175, 1);
+  --mb-ease-cine: cubic-bezier(.16, 1, .3, 1);
+  --mb-dur-press: 120ms; --mb-dur-hover: 180ms; --mb-dur-ui: 250ms;
+  --mb-dur-reveal: 700ms; --mb-dur-cine: 1200ms;
+  --mb-stagger: 70ms;
+  --mb-tap-min: 48px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --mb-dur-press: 0ms; --mb-dur-hover: 0ms; --mb-dur-ui: 0ms; --mb-dur-reveal: 0ms; --mb-dur-cine: 0ms; --mb-stagger: 0ms; }
+}
