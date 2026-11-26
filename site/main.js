@@ -170,13 +170,26 @@
     const siblings = Array.prototype.filter.call(el.parentElement.children, function (c) { return c.classList.contains('reveal'); });
     el.style.setProperty('--d', Math.min(siblings.indexOf(el), 6) * 90 + 'ms');
   });
+  // Só revela a moldura depois que a foto decodificou: máscara/clip-path nunca mostra moldura vazia nem imagem "estourando" depois (anti-flicker)
+  function whenImagesReady(el, cb) {
+    const pending = Array.prototype.filter.call(el.querySelectorAll('.media img, .fleet-stage img'), function (img) {
+      return !(img.complete && img.naturalWidth > 0) && img.getClientRects().length > 0;
+    });
+    if (!pending.length || el.classList.contains('is-visible')) { cb(); return; }
+    let fired = false;
+    function go() { if (!fired) { fired = true; cb(); } }
+    pending.forEach(function (img) { img.loading = 'eager'; });
+    Promise.all(pending.map(function (img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); })).then(go);
+    window.setTimeout(go, 1800);
+  }
   if (!prefersReducedMotion && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+            const target = entry.target;
+            observer.unobserve(target);
+            whenImagesReady(target, function () { target.classList.add('is-visible'); });
           }
         });
       },
@@ -191,6 +204,7 @@
   (function initSkeleton() {
     document.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
       if (img.getAttribute('aria-hidden') === 'true') return;
+      if (img.closest('.media, .fleet-stage')) return;
       if (img.complete && img.naturalWidth > 0) return;
       const pic = img.closest('picture');
       img.setAttribute('data-skel', '');
@@ -326,7 +340,7 @@
         const rect = fleetStage.getBoundingClientRect();
         if (rect.bottom > 0 && rect.top < h) {
           const p = Math.max(0, Math.min(1, (rect.top - h * 0.15) / (h * 0.75)));
-          fleetStage.style.setProperty('--fx', (p * 14).toFixed(2) + '%');
+          fleetStage.style.setProperty('--fx', (p * 4).toFixed(2) + '%');
         }
       }
 

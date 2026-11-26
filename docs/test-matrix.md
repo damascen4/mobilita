@@ -42,3 +42,5 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | Form em bloco verde, card branco, cabeçalho (H3, faixa escura, divisor) distinto dos campos | e2e | "formulário: bloco verde com card branco…" |
 | Desktop: hero sticky tela cheia, fatos, marquee, bento 12 col; ausentes no mobile | e2e | "desktop: hero em tela cheia…" |
 | Diferenciais desktop 2 colunas (último largura total) | e2e | "diferenciais: 7 itens…" |
+
+| Fotos ≤6, frota sem foto de fundo, sem flicker (v7) | e2e | tests/e2e/site.spec.ts |

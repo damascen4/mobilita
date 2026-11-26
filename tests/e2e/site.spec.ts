@@ -338,16 +338,17 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'tests/screenshots/v6-375.png', fullPage: true });
+    await page.screenshot({ path: 'tests/screenshots/v7-375.png', fullPage: true });
 
     // Desktop 1440
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'tests/screenshots/v6-1440.png', fullPage: true });
+    await page.screenshot({ path: 'tests/screenshots/v7-1440.png', fullPage: true });
     await page.addStyleTag({ content: '.site-header,.skip-link,.floating-whatsapp,.mobile-bottom-bar{visibility:hidden!important}' });
-    await page.locator('#orcamento').screenshot({ path: 'tests/screenshots/v6-1440-form.png' });
+    await page.locator('#orcamento').screenshot({ path: 'tests/screenshots/v7-1440-form.png' });
+    await page.locator('#frota').screenshot({ path: 'tests/screenshots/v7-1440-frota.png' });
   });
 
   test('reduced-motion desliga animações: conteúdo visível, sem loader e sem scroll horizontal', async ({ page }) => {
@@ -504,20 +505,62 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     }
   });
 
-  test('skeleton: imagem lazy ganha shimmer enquanto carrega e a classe some após o load', async ({ page }) => {
+  test('moldura de foto só revela depois da imagem decodificar (sem moldura vazia nem pop-in)', async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as any).__bad = [];
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.reveal').forEach((el) => {
+          new MutationObserver(() => {
+            if (!el.classList.contains('is-visible')) return;
+            el.querySelectorAll('.media img, .fleet-stage img').forEach((img) => {
+              const i = img as HTMLImageElement;
+              if (i.getClientRects().length && !(i.complete && i.naturalWidth > 0)) (window as any).__bad.push(i.getAttribute('src'));
+            });
+          }).observe(el, { attributes: true, attributeFilter: ['class'] });
+        });
+      });
+    });
     await page.route('**/assets/stock/**', async (route) => {
-      await new Promise((r) => setTimeout(r, 700));
+      await new Promise((r) => setTimeout(r, 600));
       await route.continue();
     });
     await page.goto('/');
-    const img = page.locator('#quem-somos .about-image');
-    await expect(img).toHaveClass(/is-loading/);
-    await expect(page.locator('#quem-somos .media--about picture')).toHaveClass(/is-skel/);
-    await img.scrollIntoViewIfNeeded();
-    await expect(img).not.toHaveClass(/is-loading/, { timeout: 10000 });
-    await expect(page.locator('#quem-somos .media--about picture')).not.toHaveClass(/is-skel/, { timeout: 5000 });
-    const loaded = await img.evaluate((el) => (el as HTMLImageElement).naturalWidth);
-    expect(loaded).toBeGreaterThan(0);
+    await page.locator('#quem-somos .about-figure').scrollIntoViewIfNeeded();
+    await expect(page.locator('#quem-somos .about-figure')).toHaveClass(/is-visible/, { timeout: 10000 });
+    await expect(page.locator('#quem-somos .about-image')).not.toHaveClass(/is-loading/);
+    expect(await page.evaluate(() => (window as any).__bad)).toEqual([]);
+    expect(await page.locator('#quem-somos .about-image').evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  });
+
+  test('frota: fundo limpo, sem foto de fundo; carros entram sem piscar (opacidade nunca regride)', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name.startsWith('mobile-'), 'entrada cinemática verificada no desktop');
+    await page.goto('/');
+    await expect(page.locator('#frota .bg-photo')).toHaveCount(0);
+    await expect(page.locator('#frota .fleet-photo')).toHaveCount(0);
+    expect(await page.locator('#frota').evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
+    await page.evaluate(() => {
+      const w = window as any;
+      w.__samples = [];
+      const stage = document.getElementById('fleet-parallax-stage') as HTMLElement;
+      const img = document.getElementById('fleet-parallax-img') as HTMLElement;
+      const tick = () => {
+        w.__samples.push({ s: parseFloat(getComputedStyle(stage).opacity), i: parseFloat(getComputedStyle(img).opacity), c: img.classList.contains('is-loading') });
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+    await page.locator('#frota').scrollIntoViewIfNeeded();
+    await page.mouse.wheel(0, 300);
+    await expect(page.locator('#fleet-parallax-stage')).toHaveClass(/is-visible/, { timeout: 10000 });
+    await page.waitForTimeout(2200);
+    const samples: { s: number; i: number; c: boolean }[] = await page.evaluate(() => (window as any).__samples);
+    expect(samples.length).toBeGreaterThan(20);
+    for (let k = 1; k < samples.length; k++) {
+      expect(samples[k].s).toBeGreaterThanOrEqual(samples[k - 1].s - 0.001);
+      expect(samples[k].i).toBeGreaterThanOrEqual(samples[k - 1].i - 0.001);
+    }
+    expect(samples.some((x) => x.c)).toBe(false);
+    expect(samples[samples.length - 1].s).toBe(1);
   });
 
   test('imagens fora da primeira dobra são lazy, com width/height e fotos novas sem repetir entre seções', async ({ page }) => {
@@ -539,7 +582,9 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     expect(info.filter((i) => !i.hasSize).map((i) => i.src)).toEqual([]);
     expect(await page.locator('.hero-bg-img').getAttribute('fetchpriority')).toBe('high');
     const stock = new Set(info.filter((i) => i.src.includes('assets/stock/')).map((i) => i.src));
-    expect(stock.size).toBeGreaterThanOrEqual(8);
+    expect(stock.size).toBe(3);
+    const photos = new Set(info.filter((i) => /assets\/stock\/|showcase|fundo-sessao/.test(i.src)).map((i) => i.src.replace(/-(800|1600|640|1280|480|960)/, '')));
+    expect(photos.size).toBeLessThanOrEqual(6);
     const bySrc = new Map<string, Set<string>>();
     info.filter((i) => i.src.includes('assets/stock/')).forEach((i) => {
       bySrc.set(i.src, (bySrc.get(i.src) || new Set<string>()).add(i.section));
@@ -589,7 +634,7 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     expect(s.headTag).toBe('H3');
     expect(parseFloat(s.headBorder)).toBeGreaterThanOrEqual(3);
     expect(s.headSize).toBeGreaterThanOrEqual(24);
-    await expect(page.locator('#orcamento .bg-photo')).toHaveCount(1);
+    await expect(page.locator('#orcamento .bg-photo')).toHaveCount(0);
   });
 
   test('desktop: hero em tela cheia com fatos, marquee e bento de serviços; mobile sem esses blocos', async ({ page }, testInfo) => {
