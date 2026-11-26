@@ -325,6 +325,206 @@
     dateInput.min = todayIso;
   }
 
+  const MONTHS_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  const WEEKDAYS_PT = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function toIso(y, m, d) { return y + '-' + pad2(m + 1) + '-' + pad2(d); }
+  function fromIso(iso) { const p = iso.split('-'); return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); }
+
+  // Seletor de data custom (popover acessível, teclado e aria)
+  (function initCalendar() {
+    const btn = document.getElementById('data-btn');
+    const pop = document.getElementById('cal');
+    const grid = document.getElementById('cal-grid');
+    const title = document.getElementById('cal-title');
+    const prev = document.getElementById('cal-prev');
+    const next = document.getElementById('cal-next');
+    const closeBtn = document.getElementById('cal-close');
+    const valueEl = document.getElementById('data-value');
+    if (!btn || !pop || !grid || !dateInput) return;
+
+    const today = fromIso(todayIso);
+    let viewY = today.getFullYear();
+    let viewM = today.getMonth();
+    let focusIso = todayIso;
+
+    function isOpen() { return !pop.hidden; }
+
+    function render() {
+      title.textContent = MONTHS_PT[viewM] + ' de ' + viewY;
+      prev.disabled = viewY === today.getFullYear() && viewM === today.getMonth();
+      grid.textContent = '';
+      const first = new Date(viewY, viewM, 1).getDay();
+      const days = new Date(viewY, viewM + 1, 0).getDate();
+      for (let i = 0; i < first; i++) {
+        const pad = document.createElement('span');
+        pad.className = 'cal-pad';
+        grid.appendChild(pad);
+      }
+      for (let d = 1; d <= days; d++) {
+        const iso = toIso(viewY, viewM, d);
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'cal-day' + (iso === todayIso ? ' is-today' : '');
+        b.textContent = String(d);
+        b.dataset.iso = iso;
+        b.setAttribute('aria-label', d + ' de ' + MONTHS_PT[viewM] + ' de ' + viewY + ', ' + WEEKDAYS_PT[new Date(viewY, viewM, d).getDay()]);
+        b.setAttribute('aria-pressed', String(dateInput.value === iso));
+        b.tabIndex = iso === focusIso ? 0 : -1;
+        if (iso < todayIso) b.disabled = true;
+        grid.appendChild(b);
+      }
+    }
+
+    function focusDay() {
+      const el = grid.querySelector('[data-iso="' + focusIso + '"]');
+      if (el && !el.disabled) el.focus();
+    }
+
+    function moveFocus(deltaDays) {
+      const d = fromIso(focusIso);
+      d.setDate(d.getDate() + deltaDays);
+      let iso = toIso(d.getFullYear(), d.getMonth(), d.getDate());
+      if (iso < todayIso) iso = todayIso;
+      focusIso = iso;
+      const t = fromIso(iso);
+      viewY = t.getFullYear();
+      viewM = t.getMonth();
+      render();
+      focusDay();
+    }
+
+    function open() {
+      const base = dateInput.value ? fromIso(dateInput.value) : today;
+      viewY = base.getFullYear();
+      viewM = base.getMonth();
+      focusIso = dateInput.value || todayIso;
+      render();
+      pop.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      focusDay();
+    }
+
+    function close(returnFocus) {
+      if (!isOpen()) return;
+      pop.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      if (returnFocus) btn.focus();
+    }
+
+    function choose(iso) {
+      dateInput.value = iso;
+      const d = fromIso(iso);
+      valueEl.textContent = pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + '/' + d.getFullYear() + ' · ' + WEEKDAYS_PT[d.getDay()];
+      valueEl.classList.remove('is-empty');
+      const field = btn.closest('.field');
+      if (field) field.classList.remove('is-invalid');
+      close(true);
+    }
+
+    btn.addEventListener('click', function () { if (isOpen()) close(false); else open(); });
+    prev.addEventListener('click', function () {
+      viewM -= 1;
+      if (viewM < 0) { viewM = 11; viewY -= 1; }
+      focusIso = toIso(viewY, viewM, 1) < todayIso ? todayIso : toIso(viewY, viewM, 1);
+      render();
+    });
+    next.addEventListener('click', function () {
+      viewM += 1;
+      if (viewM > 11) { viewM = 0; viewY += 1; }
+      focusIso = toIso(viewY, viewM, 1);
+      render();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', function () { close(true); });
+    grid.addEventListener('click', function (e) {
+      const b = e.target.closest('.cal-day');
+      if (b && !b.disabled) choose(b.dataset.iso);
+    });
+    pop.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.stopPropagation(); close(true); return; }
+      if (!e.target.classList || !e.target.classList.contains('cal-day')) return;
+      const map = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+      if (map[e.key] !== undefined) { e.preventDefault(); focusIso = e.target.dataset.iso; moveFocus(map[e.key]); }
+      else if (e.key === 'PageDown' || e.key === 'PageUp') {
+        e.preventDefault();
+        const d = fromIso(e.target.dataset.iso);
+        d.setMonth(d.getMonth() + (e.key === 'PageDown' ? 1 : -1));
+        focusIso = toIso(d.getFullYear(), d.getMonth(), d.getDate());
+        moveFocus(0);
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (isOpen() && !e.target.closest('#data-field')) close(false);
+    });
+  })();
+
+  // Horário: opções de 15 em 15 minutos agrupadas por período
+  (function initTime() {
+    const sel = document.getElementById('hora');
+    if (!sel) return;
+    const groups = [['Madrugada', 0, 6], ['Manhã', 6, 12], ['Tarde', 12, 18], ['Noite', 18, 24]];
+    groups.forEach(function (g) {
+      const og = document.createElement('optgroup');
+      og.label = g[0];
+      for (let h = g[1]; h < g[2]; h++) {
+        for (let m = 0; m < 60; m += 15) {
+          const v = pad2(h) + ':' + pad2(m);
+          const o = document.createElement('option');
+          o.value = v;
+          o.textContent = v;
+          og.appendChild(o);
+        }
+      }
+      sel.appendChild(og);
+    });
+    sel.addEventListener('change', function () {
+      const field = sel.closest('.field');
+      if (field) field.classList.remove('is-invalid');
+    });
+  })();
+
+  // Passageiros: stepper − / +
+  (function initStepper() {
+    const input = document.getElementById('passageiros');
+    const minus = document.getElementById('pax-minus');
+    const plus = document.getElementById('pax-plus');
+    if (!input || !minus || !plus) return;
+    const MIN = 1;
+    const MAX = 60;
+    function clamp() {
+      let n = parseInt(input.value, 10);
+      if (isNaN(n)) n = MIN;
+      n = Math.max(MIN, Math.min(MAX, n));
+      input.value = String(n);
+      minus.disabled = n <= MIN;
+      plus.disabled = n >= MAX;
+    }
+    minus.addEventListener('click', function () { input.value = String((parseInt(input.value, 10) || MIN) - 1); clamp(); });
+    plus.addEventListener('click', function () { input.value = String((parseInt(input.value, 10) || MIN) + 1); clamp(); });
+    input.addEventListener('change', clamp);
+    input.addEventListener('input', function () { const n = parseInt(input.value, 10); if (!isNaN(n)) { minus.disabled = n <= MIN; plus.disabled = n >= MAX; } });
+    clamp();
+  })();
+
+  // Botão flutuante: só após rolar e escondido sobre contato/rodapé
+  (function initFab() {
+    const fab = document.querySelector('.floating-whatsapp');
+    if (!fab) return;
+    let pastHero = window.scrollY > 520;
+    let overEnd = false;
+    function apply() { fab.classList.toggle('is-hidden', !pastHero || overEnd); }
+    window.addEventListener('scroll', function () { pastHero = window.scrollY > 520; apply(); }, { passive: true });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { en.target.__vis = en.isIntersecting; });
+        overEnd = Array.prototype.some.call(document.querySelectorAll('#contato, .site-footer'), function (el) { return el.__vis; });
+        apply();
+      }, { threshold: 0.05 });
+      document.querySelectorAll('#contato, .site-footer').forEach(function (el) { io.observe(el); });
+    }
+    apply();
+  })();
+
   // Format YYYY-MM-DD + HH:MM for readable Portuguese message
   function formatDateAndTime(dateVal, timeVal) {
     const parts = String(dateVal || '').split('-');
@@ -359,6 +559,10 @@
   const generatedLink = document.getElementById('whatsapp-generated-link');
 
   if (quoteForm) {
+    quoteForm.addEventListener('input', function (e) {
+      const f = e.target.closest && e.target.closest('.field');
+      if (f) f.classList.remove('is-invalid');
+    });
     quoteForm.addEventListener('submit', function (event) {
       event.preventDefault();
 
@@ -393,7 +597,10 @@
           formError.hidden = false;
         }
         if (formResult) formResult.hidden = true;
-        quoteForm[missing.key].focus();
+        quoteForm.querySelectorAll('.field.is-invalid').forEach(function (f) { f.classList.remove('is-invalid'); });
+        const target = missing.key === 'data' ? document.getElementById('data-btn') : quoteForm[missing.key];
+        if (target.closest('.field')) target.closest('.field').classList.add('is-invalid');
+        target.focus();
         return;
       }
 
@@ -403,7 +610,7 @@
           formError.hidden = false;
         }
         if (formResult) formResult.hidden = true;
-        quoteForm.data.focus();
+        document.getElementById('data-btn').focus();
         return;
       }
 

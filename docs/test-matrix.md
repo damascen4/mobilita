@@ -22,3 +22,13 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | TC-06 | Reduced-motion: animações desligadas, conteúdo visível, sem loader/overflow | `tests/e2e/site.spec.ts` — `reduced-motion desliga animações...` | todos | `html` sem `js-enabled`, animação do hero/Ken Burns `none`, `.reveal` opacidade 1, sem scroll horizontal. |
 | TC-07 | Com movimento: loader 1ª visita some, reveal ao rolar, sem overflow | `tests/e2e/site.spec.ts` — `com movimento: loader da 1ª visita...` | todos | `.intro-loader` removido <3s; `.diff-card` recebe `is-visible` ao rolar. |
 | TC-08 | Capturas de seções no meio da rolagem (hero, diferenciais, como-funciona, frota) | `tests/e2e/site.spec.ts` — `screenshots de seções no meio da rolagem` | `desktop-chrome` | Gera `tests/screenshots/{hero,diferenciais,como-funciona,frota}-{mobile,desktop}.png`. |
+
+## v4 (ajustes de cliente) — tests/e2e/site.spec.ts
+| Funcionalidade | Tipo | Teste |
+|---|---|---|
+| Hero sem logo duplicada, folha protagonista | e2e (Playwright) | "hero não duplica a logo do header…" |
+| Telefones sem quebra + redes sociais SVG ≥48px | e2e | "telefones nunca quebram linha…" |
+| Diferenciais 4+3 centralizados, canais de contato | e2e | "diferenciais: 7 cards…" |
+| Serviços largura total, CTA transfer AA | e2e | "serviços ocupam a largura toda…" |
+| Calendário custom, horário, stepper, máscara, mensagem WhatsApp | e2e | "formulário aplica máscara leve…" |
+| FAB compacto, só após rolar, some em contato | e2e | "barra inferior fixa…" |
