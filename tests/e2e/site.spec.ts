@@ -338,14 +338,16 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'tests/screenshots/mobile-375.png', fullPage: true });
+    await page.screenshot({ path: 'tests/screenshots/v6-375.png', fullPage: true });
 
     // Desktop 1440
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'tests/screenshots/desktop-1440.png', fullPage: true });
+    await page.screenshot({ path: 'tests/screenshots/v6-1440.png', fullPage: true });
+    await page.addStyleTag({ content: '.site-header,.skip-link,.floating-whatsapp,.mobile-bottom-bar{visibility:hidden!important}' });
+    await page.locator('#orcamento').screenshot({ path: 'tests/screenshots/v6-1440-form.png' });
   });
 
   test('reduced-motion desliga animações: conteúdo visível, sem loader e sem scroll horizontal', async ({ page }) => {
@@ -452,7 +454,7 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     }
   });
 
-  test('diferenciais: 7 cards com linha de baixo centralizada e contato lista todos os canais', async ({ page }, testInfo) => {
+  test('diferenciais: 7 itens (desktop em 2 colunas, último em largura total) e contato lista todos os canais', async ({ page }, testInfo) => {
     await page.goto('/');
     const rects = await page.evaluate(() => Array.from(document.querySelectorAll('.diff-card')).map((c) => {
       const r = c.getBoundingClientRect();
@@ -463,12 +465,9 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
       const rows = new Map<number, typeof rects>();
       rects.forEach((c) => rows.set(c.t, [...(rows.get(c.t) || []), c]));
       const lines = Array.from(rows.values());
-      expect(lines.map((l) => l.length)).toEqual([4, 3]);
-      const vw = await page.evaluate(() => window.innerWidth);
-      const last = lines[1];
-      const left = last[0].l;
-      const right = vw - last[last.length - 1].r;
-      expect(Math.abs(left - right)).toBeLessThan(6);
+      expect(lines.map((l) => l.length)).toEqual([2, 2, 2, 1]);
+      // último item ocupa a largura das 2 colunas
+      expect(lines[3][0].r - lines[3][0].l).toBeGreaterThan((lines[0][0].r - lines[0][0].l) * 1.8);
     }
     const channels = page.locator('#contato .channel');
     await expect(channels).toHaveCount(6);
@@ -502,6 +501,112 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
       });
       expect(widths.f).toBeGreaterThanOrEqual(widths.c - 2);
       expect(widths.g).toBeGreaterThanOrEqual(widths.c - 2);
+    }
+  });
+
+  test('skeleton: imagem lazy ganha shimmer enquanto carrega e a classe some após o load', async ({ page }) => {
+    await page.route('**/assets/stock/**', async (route) => {
+      await new Promise((r) => setTimeout(r, 700));
+      await route.continue();
+    });
+    await page.goto('/');
+    const img = page.locator('#quem-somos .about-image');
+    await expect(img).toHaveClass(/is-loading/);
+    await expect(page.locator('#quem-somos .media--about picture')).toHaveClass(/is-skel/);
+    await img.scrollIntoViewIfNeeded();
+    await expect(img).not.toHaveClass(/is-loading/, { timeout: 10000 });
+    await expect(page.locator('#quem-somos .media--about picture')).not.toHaveClass(/is-skel/, { timeout: 5000 });
+    const loaded = await img.evaluate((el) => (el as HTMLImageElement).naturalWidth);
+    expect(loaded).toBeGreaterThan(0);
+  });
+
+  test('imagens fora da primeira dobra são lazy, com width/height e fotos novas sem repetir entre seções', async ({ page }) => {
+    await page.goto('/');
+    const info = await page.evaluate(() => {
+      const vh = window.innerHeight;
+      return Array.from(document.querySelectorAll('img')).map((i) => ({
+        src: i.getAttribute('src') || '',
+        lazy: i.getAttribute('loading') === 'lazy',
+        top: i.getBoundingClientRect().top + window.scrollY,
+        hasSize: !!i.getAttribute('width') && !!i.getAttribute('height'),
+        section: i.closest('section, footer, header')?.id || i.closest('footer')?.className || '',
+        vh,
+      }));
+    });
+    const below = info.filter((i) => i.top > i.vh && i.src);
+    expect(below.length).toBeGreaterThan(10);
+    expect(below.filter((i) => !i.lazy).map((i) => i.src)).toEqual([]);
+    expect(info.filter((i) => !i.hasSize).map((i) => i.src)).toEqual([]);
+    expect(await page.locator('.hero-bg-img').getAttribute('fetchpriority')).toBe('high');
+    const stock = new Set(info.filter((i) => i.src.includes('assets/stock/')).map((i) => i.src));
+    expect(stock.size).toBeGreaterThanOrEqual(8);
+    const bySrc = new Map<string, Set<string>>();
+    info.filter((i) => i.src.includes('assets/stock/')).forEach((i) => {
+      bySrc.set(i.src, (bySrc.get(i.src) || new Set<string>()).add(i.section));
+    });
+    bySrc.forEach((secs) => expect(secs.size).toBe(1));
+  });
+
+  test('cursor: pointer em CTAs, opções do formulário e calendário; not-allowed em desabilitados', async ({ page }) => {
+    await page.goto('/');
+    const cursorOf = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).cursor);
+    for (const sel of ['#hero-whatsapp-cta', '#quote-submit', '#data-btn', '#pax-plus', '#cal-close', 'label[for="nome"]', 'a[href="#quem-somos"]', '.floating-whatsapp', '.site-footer .social-btn']) {
+      expect(await cursorOf(sel), sel).toBe('pointer');
+    }
+    await expect(page.locator('#pax-minus')).toBeDisabled();
+    expect(await cursorOf('#pax-minus')).toBe('not-allowed');
+    expect(await cursorOf('#nome')).toBe('text');
+    await page.locator('#data-btn').scrollIntoViewIfNeeded();
+    await page.locator('#data-btn').click();
+    const enabledDay = page.locator('.cal-day:not(:disabled)').first();
+    await expect(enabledDay).toBeVisible();
+    expect(await enabledDay.evaluate((el) => getComputedStyle(el).cursor)).toBe('pointer');
+    const disabledDay = page.locator('.cal-day:disabled').first();
+    if (await disabledDay.count()) {
+      expect(await disabledDay.evaluate((el) => getComputedStyle(el).cursor)).toBe('not-allowed');
+    }
+  });
+
+  test('formulário: bloco verde com card branco e cabeçalho claramente distinto dos campos', async ({ page }) => {
+    await page.goto('/');
+    const s = await page.evaluate(() => {
+      const bg = (sel: string) => getComputedStyle(document.querySelector(sel) as HTMLElement).backgroundColor;
+      const head = document.querySelector('.form-head') as HTMLElement;
+      const title = document.querySelector('.form-head-title') as HTMLElement;
+      return {
+        section: bg('.section--quote'),
+        card: bg('.quote-form'),
+        head: bg('.form-head'),
+        input: bg('#nome'),
+        headTag: title.tagName,
+        headBorder: getComputedStyle(head).borderBottomWidth,
+        headSize: parseFloat(getComputedStyle(title).fontSize),
+      };
+    });
+    expect(s.section).not.toBe(s.card);
+    expect(s.head).not.toBe(s.card);
+    expect(s.head).not.toBe(s.input);
+    expect(s.headTag).toBe('H3');
+    expect(parseFloat(s.headBorder)).toBeGreaterThanOrEqual(3);
+    expect(s.headSize).toBeGreaterThanOrEqual(24);
+    await expect(page.locator('#orcamento .bg-photo')).toHaveCount(1);
+  });
+
+  test('desktop: hero em tela cheia com fatos, marquee e bento de serviços; mobile sem esses blocos', async ({ page }, testInfo) => {
+    await page.goto('/');
+    const isMobile = testInfo.project.name.startsWith('mobile-');
+    if (isMobile) {
+      await expect(page.locator('.hero-facts')).toBeHidden();
+      await expect(page.locator('.marquee')).toBeHidden();
+      await expect(page.locator('.featured-photo')).toBeHidden();
+    } else {
+      await expect(page.locator('.hero')).toHaveCSS('position', 'sticky');
+      await expect(page.locator('.hero-facts')).toBeVisible();
+      await expect(page.locator('.marquee')).toBeVisible();
+      const h = await page.locator('.hero').evaluate((el) => el.getBoundingClientRect().height);
+      expect(h).toBeGreaterThanOrEqual((await page.evaluate(() => window.innerHeight)) - 1);
+      const cols = await page.locator('.services-grid').evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
+      expect(cols).toBe(12);
     }
   });
 });

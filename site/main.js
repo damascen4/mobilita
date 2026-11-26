@@ -187,25 +187,118 @@
     revealElements.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
-  // Contadores animados (disparam ao entrar na viewport)
-  const counters = document.querySelectorAll('[data-count]');
-  function runCounter(el) {
-    const target = parseInt(el.dataset.count, 10) || 0;
-    const start = performance.now();
-    const dur = 1400;
-    (function tick(now) {
-      const t = Math.min(1, (now - start) / dur);
-      el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
-      if (t < 1) window.requestAnimationFrame(tick);
-    })(start);
-  }
-  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
-    const cio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) { runCounter(entry.target); cio.unobserve(entry.target); }
+  // Skeleton: imagens lazy ainda não carregadas ganham shimmer e entram com fade (sem layout shift: width/height + aspect-ratio)
+  (function initSkeleton() {
+    document.querySelectorAll('img[loading="lazy"]').forEach(function (img) {
+      if (img.getAttribute('aria-hidden') === 'true') return;
+      if (img.complete && img.naturalWidth > 0) return;
+      const pic = img.closest('picture');
+      img.setAttribute('data-skel', '');
+      img.classList.add('is-loading');
+      if (pic) pic.classList.add('is-skel');
+      function done() {
+        img.classList.remove('is-loading');
+        if (pic) window.setTimeout(function () { pic.classList.remove('is-skel'); }, 700);
+      }
+      img.addEventListener('load', done, { once: true });
+      img.addEventListener('error', done, { once: true });
+    });
+  })();
+
+  // Títulos de seção: máscara por palavra (só com movimento permitido)
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.reveal .section-title').forEach(function (h) {
+      const words = h.textContent.trim().split(/\s+/);
+      h.textContent = '';
+      words.forEach(function (w, i) {
+        const outer = document.createElement('span');
+        outer.className = 'hw';
+        outer.style.setProperty('--wi', String(i));
+        const inner = document.createElement('span');
+        inner.textContent = w;
+        outer.appendChild(inner);
+        h.appendChild(outer);
+        if (i < words.length - 1) h.appendChild(document.createTextNode(' '));
       });
-    }, { threshold: 0.6 });
-    counters.forEach(function (c) { c.textContent = '0'; cio.observe(c); });
+    });
+  }
+
+  // Desktop: barra de progresso + scrollspy no header, cortina do hero, parallax dentro das molduras
+  const desktopMQ = window.matchMedia('(min-width: 1024px)');
+  (function initDesktopFx() {
+    const bar = header && header.querySelector('.scroll-progress');
+    const links = Array.prototype.slice.call(document.querySelectorAll('.nav-list a[href^="#"]'));
+    const targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    const hero = document.querySelector('.hero');
+    const heroContent = hero && hero.querySelector('.hero-content');
+    const heroMedia = hero && hero.querySelector('.hero-media');
+    const frames = Array.prototype.slice.call(document.querySelectorAll('.media > picture > img'));
+    let ticking = false;
+
+    function run() {
+      ticking = false;
+      const y = window.scrollY;
+      const vh = window.innerHeight || 800;
+
+      if (bar) {
+        const max = document.documentElement.scrollHeight - vh;
+        bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0).toFixed(4) + ')';
+      }
+
+      let cur = -1;
+      targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top <= vh * 0.4) cur = i; });
+      links.forEach(function (a, i) {
+        a.classList.toggle('is-active', i === cur);
+        if (i === cur) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+      });
+
+      if (!desktopMQ.matches || prefersReducedMotion) return;
+
+      if (hero && heroContent && heroMedia) {
+        const p = Math.min(1, Math.max(0, y / vh));
+        heroContent.style.transform = 'translate3d(0,' + (-p * 64).toFixed(1) + 'px,0)';
+        heroContent.style.opacity = String(Math.max(0, 1 - p * 1.3).toFixed(3));
+        heroMedia.style.transform = 'scale(' + (1 + p * 0.07).toFixed(4) + ')';
+        hero.classList.toggle('is-away', y > vh * 1.05);
+      }
+
+      frames.forEach(function (img) {
+        const frame = img.parentElement.parentElement;
+        const r = frame.getBoundingClientRect();
+        if (!r.width || r.bottom < -100 || r.top > vh + 100) return;
+        const p = (r.top + r.height / 2 - vh / 2) / vh;
+        img.style.transform = 'translate3d(0,' + (p * -r.height * 0.07).toFixed(1) + 'px,0) scale(1.12)';
+      });
+    }
+
+    function onScroll() { if (!ticking) { ticking = true; window.requestAnimationFrame(run); } }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    run();
+  })();
+
+  // Interações finas (mouse): botões magnéticos e brilho que segue o ponteiro nos cards de serviço
+  if (finePointer && !prefersReducedMotion) {
+    document.querySelectorAll('.btn--lg, .header-whatsapp').forEach(function (btn) {
+      btn.addEventListener('pointermove', function (e) {
+        if (!desktopMQ.matches) return;
+        const r = btn.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) / r.width;
+        const y = (e.clientY - r.top - r.height / 2) / r.height;
+        btn.style.translate = (x * 12).toFixed(1) + 'px ' + (y * 8).toFixed(1) + 'px';
+      });
+      btn.addEventListener('pointerleave', function () { btn.style.translate = ''; });
+    });
+    document.querySelectorAll('.service-card').forEach(function (card) {
+      const spot = document.createElement('span');
+      spot.className = 'spot';
+      spot.setAttribute('aria-hidden', 'true');
+      card.appendChild(spot);
+      card.addEventListener('pointermove', function (e) {
+        const r = card.getBoundingClientRect();
+        spot.style.transform = 'translate3d(' + (e.clientX - r.left).toFixed(0) + 'px,' + (e.clientY - r.top).toFixed(0) + 'px,0)';
+      });
+    });
   }
 
   // Parallax (fundos fotográficos, folhas, frota entrando de lado) e rota animada
