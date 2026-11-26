@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Carrega .env local (não versionado), se existir
+if [[ -f "$(dirname "$0")/../.env" ]]; then set -a; . "$(dirname "$0")/../.env"; set +a; fi
 
 # Rollback do site estático a partir dos backups em BACKUP_DIR.
 # Configuração 100% via variáveis de ambiente (nunca commitar host ou chaves).
