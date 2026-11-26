@@ -101,13 +101,15 @@ document.documentElement.classList.add('js-motion');
 </div>
 
 <main id="conteudo">
-<section id="inicio" class="hero" aria-labelledby="hero-title">
+<section id="inicio" class="hero" aria-labelledby="hero-title" data-parallax="0.12">
 <picture class="hero-media">
 <source srcset="assets/brand/hero-passageiro-executivo.webp" type="image/webp">
 <img class="hero-img" src="assets/brand/hero-passageiro-executivo.jpeg" alt="Executivo sorrindo ao telefone no banco traseiro de um veículo da Mobilità" width="1920" height="1080" fetchpriority="high" decoding="async">
 </picture>
+<div class="hero-shade" aria-hidden="true"></div>
+<div class="hero-leaf" aria-hidden="true"></div>
 <div class="container hero-wrap">
-<div class="hero-card hero-enter" style="--d: 150ms">
+<div class="hero-copy">
 <h1 id="hero-title" class="hero-title">
 <span class="w"><span style="--i:0">Você</span></span>
 <span class="w"><span style="--i:1">no</span></span>
@@ -116,16 +118,20 @@ document.documentElement.classList.add('js-motion');
 <span class="w"><span style="--i:4">sem</span></span>
 <span class="w"><span style="--i:5">preocupações</span></span>
 </h1>
-<p class="hero-lead">Transporte executivo e corporativo em Campinas, Grande São Paulo e interior.</p>
-<div class="hero-actions">
-<a class="btn btn-primary btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-<a class="btn btn-outline" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20de%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de solicitar um orçamento de transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+<p class="hero-lead hero-enter" style="--d: 950ms">Transporte executivo e corporativo em Campinas, Grande São Paulo e interior.</p>
+<div class="hero-actions hero-enter" style="--d: 1100ms">
+<a class="btn btn-light btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+<a class="btn btn-outline-light" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20de%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de solicitar um orçamento de transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+</div>
+<ul class="hero-chips" data-stagger aria-label="Diferenciais">
+<li>Plantão 24h</li><li>Motoristas bilíngues</li><li>Percursos via GPS</li>
+</ul>
 </div>
 </div>
-</div>
+<a class="hero-scroll" href="#quemsomos" aria-label="Rolar para a próxima seção"><span class="hero-scroll-dot" aria-hidden="true"></span></a>
 </section>
 
-<section id="quemsomos" class="section section-about band-green" aria-labelledby="quemsomos-title">
+<section id="quemsomos" class="section section-about band-green" data-parallax="0.1" aria-labelledby="quemsomos-title">
 <div class="container about-grid">
 <div class="about-copy reveal">
 <h2 id="quemsomos-title" class="section-title">Mobilità Transporte Executivo</h2>
@@ -134,7 +140,7 @@ document.documentElement.classList.add('js-motion');
 <p>Contamos com profissionais altamente qualificados e com vasta experiência no mercado. Nossos motoristas possuem cursos específicos e passam por treinamentos constantemente.</p>
 <p>Prezamos pela pontualidade, segurança e conforto de nossos passageiros. Mobilità é você no seu destino, sem preocupações.</p>
 </div>
-<div class="section-cta"><a class="btn btn-light btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+<div class="section-cta"><a class="btn btn-light btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 <div class="about-card reveal" style="--delay: 120ms" aria-hidden="true">
 <div class="img-skel img-skel--transparent about-leaf-wrap">
@@ -156,35 +162,35 @@ document.documentElement.classList.add('js-motion');
 <p class="section-intro">Nossos serviços são pensados e planejados para que você tenha a melhor experiência possível em sua viagem. Soluções completas em transporte de pessoas para eventos corporativos, traslados ou diárias para aeroportos, hotéis, shows, casamentos, feiras, teatros, convenções, locação de veículos com motorista. Atendemos toda a região de Campinas, Grande São Paulo e interior.</p>
 </header>
 <div class="services-grid">
-<article class="service-card reveal"><h3 class="service-title">Transporte corporativo</h3><p class="service-desc">Aeroportos, hotéis, restaurantes, palestras, feiras e quaisquer outros tipos de roteiros pré-definidos pelos passageiros.</p></article>
-<article class="service-card reveal" style="--delay: 60ms"><h3 class="service-title">Recepção em aeroportos</h3><p class="service-desc">Desembarque e chegue ao seu destino com segurança, sem preocupações.</p></article>
-<article class="service-card reveal" style="--delay: 120ms"><h3 class="service-title">Traslados</h3><p class="service-desc">Eventos, viagens em grupo e todo o tipo de programação que necessite de transporte especializado.</p></article>
-<article class="service-card service-card--wide reveal"><h3 class="service-title">Locação de veículo</h3><p class="service-desc">Defina seu itinerário e contrate um de nossos carros e motoristas para atender às suas necessidades.</p></article>
-<article class="service-card service-card--wide reveal" style="--delay: 60ms"><h3 class="service-title">Assessoria e coordenação para eventos</h3><p class="service-desc">Nossos profissionais estão prontos para te auxiliar na realização de seu evento. Para que tudo saia dentro do planejado e cumpra o cronograma, recorra à Mobilità.</p></article>
+<article class="service-card spot reveal"><h3 class="service-title">Transporte corporativo</h3><p class="service-desc">Aeroportos, hotéis, restaurantes, palestras, feiras e quaisquer outros tipos de roteiros pré-definidos pelos passageiros.</p></article>
+<article class="service-card spot reveal" style="--delay: 60ms"><h3 class="service-title">Recepção em aeroportos</h3><p class="service-desc">Desembarque e chegue ao seu destino com segurança, sem preocupações.</p></article>
+<article class="service-card spot reveal" style="--delay: 120ms"><h3 class="service-title">Traslados</h3><p class="service-desc">Eventos, viagens em grupo e todo o tipo de programação que necessite de transporte especializado.</p></article>
+<article class="service-card spot service-card--wide reveal"><h3 class="service-title">Locação de veículo</h3><p class="service-desc">Defina seu itinerário e contrate um de nossos carros e motoristas para atender às suas necessidades.</p></article>
+<article class="service-card spot service-card--wide reveal" style="--delay: 60ms"><h3 class="service-title">Assessoria e coordenação para eventos</h3><p class="service-desc">Nossos profissionais estão prontos para te auxiliar na realização de seu evento. Para que tudo saia dentro do planejado e cumpra o cronograma, recorra à Mobilità.</p></article>
 </div>
 </div>
 </section>
 
-<section id="diferenciais" class="section section-diff" aria-labelledby="diferenciais-title">
+<section id="diferenciais" class="section section-diff" data-parallax="0.08" aria-labelledby="diferenciais-title">
 <div class="container">
 <header class="section-head reveal">
 <h2 id="diferenciais-title" class="section-title">Qualidade e compromisso</h2>
 <p class="section-sub">Diferenciais que fazem a sua viagem ser muito melhor.</p>
 </header>
 <ul class="diff-grid">
-<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-atendimento-humanizado.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Atendimento humanizado</p></li>
-<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-frota-moderna.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Frota moderna e segura</p></li>
-<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-conforto.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Conforto</p></li>
-<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-pontualidade.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Pontualidade</p></li>
-<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-motoristas-bilingues.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Motoristas bilíngues e experientes</p></li>
-<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-percursos-gps.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Percursos traçados via GPS</p></li>
-<li class="diff-item reveal" style="--delay: 180ms"><span class="diff-icon img-skel img-skel--transparent"><img src="assets/brand/icone-plantao-24h.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Assessoria e plantão 24h</p></li>
+<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-atendimento-humanizado.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Atendimento humanizado</p></li>
+<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-frota-moderna.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Frota moderna e segura</p></li>
+<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-conforto.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Conforto</p></li>
+<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-pontualidade.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Pontualidade</p></li>
+<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-motoristas-bilingues.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Motoristas bilíngues e experientes</p></li>
+<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-percursos-gps.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Percursos traçados via GPS</p></li>
+<li class="diff-item reveal" style="--delay: 180ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-plantao-24h.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Assessoria e plantão 24h</p></li>
 </ul>
-<div class="section-cta reveal"><a class="btn btn-primary btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+<div class="section-cta reveal"><a class="btn btn-primary btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 </section>
 
-<section id="frota" class="section section-fleet band-green" aria-labelledby="frota-title">
+<section id="frota" class="section section-fleet band-green" data-parallax="0.1" aria-labelledby="frota-title">
 <div class="container fleet-grid">
 <div class="fleet-media reveal">
 <div class="img-skel img-skel--transparent fleet-img-wrap">
@@ -198,7 +204,7 @@ document.documentElement.classList.add('js-motion');
 <h2 id="frota-title" class="section-title">Nossa frota</h2>
 <p class="section-sub">O melhor do conforto e segurança para você.</p>
 <p>Todos os veículos da nossa frota possuem ar-condicionado, são amplos, confortáveis e constantemente inspecionados. Nossas vans, micro-ônibus e ônibus são equipados com TV Digital, DVD e aparelho de som, além de assentos reclináveis para maior conforto dos passageiros.</p>
-<ul class="pill-list" aria-label="Itens a bordo">
+<ul class="pill-list" data-stagger aria-label="Itens a bordo">
 <li>Ar-condicionado</li><li>TV Digital</li><li>DVD</li><li>Aparelho de som</li><li>Assentos reclináveis</li><li>Inspeção constante</li>
 </ul>
 </div>
@@ -253,8 +259,7 @@ document.documentElement.classList.add('js-motion');
 </section>
 </main>
 
-<footer class="site-footer">
-<img class="footer-leaf" src="assets/brand/simbolo-folha-branco.png" alt="" width="1191" height="1080" loading="lazy" decoding="async">
+<footer class="site-footer" data-parallax="0.08">
 <div class="container footer-grid">
 <div class="footer-brand">
 <div class="img-skel img-skel--transparent footer-logo-wrap">

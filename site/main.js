@@ -166,6 +166,47 @@
   }
 
 
+  /* 5c. Stagger (--i) para chips/listas */
+  document.querySelectorAll('[data-stagger]').forEach((list) => {
+    Array.from(list.children).forEach((el, i) => el.style.setProperty('--i', String(i)));
+  });
+
+  /* 5d. Parallax lento (só --py, aplicado via transform no CSS) */
+  if (!prefersReducedMotion) {
+    const items = Array.from(document.querySelectorAll('[data-parallax]')).map((el) => ({ el, k: parseFloat(el.getAttribute('data-parallax')) || 0.1 }));
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      items.forEach(({ el, k }) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        const py = (vh / 2 - (r.top + r.height / 2)) * k;
+        el.style.setProperty('--py', py.toFixed(1) + 'px');
+      });
+    };
+    const request = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    update();
+  }
+
+  /* 5e. Spotlight que segue o mouse nos cards de serviço */
+  if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.spot').forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--sx', (e.clientX - r.left).toFixed(0) + 'px');
+        card.style.setProperty('--sy', (e.clientY - r.top).toFixed(0) + 'px');
+      });
+    });
+  }
+
   /* 6. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */
   const openWhatsApp = (phone, text) => {
     const encoded = encodeURIComponent(text);

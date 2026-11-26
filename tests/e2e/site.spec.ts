@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
 const PRIMARY_PHONE = '5519998108070';
 const SECONDARY_PHONE = '5519992638676';
 
-test.describe('Mobilità Transportes — v11 marca original modernizada', () => {
+test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações', () => {
   test('SEO, fontes KoHo 400-700, tokens, <picture> WebP e zero imagens quebradas', async ({ page }) => {
     await page.goto('/');
 
@@ -379,6 +379,15 @@ test.describe('Mobilità Transportes — v11 marca original modernizada', () => 
     expect(blocking.map((v) => v.id + ': ' + v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | '))).toEqual([]);
   });
 
+  test('v12: hero sem card, chips e indicador de scroll; "WhatsApp: (19)" com espaço', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.hero-card')).toHaveCount(0);
+    await expect(page.locator('.hero-chips li')).toHaveCount(3);
+    await expect(page.locator('.hero-scroll')).toHaveAttribute('href', '#quemsomos');
+    const gap = await page.locator('.topbar-link').evaluate((el) => parseFloat(getComputedStyle(el).columnGap));
+    expect(gap).toBeGreaterThan(0);
+  });
+
   test('captura screenshots 1440 e 375 em test-results', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-chrome', 'Screenshots gerados uma única vez no projeto desktop-chrome');
 
@@ -415,15 +424,15 @@ test.describe('Mobilità Transportes — v11 marca original modernizada', () => 
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v11-1440-fold.png' });
-    await page.screenshot({ path: 'test-results/v11-1440-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v12-1440-fold.png' });
+    await page.screenshot({ path: 'test-results/v12-1440-full.png', fullPage: true });
 
     // Mobile 375
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v11-375-fold.png' });
-    await page.screenshot({ path: 'test-results/v11-375-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v12-375-fold.png' });
+    await page.screenshot({ path: 'test-results/v12-375-full.png', fullPage: true });
   });
 });
