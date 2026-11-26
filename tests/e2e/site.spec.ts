@@ -610,3 +610,25 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     }
   });
 });
+
+test.describe('Rodapé premium', () => {
+  for (const [w, h] of [[375, 812], [1440, 900]]) {
+    test(`rodapé nítido, contatos clicáveis e print ${w}`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await page.goto('/');
+      await expect(page.locator('.intro-loader')).toHaveCount(0, { timeout: 5000 });
+      await page.addStyleTag({ content: '.skip-link,.floating-whatsapp,.site-header,.mobile-bottom-bar{visibility:hidden!important}' });
+      const footer = page.locator('.site-footer');
+      await footer.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(800);
+      const logo = footer.locator('img.footer-logo');
+      await expect(logo).toHaveAttribute('srcset', /@2x\.webp 2x/);
+      const nat = await logo.evaluate((i: HTMLImageElement) => ({ nw: i.naturalWidth, w: i.getBoundingClientRect().width }));
+      expect(nat.w).toBeLessThanOrEqual(nat.nw);
+      await expect(footer.locator('a[data-wa-phone]')).toHaveCount(2);
+      await expect(footer.locator('a[href^="mailto:"]')).toHaveCount(1);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+      await footer.screenshot({ path: `tests/screenshots/footer-${w}.png` });
+    });
+  }
+});

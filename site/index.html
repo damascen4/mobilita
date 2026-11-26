@@ -820,68 +820,50 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <div class="bg-photo" aria-hidden="true">
-        <picture>
-          <source type="image/webp" srcset="assets/stock/estrada-horizonte-800.webp 800w, assets/stock/estrada-horizonte-1600.webp 1600w" sizes="100vw">
-          <img src="assets/stock/estrada-horizonte-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async" class="bg-photo-img" data-parallax="0.06">
-        </picture>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-          <picture>
+    <picture aria-hidden="true">
       <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-      <img
-        src="assets/mobilita-elemento-logo-branco.png"
-        alt=""
-        width="1024"
-        height="929"
-        loading="lazy"
-        aria-hidden="true"
-        class="footer-leaf-decor"
-      >
+      <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" class="footer-leaf-decor">
     </picture>
     <div class="container footer-grid">
       <div class="footer-brand">
-        <picture>
-          <source type="image/webp" srcset="assets/mobilita-logo-branco-grande.webp">
-          <img
-            src="assets/mobilita-logo-branco-grande.png"
-            alt="Mobilità Transportes"
-            width="220"
-            height="59"
-            loading="lazy"
-            class="footer-logo"
-          >
-        </picture>
+        <a href="#conteudo-principal" class="footer-logo-link" aria-label="Mobilità Transportes — voltar ao topo">
+          <img src="assets/mobilita-logo-branco-grande.webp" srcset="assets/mobilita-logo-branco-grande.webp 1x, assets/mobilita-logo-branco-grande@2x.webp 2x" alt="Mobilità Transportes" width="220" height="59" loading="lazy" class="footer-logo">
+        </a>
         <p class="footer-slogan">Você no seu destino, sem preocupações.</p>
-        <p class="footer-area">Área atendida: <strong>Campinas e Grande São Paulo</strong></p>
+        <p class="footer-area">Campinas e Grande São Paulo</p>
       </div>
+
+      <nav class="footer-col" aria-label="Atalhos do rodapé">
+        <h2>Navegação</h2>
+        <ul class="footer-list">
+          <li><a href="#quem-somos">Quem somos</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#frota">Frota</a></li>
+          <li><a href="#orcamento">Pedir orçamento</a></li>
+        </ul>
+      </nav>
 
       <div class="footer-col">
         <h2>Contatos</h2>
         <ul class="footer-list">
           <li>
-            <a
-              href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20conversar."
-              data-wa-phone="5519998108070"
-              data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de conversar."
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              WhatsApp: <span class="nowrap">(19) 99810-8070</span>
+            <a href="https://wa.me/5519998108070?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20conversar." data-wa-phone="5519998108070" data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de conversar." target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+              <span>WhatsApp <span class="nowrap">(19) 99810-8070</span></span>
             </a>
           </li>
           <li>
-            <a
-              href="https://wa.me/5519992638676?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20conversar."
-              data-wa-phone="5519992638676"
-              data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de conversar."
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              WhatsApp: <span class="nowrap">(19) 99263-8676</span>
+            <a href="https://wa.me/5519992638676?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Mobilit%C3%A0%20e%20gostaria%20de%20conversar." data-wa-phone="5519992638676" data-wa-text="Olá! Vim pelo site da Mobilità e gostaria de conversar." target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+              <span>WhatsApp <span class="nowrap">(19) 99263-8676</span></span>
             </a>
           </li>
-          <li><a href="mailto:contato@mobilitatransportes.com.br">contato@mobilitatransportes.com.br</a></li>
+          <li>
+            <a href="mailto:contato@mobilitatransportes.com.br">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              <span>contato@mobilitatransportes.com.br</span>
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -896,20 +878,13 @@
           </li>
         </ul>
       </div>
-
-      <div class="footer-col">
-        <h2>Atalhos</h2>
-        <ul class="footer-list">
-          <li><a href="#quem-somos">Quem somos</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#frota">Frota</a></li>
-          <li><a href="#orcamento">Pedir orçamento</a></li>
-        </ul>
-      </div>
     </div>
 
-    <div class="container footer-bottom">
-      <p>&copy; <span id="current-year">2026</span> Mobilità Transportes. Todos os direitos reservados.</p>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-in">
+        <p>&copy; <span id="current-year">2026</span> Mobilità Transportes. Todos os direitos reservados.</p>
+        <p>Feito com cuidado em Campinas</p>
+      </div>
     </div>
   </footer>
 

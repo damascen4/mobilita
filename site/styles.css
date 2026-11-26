@@ -384,24 +384,34 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @media (min-width: 960px) { .contact-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--mb-s-9); } }
 
 /* ---------- Rodapé ---------- */
-.site-footer { position: relative; isolation: isolate; padding-top: var(--sec-y); color: var(--on-green-soft); background: var(--mb-ink); overflow: clip; }
-.site-footer .bg-overlay { background: var(--mb-ink); opacity: .9; }
-.footer-leaf-decor { position: absolute; z-index: -1; right: -8%; top: 0; width: min(60vw, 26rem); opacity: .06; pointer-events: none; }
-.footer-grid { display: grid; gap: var(--mb-s-7); padding-bottom: var(--mb-s-8); }
-.footer-logo { width: min(16rem, 70%); height: auto; margin-bottom: var(--mb-s-5); }
-.footer-slogan { font: var(--mb-fw-regular) var(--mb-fs-lead)/var(--mb-lh-lead) var(--mb-font-display); color: var(--mb-white); max-width: 22ch; }
-.footer-area { margin-top: var(--mb-s-3); font-size: 1rem; }
-.footer-col h2 { margin-bottom: var(--mb-s-4); font: var(--mb-fw-medium) var(--mb-fs-label)/1.2 var(--mb-font-display); letter-spacing: var(--mb-ls-label); text-transform: uppercase; color: var(--mb-green-light); }
-.footer-list { display: grid; gap: var(--mb-s-1); }
-.footer-list a { display: inline-flex; align-items: center; gap: var(--mb-s-2); min-height: var(--mb-tap-min); color: var(--mb-white); }
-.footer-social { display: flex; gap: var(--mb-s-3); }
-.social-btn { display: grid; place-items: center; width: var(--mb-tap-min); height: var(--mb-tap-min); color: var(--mb-white); border: 2px solid var(--mb-white); border-radius: var(--mb-r-circle); transition: transform var(--mb-dur-press) var(--mb-ease-out), background-color var(--mb-dur-hover) var(--mb-ease-out), color var(--mb-dur-hover) var(--mb-ease-out); }
+.site-footer { position: relative; isolation: isolate; padding-top: var(--mb-s-9); color: var(--on-green-soft); background: var(--mb-ink); overflow: clip; text-align: center; }
+.footer-leaf-decor { position: absolute; z-index: -1; right: -12%; top: 50%; translate: 0 -50%; width: min(80vw, 30rem); height: auto; opacity: .05; pointer-events: none; }
+.footer-grid { display: grid; gap: var(--mb-s-7); justify-items: center; padding-bottom: var(--mb-s-8); }
+.footer-brand { display: grid; justify-items: center; gap: var(--mb-s-3); }
+.footer-logo-link { display: inline-block; cursor: pointer; }
+.footer-logo { width: 220px; max-width: 100%; height: auto; display: block; }
+.footer-slogan { margin-top: var(--mb-s-3); font: var(--mb-fw-regular) var(--mb-fs-lead)/var(--mb-lh-lead) var(--mb-font-display); color: var(--mb-white); max-width: 22ch; }
+.footer-area { font-size: 1rem; }
+.footer-col h2 { margin-bottom: var(--mb-s-3); font: var(--mb-fw-medium) var(--mb-fs-label)/1.2 var(--mb-font-display); letter-spacing: var(--mb-ls-label); text-transform: uppercase; color: var(--mb-green-light); }
+.footer-list { display: grid; justify-items: center; gap: var(--mb-s-1); }
+.footer-list a { display: inline-flex; text-decoration: none; align-items: center; gap: var(--mb-s-2); min-height: var(--mb-tap-min); color: var(--mb-white); cursor: pointer; background: linear-gradient(currentColor, currentColor) 0 calc(50% + 1.1em) / 0 1px no-repeat; transition: background-size var(--mb-dur-hover) var(--mb-ease-out); }
+.footer-list a svg { flex: none; color: var(--mb-green-light); }
+.footer-social { display: flex; justify-content: center; gap: var(--mb-s-3); }
+.social-btn { display: grid; place-items: center; width: var(--mb-tap-min); height: var(--mb-tap-min); color: var(--mb-white); border: 1.5px solid rgba(255, 255, 255, .18); border-radius: var(--mb-r-circle); cursor: pointer; transition: transform var(--mb-dur-press) var(--mb-ease-out), background-color var(--mb-dur-hover) var(--mb-ease-out), color var(--mb-dur-hover) var(--mb-ease-out), border-color var(--mb-dur-hover) var(--mb-ease-out); }
 .social-btn:active { transform: scale(.94); }
 .social-btn svg { width: 1.375rem; height: 1.375rem; }
-@media (hover: hover) { .social-btn:hover { background: var(--mb-white); color: var(--mb-ink); } }
-.footer-bottom { padding-block: var(--mb-s-5); border-top: 1px solid var(--mb-overlay-dark); font-size: .875rem; }
-@media (min-width: 720px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1080px) { .footer-grid { grid-template-columns: 1.6fr 1.4fr 1fr 1fr; gap: var(--mb-s-8); } }
+@media (hover: hover) { .social-btn:hover { background: var(--mb-white); color: var(--mb-ink); border-color: var(--mb-white); } .footer-list a:hover { background-size: 100% 1px; } }
+.footer-list a:focus-visible, .social-btn:focus-visible, .footer-logo-link:focus-visible { outline: 2px solid var(--mb-green-light); outline-offset: 3px; border-radius: 4px; }
+.footer-bottom { border-top: 1px solid rgba(255, 255, 255, .18); font-size: .875rem; }
+.footer-bottom-in { display: grid; gap: var(--mb-s-1); justify-items: center; padding-block: var(--mb-s-5); }
+@media (min-width: 1080px) {
+  .site-footer { text-align: left; }
+  .footer-grid { grid-template-columns: 1.5fr 1fr 1.4fr auto; gap: var(--mb-s-8); justify-items: start; align-items: start; }
+  .footer-brand { justify-items: start; }
+  .footer-list { justify-items: start; }
+  .footer-social { justify-content: flex-start; }
+  .footer-bottom-in { grid-template-columns: 1fr auto; justify-items: start; }
+}
 
 /* ---------- Barra inferior (mobile) e FAB (desktop) ---------- */
 .mobile-bottom-bar { position: fixed; inset: auto 0 0; z-index: 900; display: grid; grid-template-columns: 2fr 1fr; gap: var(--mb-s-3); padding: var(--mb-s-3) var(--mb-gutter) calc(var(--mb-s-3) + env(safe-area-inset-bottom, 0px)); background: var(--mb-overlay-white); box-shadow: var(--mb-shadow-2); }
@@ -638,9 +648,6 @@ img[data-skel].is-loading { opacity: 0; }
   .form-head { padding: var(--mb-s-6) var(--mb-s-7); }
   .form-body { padding: var(--mb-s-7); }
   .contact-intro .section-title { max-width: 14ch; font-size: clamp(2.5rem, 1.6rem + 2.2vw, 3.75rem); line-height: var(--mb-lh-tight); }
-
-  /* Rodapé aproveita a largura */
-  .footer-grid { grid-template-columns: 1.8fr 1.4fr 1fr 1fr; }
 }
 @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
