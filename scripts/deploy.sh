@@ -18,6 +18,7 @@ BACKUP_DIR="${BACKUP_DIR:-/opt/sites-backups/${APP}}"
 KEEP_BACKUPS="${KEEP_BACKUPS:-5}"
 DIST_DIR="${DIST_DIR:-dist}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
+ALLOW_MISSING_WEB3FORMS="${ALLOW_MISSING_WEB3FORMS:-0}"
 CADDYFILE="${CADDYFILE:-/etc/caddy/Caddyfile}"
 
 DEPLOY_KNOWN_HOSTS="${DEPLOY_KNOWN_HOSTS:-${HOME}/.ssh/known_hosts}"
@@ -42,7 +43,12 @@ RELEASE_TAG="${TIMESTAMP}-${COMMIT_SHA}"
 echo "[deploy] app=${APP} ref=HEAD (${COMMIT_SHA}) -> ${DEPLOY_HOST}:${DEPLOY_DIR}"
 
 if [[ "${SKIP_BUILD}" != "1" ]]; then
-  export WEB3FORMS_ACCESS_KEY="${WEB3FORMS_ACCESS_KEY:?Erro: defina WEB3FORMS_ACCESS_KEY no ambiente ou em .env}"
+  if [[ "${ALLOW_MISSING_WEB3FORMS}" == "1" ]]; then
+    export ALLOW_MISSING_WEB3FORMS="1"
+    echo "[deploy] Aviso: ALLOW_MISSING_WEB3FORMS=1 (deploy de visualização sem chave Web3Forms)."
+  else
+    export WEB3FORMS_ACCESS_KEY="${WEB3FORMS_ACCESS_KEY:?Erro: defina WEB3FORMS_ACCESS_KEY no ambiente ou em .env (ou ALLOW_MISSING_WEB3FORMS=1 para deploy sem chave)}"
+  fi
   echo "[deploy] Executando build de produção (npm ci && npm run build)..."
   npm ci
   npm run build

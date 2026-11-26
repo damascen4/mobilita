@@ -45,6 +45,7 @@ export DEPLOY_KEY="$HOME/.ssh/<sua-chave>"
 export DEPLOY_KNOWN_HOSTS="$HOME/.ssh/known_hosts"   # fixado; gere antes com ssh-keyscan -p <porta> <host> >> "$DEPLOY_KNOWN_HOSTS"
 export WEB3FORMS_ACCESS_KEY="<chave-web3forms>"      # obrigatória no build de produção (pode ser definida em .env local não versionado)
 # Opcionais (valores padrão já configurados):
+# export ALLOW_MISSING_WEB3FORMS="1"                 # permite build/deploy de visualização sem WEB3FORMS_ACCESS_KEY (formulário vai direto para o WhatsApp sem POST)
 # export APP="mobilita"
 # export DEPLOY_PORT="22"
 # export DEPLOY_DIR="/opt/sites/mobilita"
@@ -77,6 +78,8 @@ Localmente (antes do deploy):
 
 ```bash
 WEB3FORMS_ACCESS_KEY="<chave-web3forms>" npm run build
+# Ou, para build de visualização sem chave (fallback direto para WhatsApp):
+# ALLOW_MISSING_WEB3FORMS=1 npm run build
 npm run test:e2e:subpath
 ```
 

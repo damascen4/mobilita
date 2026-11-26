@@ -360,6 +360,17 @@
       ].join('\n');
       const fallbackHref = `https://wa.me/${PRIMARY_PHONE}?text=${encodeURIComponent(composed)}`;
 
+      if (!accessKey.trim() || accessKey.trim() === 'WEB3FORMS_ACCESS_KEY_AQUI') {
+        openWhatsApp(PRIMARY_PHONE, composed);
+        setStatus(
+          'success',
+          'Abrimos o WhatsApp com sua mensagem pronta. Se não abriu automaticamente, ',
+          { href: fallbackHref, label: 'clique aqui para enviar pelo WhatsApp', suffix: '.' }
+        );
+        form.reset();
+        return;
+      }
+
       if (submitBtn instanceof HTMLButtonElement) {
         submitBtn.disabled = true;
         submitBtn.setAttribute('aria-busy', 'true');

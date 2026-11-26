@@ -69,17 +69,15 @@ export function buildSite() {
   if (!fs.existsSync(outIndexHtml)) {
     throw new Error('Build failed: dist/index.html missing');
   }
-  if (web3formsKey) {
-    const rawHtml = fs.readFileSync(outIndexHtml, 'utf8');
-    if (!rawHtml.includes(WEB3FORMS_PLACEHOLDER)) {
-      throw new Error(`Expected placeholder ${WEB3FORMS_PLACEHOLDER} in site/index.html`);
-    }
-    const injectedHtml = rawHtml.replaceAll(WEB3FORMS_PLACEHOLDER, () => web3formsKey);
-    if (injectedHtml.includes(WEB3FORMS_PLACEHOLDER)) {
-      throw new Error(`Production build still contains placeholder ${WEB3FORMS_PLACEHOLDER} in dist/index.html`);
-    }
-    fs.writeFileSync(outIndexHtml, injectedHtml, 'utf8');
+  const rawHtml = fs.readFileSync(outIndexHtml, 'utf8');
+  if (!rawHtml.includes(WEB3FORMS_PLACEHOLDER)) {
+    throw new Error(`Expected placeholder ${WEB3FORMS_PLACEHOLDER} in site/index.html`);
   }
+  const injectedHtml = rawHtml.replaceAll(WEB3FORMS_PLACEHOLDER, () => web3formsKey);
+  if (injectedHtml.includes(WEB3FORMS_PLACEHOLDER)) {
+    throw new Error(`Production build still contains placeholder ${WEB3FORMS_PLACEHOLDER} in dist/index.html`);
+  }
+  fs.writeFileSync(outIndexHtml, injectedHtml, 'utf8');
 
   const outMainJs = path.join(outDir, 'main.js');
   if (fs.existsSync(outMainJs)) {
