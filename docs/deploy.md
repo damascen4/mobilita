@@ -43,6 +43,7 @@ O script executa `npm ci && npm run build` (gerando `dist/` sem `window.__mobili
 export DEPLOY_HOST="<usuario>@<host-da-vps>"
 export DEPLOY_KEY="$HOME/.ssh/<sua-chave>"
 export DEPLOY_KNOWN_HOSTS="$HOME/.ssh/known_hosts"   # fixado; gere antes com ssh-keyscan -p <porta> <host> >> "$DEPLOY_KNOWN_HOSTS"
+export WEB3FORMS_ACCESS_KEY="<chave-web3forms>"      # obrigatória no build de produção (pode ser definida em .env local não versionado)
 # Opcionais (valores padrão já configurados):
 # export APP="mobilita"
 # export DEPLOY_PORT="22"
@@ -75,7 +76,7 @@ export DEPLOY_KNOWN_HOSTS="$HOME/.ssh/known_hosts"   # fixado; gere antes com ss
 Localmente (antes do deploy):
 
 ```bash
-npm run build
+WEB3FORMS_ACCESS_KEY="<chave-web3forms>" npm run build
 npm run test:e2e:subpath
 ```
 

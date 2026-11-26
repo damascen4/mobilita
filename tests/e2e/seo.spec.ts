@@ -52,7 +52,7 @@ test.describe('SEO metadata & structured data', () => {
     tempDistDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mobilita-seo-'));
     execFileSync(process.execPath, [BUILD_SCRIPT], {
       cwd: ROOT_DIR,
-      env: { ...process.env, OUT_DIR: tempDistDir },
+      env: { ...process.env, OUT_DIR: tempDistDir, ALLOW_MISSING_WEB3FORMS: '1' },
       stdio: 'pipe',
     });
     const started = await startServer(tempDistDir);

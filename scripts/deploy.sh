@@ -42,6 +42,7 @@ RELEASE_TAG="${TIMESTAMP}-${COMMIT_SHA}"
 echo "[deploy] app=${APP} ref=HEAD (${COMMIT_SHA}) -> ${DEPLOY_HOST}:${DEPLOY_DIR}"
 
 if [[ "${SKIP_BUILD}" != "1" ]]; then
+  export WEB3FORMS_ACCESS_KEY="${WEB3FORMS_ACCESS_KEY:?Erro: defina WEB3FORMS_ACCESS_KEY no ambiente ou em .env}"
   echo "[deploy] Executando build de produção (npm ci && npm run build)..."
   npm ci
   npm run build
@@ -64,6 +65,11 @@ fi
 
 if grep -rn -- "__mobilitaNavigate" "${DIST_DIR}" >/dev/null 2>&1; then
   echo "Erro: '${DIST_DIR}' contém '__mobilitaNavigate' (build não é de produção)." >&2
+  exit 1
+fi
+
+if grep -rn -- "WEB3FORMS_ACCESS_KEY_AQUI" "${DIST_DIR}" >/dev/null 2>&1; then
+  echo "Erro: '${DIST_DIR}' contém placeholder 'WEB3FORMS_ACCESS_KEY_AQUI'." >&2
   exit 1
 fi
 

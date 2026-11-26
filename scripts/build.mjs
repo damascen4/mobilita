@@ -9,6 +9,7 @@ const outDir = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : path.jo
 
 const TEXT_EXTS = new Set(['.html', '.css', '.js']);
 const ROOT_RELATIVE_PATTERN = /(?:href|src|srcset|action)=["']\/(?!\/)|url\(\s*["']?\/(?!\/)/g;
+const WEB3FORMS_PLACEHOLDER = 'WEB3FORMS_ACCESS_KEY_AQUI';
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -49,8 +50,36 @@ export function buildSite() {
     );
   }
 
+  const web3formsKey = (process.env.WEB3FORMS_ACCESS_KEY || '').trim();
+  const allowMissingWeb3forms = process.env.ALLOW_MISSING_WEB3FORMS === '1';
+
+  if (!web3formsKey && !allowMissingWeb3forms) {
+    throw new Error(
+      'WEB3FORMS_ACCESS_KEY is required for production builds. Set WEB3FORMS_ACCESS_KEY (or ALLOW_MISSING_WEB3FORMS=1 for test builds).'
+    );
+  }
+  if (web3formsKey === WEB3FORMS_PLACEHOLDER) {
+    throw new Error(`WEB3FORMS_ACCESS_KEY must not be the placeholder value (${WEB3FORMS_PLACEHOLDER}).`);
+  }
+
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.cpSync(srcDir, outDir, { recursive: true });
+
+  const outIndexHtml = path.join(outDir, 'index.html');
+  if (!fs.existsSync(outIndexHtml)) {
+    throw new Error('Build failed: dist/index.html missing');
+  }
+  if (web3formsKey) {
+    const rawHtml = fs.readFileSync(outIndexHtml, 'utf8');
+    if (!rawHtml.includes(WEB3FORMS_PLACEHOLDER)) {
+      throw new Error(`Expected placeholder ${WEB3FORMS_PLACEHOLDER} in site/index.html`);
+    }
+    const injectedHtml = rawHtml.replaceAll(WEB3FORMS_PLACEHOLDER, () => web3formsKey);
+    if (injectedHtml.includes(WEB3FORMS_PLACEHOLDER)) {
+      throw new Error(`Production build still contains placeholder ${WEB3FORMS_PLACEHOLDER} in dist/index.html`);
+    }
+    fs.writeFileSync(outIndexHtml, injectedHtml, 'utf8');
+  }
 
   const outMainJs = path.join(outDir, 'main.js');
   if (fs.existsSync(outMainJs)) {
@@ -66,9 +95,6 @@ export function buildSite() {
   }
 
   const builtFiles = walk(outDir);
-  if (!fs.existsSync(path.join(outDir, 'index.html'))) {
-    throw new Error('Build failed: dist/index.html missing');
-  }
 
   return { outDir, fileCount: builtFiles.length };
 }

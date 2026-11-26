@@ -57,7 +57,7 @@ test.describe('Deploy em subpath (/projetos/mobilita)', () => {
     tempDistDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mobilita-subpath-'));
     execFileSync(process.execPath, [BUILD_SCRIPT], {
       cwd: ROOT_DIR,
-      env: { ...process.env, OUT_DIR: tempDistDir },
+      env: { ...process.env, OUT_DIR: tempDistDir, WEB3FORMS_ACCESS_KEY: 'e2e-mock-access-key' },
       stdio: 'pipe',
     });
     const started = await startSubpathServer(tempDistDir);
@@ -142,5 +142,14 @@ test.describe('Deploy em subpath (/projetos/mobilita)', () => {
     expect(failedLocalResponses, 'Nenhum asset local deve retornar 4xx/5xx').toEqual([]);
     expect(brokenImages, 'Todas as imagens devem carregar sob /projetos/mobilita/').toEqual([]);
     expect(pageErrors, 'Sem erros JS não tratados').toEqual([]);
+  });
+
+  test('injeta WEB3FORMS_ACCESS_KEY não-placeholder no formulário do build mockado', async ({ page }) => {
+    await page.goto(`${origin}${BASE_PATH}/`, { waitUntil: 'domcontentloaded' });
+    const accessKeyInput = page.locator('#contact-form input[name="access_key"]');
+    await expect(accessKeyInput).toHaveValue('e2e-mock-access-key');
+    await expect(accessKeyInput).not.toHaveValue('WEB3FORMS_ACCESS_KEY_AQUI');
+    const html = await page.content();
+    expect(html).not.toContain('WEB3FORMS_ACCESS_KEY_AQUI');
   });
 });
