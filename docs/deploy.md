@@ -2,7 +2,7 @@
 
 ## Arquitetura
 
-- **Stack**: site estático puro (HTML, CSS e JS vanilla em `site/`).
+- **Stack**: site estático puro (HTML, CSS e JS vanilla em `site/`, build de produção em `dist/` via `scripts/build.mjs`).
 - **Servidor**: servido diretamente pelo **Caddy** (sem processo Node.js e sem unit `systemd` adicional).
 - **Coexistência**: compartilha a VPS com o `screenshare` (porta `127.0.0.1:8787` não é tocada).
 - **Caminhos na VPS**:
@@ -36,7 +36,7 @@
 
 ## 2. Deploy
 
-O script empacota `site/` via `git archive` + `tar` por SSH, faz troca atômica em `/opt/sites/mobilita` e mantém os últimos 5 backups em `/opt/sites-backups/mobilita`.
+O script executa `npm ci && npm run build` (gerando `dist/` sem `window.__mobilitaNavigate`), valida que `dist/` existe, não contém `__mobilitaNavigate` nem dotfiles/`.env`, empacota `dist/` via `tar` por SSH, faz troca atômica em `/opt/sites/mobilita`, mantém os últimos 5 backups em `/opt/sites-backups/mobilita` e executa `caddy validate --config /etc/caddy/Caddyfile` antes de `systemctl reload caddy` (abortando se a validação falhar).
 
 ```bash
 export DEPLOY_HOST="<usuario>@<host-da-vps>"
@@ -47,9 +47,11 @@ export DEPLOY_KNOWN_HOSTS="$HOME/.ssh/known_hosts"   # fixado; gere antes com ss
 # export DEPLOY_PORT="22"
 # export DEPLOY_DIR="/opt/sites/mobilita"
 # export BACKUP_DIR="/opt/sites-backups/mobilita"
+# export DIST_DIR="dist"
+# export SKIP_BUILD="0"                              # defina "1" para reutilizar dist/ já gerado
+# export CADDYFILE="/etc/caddy/Caddyfile"
 
-./scripts/deploy.sh          # publica HEAD
-./scripts/deploy.sh v1.2.0   # publica tag/branch/commit específico
+./scripts/deploy.sh
 ```
 
 > Nunca salve `DEPLOY_HOST`, IPs ou chaves SSH em arquivos versionados. Os scripts usam `StrictHostKeyChecking=yes` com `UserKnownHostsFile="${DEPLOY_KNOWN_HOSTS}"` (padrão `~/.ssh/known_hosts`).
