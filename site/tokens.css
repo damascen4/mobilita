@@ -1,4 +1,4 @@
-/* Mobilità Transporte Executivo — Design Tokens (v9)
+/* Mobilità Transporte Executivo — Design Tokens (v10)
  * Fonte: docs/brand-manual.md
  */
 :root {
@@ -67,14 +67,16 @@
   --mb-s-8: 4rem;
   --mb-s-9: 6rem;
   --mb-section-y: clamp(4.25rem, 3rem + 5.5vw, 7.5rem);
-  --mb-container: 1200px;
+  --mb-container: 1240px;
   --mb-gutter: clamp(1.25rem, 1rem + 1.5vw, 2.5rem);
 
   /* Forma e elevação */
-  --mb-r-sm: 3px;
-  --mb-r-md: 6px;
-  --mb-r-lg: 12px;
+  --mb-r-sm: 8px;
+  --mb-r-md: 14px;
+  --mb-r-lg: 24px;
   --mb-r-pill: 500px;
+  --mb-r-xl: 28px;
+  --mb-r-2xl: 36px;
   --mb-shadow-1: 0 2px 8px rgba(18, 22, 19, 0.07);
   --mb-shadow-2: 0 10px 28px rgba(18, 22, 19, 0.1);
   --mb-shadow-3: 0 24px 48px rgba(18, 22, 19, 0.16);

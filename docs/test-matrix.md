@@ -21,3 +21,5 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | TC-06 | Lazy load, skeleton shimmer e `fetchpriority="high"` | `lazy load + skeleton shimmer abaixo da dobra e hero com fetchpriority=high` | todos | Hero com `fetchpriority="high"` sem lazy; imagens abaixo da dobra com `loading="lazy"`, `decoding="async"`, `width`/`height`; `.img-skel` resolve para `.is-loaded` via HTTP e `file://`. |
 | TC-07 | Reduced motion e scroll reveal | `prefers-reduced-motion desliga animações mantendo conteúdo visível; com movimento ativa reveals` | todos | Com `reduce`, `html` sem `js-motion`, animações `none` e `.reveal` opacidade 1; com movimento, `html.js-motion` e `.is-visible` aplicado ao rolar. |
 | TC-08 | Evidência visual 1440 e 375 | `captura screenshots 1440 e 375 em test-results` | `desktop-chrome` | Gera `test-results/v9-1440-fold.png`, `test-results/v9-1440-full.png`, `test-results/v9-375-fold.png` e `test-results/v9-375-full.png`. |
+
+| Acessibilidade axe-core (serious/critical, WCAG 2.2 AA, desktop+mobile) | e2e | tests/e2e/site.spec.ts |

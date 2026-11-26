@@ -150,6 +150,35 @@
     }
   });
 
+  /* 5b. Botão magnético leve (ponteiro fino + movimento permitido) */
+  if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.btn-magnetic').forEach((btn) => {
+      btn.addEventListener('pointermove', (e) => {
+        const r = btn.getBoundingClientRect();
+        btn.style.setProperty('--mx', ((e.clientX - r.left - r.width / 2) * 0.12).toFixed(1) + 'px');
+        btn.style.setProperty('--my', ((e.clientY - r.top - r.height / 2) * 0.2).toFixed(1) + 'px');
+      });
+      btn.addEventListener('pointerleave', () => {
+        btn.style.removeProperty('--mx');
+        btn.style.removeProperty('--my');
+      });
+    });
+  }
+
+  /* 5c. Carrossel da frota (scroll-snap + botões) */
+  const track = document.getElementById('fleet-track');
+  const prev = document.getElementById('fleet-prev');
+  const next = document.getElementById('fleet-next');
+  if (track && prev && next) {
+    const step = (dir) => {
+      const slide = track.querySelector('.fleet-slide');
+      const amount = (slide ? slide.getBoundingClientRect().width : track.clientWidth * 0.8) + 16;
+      track.scrollBy({ left: dir * amount, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    };
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+  }
+
   /* 6. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */
   const openWhatsApp = (phone, text) => {
     const encoded = encodeURIComponent(text);

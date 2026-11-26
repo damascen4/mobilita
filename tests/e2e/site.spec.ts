@@ -2,12 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 const PRIMARY_PHONE = '5519998108070';
 const SECONDARY_PHONE = '5519992638676';
 
-test.describe('Mobilità Transportes — v9 Reformulação Minimalista', () => {
-  test('SEO, fontes KoHo 400-700, tokens v9, <picture> WebP e zero imagens quebradas', async ({ page }) => {
+test.describe('Mobilità Transportes — v10 Redesign Moderno', () => {
+  test('SEO, fontes KoHo 400-700, tokens, <picture> WebP e zero imagens quebradas', async ({ page }) => {
     await page.goto('/');
 
     await expect(page).toHaveTitle('Transporte Executivo com Segurança e Conforto - Mobilità Transportes');
@@ -241,7 +242,6 @@ test.describe('Mobilità Transportes — v9 Reformulação Minimalista', () => {
       };
 
       const btnPrimary = getComputedStyle(document.querySelector('.btn-primary')!);
-      const btnOnGreen = getComputedStyle(document.querySelector('.btn-on-green')!);
       const aboutSec = getComputedStyle(document.querySelector('#quemsomos')!);
       const aboutP = getComputedStyle(document.querySelector('#quemsomos p')!);
       const label = getComputedStyle(document.querySelector('.field-label')!);
@@ -249,13 +249,11 @@ test.describe('Mobilità Transportes — v9 Reformulação Minimalista', () => {
 
       return {
         btnPrimary: ratio(btnPrimary.color, btnPrimary.backgroundColor),
-        btnOnGreen: ratio(btnOnGreen.color, btnOnGreen.backgroundColor),
         aboutBody: ratio(aboutP.color, aboutSec.backgroundColor),
         formLabel: ratio(label.color, panel.backgroundColor),
       };
     });
     expect(contrasts.btnPrimary).toBeGreaterThanOrEqual(4.5);
-    expect(contrasts.btnOnGreen).toBeGreaterThanOrEqual(4.5);
     expect(contrasts.aboutBody).toBeGreaterThanOrEqual(4.5);
     expect(contrasts.formLabel).toBeGreaterThanOrEqual(4.5);
   });
@@ -354,7 +352,7 @@ test.describe('Mobilità Transportes — v9 Reformulação Minimalista', () => {
     await page.goto('/');
     await expect(page.locator('html')).not.toHaveClass(/js-motion/);
     const reduced = await page.evaluate(() => ({
-      heroAnim: getComputedStyle(document.querySelector('.hero-card')!).animationName,
+      heroAnim: getComputedStyle(document.querySelector('.hero-title .w > span')!).animationName,
       revealOp: getComputedStyle(document.querySelector('.reveal')!).opacity,
       overflowX: document.documentElement.scrollWidth > window.innerWidth,
     }));
@@ -368,6 +366,17 @@ test.describe('Mobilità Transportes — v9 Reformulação Minimalista', () => {
     await expect(page.locator('html')).toHaveClass(/js-motion/);
     await page.locator('#diferenciais .diff-item').first().scrollIntoViewIfNeeded();
     await expect(page.locator('#diferenciais .diff-item').first()).toHaveClass(/is-visible/, { timeout: 3000 });
+  });
+
+  test('axe-core: sem violações serious/critical (WCAG 2.2 AA) em desktop e mobile', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+    const blocking = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    expect(blocking.map((v) => v.id + ': ' + v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | '))).toEqual([]);
   });
 
   test('captura screenshots 1440 e 375 em test-results', async ({ page }, testInfo) => {
@@ -406,15 +415,15 @@ test.describe('Mobilità Transportes — v9 Reformulação Minimalista', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v9-1440-fold.png' });
-    await page.screenshot({ path: 'test-results/v9-1440-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v10-1440-fold.png' });
+    await page.screenshot({ path: 'test-results/v10-1440-full.png', fullPage: true });
 
     // Mobile 375
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v9-375-fold.png' });
-    await page.screenshot({ path: 'test-results/v9-375-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v10-375-fold.png' });
+    await page.screenshot({ path: 'test-results/v10-375-full.png', fullPage: true });
   });
 });
