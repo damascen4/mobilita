@@ -214,11 +214,13 @@
     const desktopUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
 
     if (isMobileUA) {
+      /* __MOBILITA_TEST_HOOK_START__ */
       if (typeof window.__mobilitaNavigate === 'function') {
         window.__mobilitaNavigate(mobileUrl);
-      } else {
-        window.location.href = mobileUrl;
+        return mobileUrl;
       }
+      /* __MOBILITA_TEST_HOOK_END__ */
+      window.location.href = mobileUrl;
       return mobileUrl;
     }
     window.open(desktopUrl, '_blank', 'noopener,noreferrer');

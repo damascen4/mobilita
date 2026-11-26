@@ -23,3 +23,4 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | TC-08 | Evidência visual 1440 e 375 | `captura screenshots 1440 e 375 em test-results` | `desktop-chrome` | Gera `test-results/v13-1440-fold.png`, `test-results/v13-1440-full.png`, `test-results/v13-375-fold.png` e `test-results/v13-375-full.png`. |
 | TC-09 | Hero sem card, chips, scroll e espaço em "WhatsApp: (19)" | `v12: hero sem card, chips e indicador de scroll...` | todos | `.hero-card` ausente, 3 chips, link de scroll, gap no topbar. |
 | TC-10 | Acessibilidade axe-core (serious/critical, WCAG 2.2 AA, desktop+mobile) | `axe-core: sem violações serious/critical (WCAG 2.2 AA) em desktop e mobile` | todos | Zero violações serious/critical WCAG 2.2 AA. |
+| TC-11 | Deploy estático em subpath `/projetos/mobilita` | `tests/e2e/subpath.spec.ts` | todos | `npm run build` sem caminhos root-relative; 308 `/projetos/mobilita` → `/`; assets sem 404; hook de teste removido do dist. |
