@@ -255,8 +255,8 @@ a:hover {
 }
 
 .header-whatsapp {
-  min-height: 44px;
-  padding: 8px 11px;
+  min-height: 48px;
+  padding: 10px 11px;
   gap: 6px;
   font-size: 0.84rem;
 }
@@ -265,8 +265,8 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 44px;
-  padding: 8px 10px;
+  min-height: 48px;
+  padding: 10px 10px;
   border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.7);
   background: transparent;
@@ -347,16 +347,21 @@ a:hover {
   gap: 10px;
 }
 
-/* Hero */
+/* Hero (mobile-first 375px) */
 .hero {
   position: relative;
   min-height: 100svh;
   display: flex;
   align-items: center;
-  padding: calc(var(--header-height) + 40px) 0 64px;
+  padding: calc(var(--header-height) + 28px) 0 100px;
   color: var(--white);
   overflow: hidden;
   background-color: var(--graphite-deep);
+}
+
+.hero .container {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-media {
@@ -958,7 +963,7 @@ a:hover {
   position: relative;
   background-color: var(--graphite-deep);
   color: rgba(255, 255, 255, 0.9);
-  padding: 56px 0 32px;
+  padding: 56px 0 108px;
   overflow: hidden;
 }
 
@@ -1035,13 +1040,36 @@ a:hover {
   margin: 0;
 }
 
-/* Floating WhatsApp */
+/* Mobile Bottom Thumb Bar (base mobile-first) */
+.mobile-bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 960;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  background-color: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid var(--gray-border);
+  box-shadow: 0 -8px 24px rgba(31, 32, 36, 0.14);
+}
+
+.mobile-bottom-btn {
+  min-height: 52px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border-radius: 12px;
+}
+
+/* Floating WhatsApp (desktop >= 900px) */
 .floating-whatsapp {
+  display: none;
   position: fixed;
   right: 18px;
   bottom: 18px;
   z-index: 950;
-  display: inline-flex;
   align-items: center;
   gap: 10px;
   min-height: 56px;
@@ -1059,10 +1087,6 @@ a:hover {
   background-color: var(--green-hover);
   color: var(--white);
   transform: translateY(-2px);
-}
-
-.floating-whatsapp-text {
-  display: none;
 }
 
 /* Gentle Reveal */
@@ -1100,8 +1124,24 @@ a:hover {
 }
 
 @media (min-width: 900px) {
+  .hero {
+    padding: calc(var(--header-height) + 40px) 0 64px;
+  }
+
   .section {
     padding: 92px 0;
+  }
+
+  .site-footer {
+    padding-bottom: 32px;
+  }
+
+  .mobile-bottom-bar {
+    display: none;
+  }
+
+  .floating-whatsapp {
+    display: inline-flex;
   }
 
   .brand-logo {
