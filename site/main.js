@@ -208,23 +208,6 @@
     counters.forEach(function (c) { c.textContent = '0'; cio.observe(c); });
   }
 
-  // Tilt sutil nos cards de serviço (só ponteiro fino)
-  if (!prefersReducedMotion && finePointer) {
-    document.querySelectorAll('.service-card').forEach(function (card) {
-      card.addEventListener('pointermove', function (e) {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        card.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
-        card.style.setProperty('--rx', (-y * 7).toFixed(2) + 'deg');
-      });
-      card.addEventListener('pointerleave', function () {
-        card.style.setProperty('--ry', '0deg');
-        card.style.setProperty('--rx', '0deg');
-      });
-    });
-  }
-
   // Parallax (fundos fotográficos, folhas, frota entrando de lado) e rota animada
   const parallaxEls = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
   const fleetStage = document.getElementById('fleet-parallax-stage');

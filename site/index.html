@@ -28,10 +28,11 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@300;500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
   <link rel="preload" as="image" type="image/webp" href="assets/mobilita-showcase-01-640.webp" imagesrcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w" imagesizes="100vw" fetchpriority="high">
   <script>if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("js-enabled")}</script>
+  <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
 
   <!-- JSON-LD LocalBusiness -->
@@ -183,7 +184,6 @@
           >
         </picture>
         <div class="hero-overlay"></div>
-        <div class="hero-grain"></div>
         <picture>
           <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
           <img
@@ -393,29 +393,11 @@
 
     <!-- Diferenciais -->
     <section class="section section--differentials" id="diferenciais" aria-labelledby="diff-title">
-      <div class="bg-photo" aria-hidden="true">
-        <picture>
-          <source type="image/webp" srcset="assets/mobilita-fundo-sessao-01-480.webp 480w, assets/mobilita-fundo-sessao-01-960.webp 960w, assets/mobilita-fundo-sessao-01.webp 1920w" sizes="100vw">
-          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.18">
-        </picture>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-      <picture>
-        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--diff" data-parallax="-0.08">
-      </picture>
       <div class="container">
         <header class="section-header reveal">
           <p class="section-eyebrow">Qualidade e compromisso</p>
           <h2 class="section-title" id="diff-title">Diferenciais que fazem a sua viagem ser muito melhor.</h2>
         </header>
-
-        <ul class="stats-strip reveal" aria-label="Mobilità em números">
-          <li><span class="stat-num"><span data-count="24">24</span>h</span><span class="stat-label">de plantão, todos os dias</span></li>
-          <li><span class="stat-num"><span data-count="4">4</span></span><span class="stat-label">categorias de veículos</span></li>
-          <li><span class="stat-num"><span data-count="3">3</span></span><span class="stat-label">aeroportos atendidos</span></li>
-          <li><span class="stat-num"><span data-count="3">3</span></span><span class="stat-label">passos para agendar</span></li>
-        </ul>
 
         <ul class="diff-grid">
           <li class="diff-card reveal">
@@ -473,6 +455,17 @@
 
     <!-- Frota -->
     <section class="section section--fleet" id="frota" aria-labelledby="fleet-title">
+      <div class="bg-photo" aria-hidden="true">
+        <picture>
+          <source type="image/webp" srcset="assets/mobilita-fundo-sessao-01-480.webp 480w, assets/mobilita-fundo-sessao-01-960.webp 960w, assets/mobilita-fundo-sessao-01.webp 1920w" sizes="100vw">
+          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.1">
+        </picture>
+      </div>
+      <div class="bg-overlay" aria-hidden="true"></div>
+      <picture>
+        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
+        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--fleet" data-parallax="-0.08">
+      </picture>
       <div class="container">
         <header class="section-header reveal">
           <p class="section-eyebrow">Frota</p>
@@ -512,17 +505,6 @@
 
     <!-- Como funciona -->
     <section class="section section--steps" id="como-funciona" aria-labelledby="steps-title">
-      <div class="bg-photo" aria-hidden="true">
-        <picture>
-          <source type="image/webp" srcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w" sizes="100vw">
-          <img src="assets/mobilita-showcase-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.18">
-        </picture>
-      </div>
-      <div class="bg-overlay" aria-hidden="true"></div>
-      <picture>
-        <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
-        <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--steps" data-parallax="-0.08">
-      </picture>
             <div class="container">
         <header class="section-header reveal">
           <p class="section-eyebrow">Simples e rápido</p>
@@ -699,10 +681,10 @@
       <div class="bg-photo" aria-hidden="true">
         <picture>
           <source type="image/webp" srcset="assets/mobilita-showcase-01-640.webp 640w, assets/mobilita-showcase-01-1280.webp 1280w, assets/mobilita-showcase-01.webp 1920w" sizes="100vw">
-          <img src="assets/mobilita-showcase-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.14">
+          <img src="assets/mobilita-showcase-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.1">
         </picture>
       </div>
-      <div class="bg-overlay bg-overlay--dark" aria-hidden="true"></div>
+      <div class="bg-overlay" aria-hidden="true"></div>
       <picture>
         <source type="image/webp" srcset="assets/mobilita-elemento-logo-branco.webp">
         <img src="assets/mobilita-elemento-logo-branco.png" alt="" width="1024" height="929" loading="lazy" aria-hidden="true" class="leaf-decor leaf-decor--white leaf-decor--contact" data-parallax="-0.06">
@@ -792,7 +774,7 @@
     <div class="bg-photo" aria-hidden="true">
         <picture>
           <source type="image/webp" srcset="assets/mobilita-fundo-sessao-01-480.webp 480w, assets/mobilita-fundo-sessao-01-960.webp 960w, assets/mobilita-fundo-sessao-01.webp 1920w" sizes="100vw">
-          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.12">
+          <img src="assets/mobilita-fundo-sessao-01.jpeg" alt="" width="1920" height="1080" loading="lazy" class="bg-photo-img" data-parallax="0.06">
         </picture>
       </div>
       <div class="bg-overlay" aria-hidden="true"></div>

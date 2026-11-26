@@ -20,7 +20,7 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     expect(jsonLd['@type']).toBe('LocalBusiness');
     expect(jsonLd.name).toBe('Mobilità Transportes');
 
-    const rootFontSize = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
+    const rootFontSize = await page.evaluate(() => parseFloat(getComputedStyle(document.body).fontSize));
     expect(rootFontSize).toBeGreaterThanOrEqual(18);
 
     const h1 = page.getByRole('heading', { level: 1 });
@@ -377,7 +377,7 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     await expect(page.locator('html')).toHaveClass(/js-enabled/);
     await expect(page.locator('.intro-loader')).toHaveCount(0, { timeout: 3000 });
     await expect(page.locator('.hero-title .w').first()).toBeVisible();
-    await page.locator('#diferenciais').scrollIntoViewIfNeeded();
+    await page.locator('#diferenciais .diff-card').first().scrollIntoViewIfNeeded();
     await expect(page.locator('#diferenciais .diff-card').first()).toHaveClass(/is-visible/, { timeout: 3000 });
     const overflowX = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
     expect(overflowX).toBe(false);
