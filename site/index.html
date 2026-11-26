@@ -53,10 +53,7 @@ document.documentElement.classList.add('js-motion');
 <header class="site-header" id="topo">
 <div class="header-bar">
 <a class="brand-link" href="#inicio" aria-label="Mobilità Transporte Executivo — Início">
-<picture>
-<source media="(max-width: 959px)" srcset="assets/brand/logo-mobilita-mobile.png">
-<img class="brand-logo" src="assets/brand/logo-mobilita-cor.png" alt="Mobilità Transporte Executivo" width="200" height="53" decoding="async">
-</picture>
+<img class="brand-logo" src="assets/brand/logo-mobilita-cor.svg" alt="Mobilità Transporte Executivo" width="200" height="53" decoding="async">
 </a>
 <nav class="main-nav" aria-label="Navegação principal">
 <ul class="nav-list">
@@ -79,7 +76,7 @@ document.documentElement.classList.add('js-motion');
 <div class="mobile-nav-backdrop" data-close-menu></div>
 <div class="mobile-nav-panel">
 <div class="mobile-nav-head">
-<img src="assets/brand/logo-mobilita-mobile.png" alt="Mobilità Transporte Executivo" width="175" height="44" decoding="async">
+<img src="assets/brand/logo-mobilita-cor.svg" alt="Mobilità Transporte Executivo" width="175" height="44" decoding="async">
 <button type="button" id="menu-close" class="menu-close" aria-label="Fechar menu de navegação">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 </button>
@@ -103,11 +100,18 @@ document.documentElement.classList.add('js-motion');
 <main id="conteudo">
 <section id="inicio" class="hero" aria-labelledby="hero-title" data-parallax="0.12">
 <picture class="hero-media">
-<source srcset="assets/brand/hero-passageiro-executivo.webp" type="image/webp">
+<source media="(max-width: 719px)" srcset="assets/brand/hero-passageiro-executivo-960.webp 960w" sizes="100vw" type="image/webp">
+<source srcset="assets/brand/hero-passageiro-executivo-480.webp 480w, assets/brand/hero-passageiro-executivo-960.webp 960w, assets/brand/hero-passageiro-executivo-1600.webp 1600w" sizes="100vw" type="image/webp">
 <img class="hero-img" src="assets/brand/hero-passageiro-executivo.jpeg" alt="Executivo sorrindo ao telefone no banco traseiro de um veículo da Mobilità" width="1920" height="1080" fetchpriority="high" decoding="async">
 </picture>
 <div class="hero-shade" aria-hidden="true"></div>
-<div class="hero-leaf" aria-hidden="true"></div>
+<div class="hero-leaf" data-draw aria-hidden="true">
+<svg class="hero-leaf-svg" viewBox="0 0 1191 1080" fill="none" aria-hidden="true">
+<path class="leaf-blade" style="--blade:0" pathLength="1" d="M1030.9 27Q1134.4 29 1140.2 29.7L1146 30.4L1141.5 50.5Q1137 70.6 1118.5 108.7Q1099.9 146.8 1078.9 168.9Q1057.8 190.9 1029.8 208.4Q1001.8 225.9 971.7 237.5Q941.6 249 901.6 258.5Q861.6 268 684.5 289Q507.4 310 426.4 327.5Q345.4 345 301.8 361Q258.2 377.1 222.7 395.6Q187.2 414.1 150.7 440.6Q114.2 467.1 89 492.5L63.8 517.9L66.9 503.1Q70.1 488.2 88.6 446.7Q107.1 405.2 126.1 373.7Q145.1 342.2 168.6 312.2Q192.1 282.2 243.6 236.1Q295.2 190.1 352.7 157.1Q410.2 124.1 485.3 97.5Q560.4 71 640.4 55.5Q720.4 40 823.9 32.5Q927.4 25 1030.9 27Z"/>
+<path class="leaf-blade" style="--blade:1" pathLength="1" d="M977.3 366.6Q977.1 377.2 973 404.4Q969 431.6 953.5 463.7Q937.9 495.8 918.9 515.4Q899.8 534.9 868.3 553.4Q836.8 571.9 779.2 589.5Q721.6 607 559.5 631.5Q397.4 656 334.9 670.5Q272.4 685 232.8 699.5Q193.2 714.1 161.2 731.1Q129.2 748.1 106.2 765.1Q83.2 782.1 63 803L42.8 823.9L41.9 814Q41 804.1 47 750.3Q53 696.4 61.5 672.8Q70.1 649.2 84.6 624.2Q99.1 599.2 134.6 562.6Q170.2 526.1 221.7 495.6Q273.2 465.1 360.8 436.5Q448.4 408 540.4 392.5Q632.4 377 805 366.5L977.6 356L977.3 366.6Z"/>
+<path class="leaf-blade" style="--blade:2" pathLength="1" d="M329.4 781L300.3 804.5Q271.2 828.1 237.6 867.1Q204.1 906.2 184.6 942.2Q165.1 978.2 152.7 1018.1L140.4 1058L124.2 1028.4Q108.1 998.8 99.5 970.2Q91 941.6 91 919.5Q91 897.4 100 876.3Q109.1 855.2 123.1 841.6Q137.2 828.1 158.2 817.1Q179.2 806.1 213.3 797Q247.4 788 288.4 784.5Z"/>
+</svg>
+</div>
 <div class="container hero-wrap">
 <div class="hero-copy">
 <h1 id="hero-title" class="hero-title">
@@ -144,7 +148,7 @@ document.documentElement.classList.add('js-motion');
 </div>
 <div class="about-card reveal" style="--delay: 120ms" aria-hidden="true">
 <div class="img-skel img-skel--transparent about-leaf-wrap">
-<img class="about-leaf" src="assets/brand/simbolo-folha-branco.png" alt="" width="1191" height="1080" loading="lazy" decoding="async">
+<img class="about-leaf" src="assets/brand/simbolo-folha-branco.svg" alt="" width="1191" height="1080" loading="lazy" decoding="async">
 </div>
 </div>
 </div>
@@ -152,7 +156,7 @@ document.documentElement.classList.add('js-motion');
 
 <section id="oquefazemos" class="section section-services" aria-labelledby="servicos-title">
 <picture class="services-bg">
-<source srcset="assets/brand/servicos-onibus-estrada.webp" type="image/webp">
+<source srcset="assets/brand/servicos-onibus-estrada-480.webp 480w, assets/brand/servicos-onibus-estrada-960.webp 960w, assets/brand/servicos-onibus-estrada-1600.webp 1600w" sizes="100vw" type="image/webp">
 <img src="assets/brand/servicos-onibus-estrada.jpeg" alt="" width="1920" height="1080" loading="lazy" decoding="async">
 </picture>
 <div class="container">
@@ -178,13 +182,13 @@ document.documentElement.classList.add('js-motion');
 <p class="section-sub">Diferenciais que fazem a sua viagem ser muito melhor.</p>
 </header>
 <ul class="diff-grid">
-<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-atendimento-humanizado.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Atendimento humanizado</p></li>
-<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-frota-moderna.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Frota moderna e segura</p></li>
-<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-conforto.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Conforto</p></li>
-<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-pontualidade.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Pontualidade</p></li>
-<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-motoristas-bilingues.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Motoristas bilíngues e experientes</p></li>
-<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-percursos-gps.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Percursos traçados via GPS</p></li>
-<li class="diff-item reveal" style="--delay: 180ms"><span class="diff-icon img-skel img-skel--transparent"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><img src="assets/brand/icone-plantao-24h.png" alt="" width="76" height="76" loading="lazy" decoding="async"></span><p class="diff-label">Assessoria e plantão 24h</p></li>
+<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="18" width="8" height="22" rx="1" pathLength="1"/><rect x="48" y="18" width="8" height="22" rx="1" pathLength="1"/><path d="M16 20l5 2-5 15M48 20l-5 2 5 15" pathLength="1"/><path d="M21 23l13 1M43 23l-10 2-9 4c1 3 4 4 7 2l4-1 10 10c2 2 0 5-2 4l-3-2" pathLength="1"/><path d="M16 37l4 3m20 3c1 2-1 4-3 3l-5-4m4 5c1 2-1 4-3 3l-5-3" pathLength="1"/><path d="M20 42l3-4a2 2 0 0 1 3 0l1 1-3 4a2 2 0 0 1-3 0zm5 3l3-4a2 2 0 0 1 3 0l1 1-3 4a2 2 0 0 1-3 0zm5 3l2-3a2 2 0 0 1 3 0l1 1-2 3a2 2 0 0 1-3 0z" pathLength="1"/></svg></span><p class="diff-label">Atendimento humanizado</p></li>
+<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 36V20a4 4 0 0 1 4-4h30a3 3 0 0 1 2.7 1.7L51 29l2.5.6A3 3 0 0 1 56 32.5V36h1v5a2 2 0 0 1-2 2h-2a8 8 0 0 0-15 0H26a8 8 0 0 0-15 0h-1a2 2 0 0 1-2-2v-5h1z" pathLength="1"/><path d="M37 20h6.5l4.5 9H37z" pathLength="1"/><line x1="13" y1="30" x2="25" y2="30" pathLength="1"/><circle cx="18.5" cy="43.5" r="5" pathLength="1"/><circle cx="18.5" cy="43.5" r="2" pathLength="1"/><circle cx="45.5" cy="43.5" r="5" pathLength="1"/><circle cx="45.5" cy="43.5" r="2" pathLength="1"/></svg></span><p class="diff-label">Frota moderna e segura</p></li>
+<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 51S11 38.5 11 24.5C11 17.5 16.5 12 22.8 12c4.2 0 7.7 2.5 9.2 6.8 1.5-4.3 5-6.8 9.2-6.8C47.5 12 53 17.5 53 24.5 53 38.5 32 51 32 51z" pathLength="1"/></svg></span><p class="diff-label">Conforto</p></li>
+<li class="diff-item reveal" style="--delay: 0ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="21" pathLength="1"/><circle cx="32" cy="32" r="17" pathLength="1"/><path d="M22.5 26l2-2.5 10 8-2 2.5z" pathLength="1"/><line x1="33" y1="31" x2="42" y2="22" pathLength="1"/><line x1="31.5" y1="28" x2="34" y2="45" pathLength="1"/></svg></span><p class="diff-label">Pontualidade</p></li>
+<li class="diff-item reveal" style="--delay: 60ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 23v-6c0-6 4-9 11-9s11 3 11 9v6" pathLength="1"/><path d="M14 23c1.5-2 1-5 2.5-6.5 2-1.5 5 1 8.5 1s6.5-2.5 8.5-1C35 18 34.5 21 36 23c0 7-4.5 13-11 13s-11-6-11-13z" pathLength="1"/><path d="M19 35v4l-7 3a7 7 0 0 0-4 6.5V54a2 2 0 0 0 2 2h30a2 2 0 0 0 2-2v-5.5a7 7 0 0 0-4-6.5l-7-3v-4" pathLength="1"/><path d="M18 40c2.5 3 11.5 3 14 0" pathLength="1"/><path d="M40 10h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H46l-4 3.5V23h-2a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z" pathLength="1"/><path d="M38 26h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H44l-5 4 1-4h-2a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z" pathLength="1"/></svg></span><p class="diff-label">Motoristas bilíngues e experientes</p></li>
+<li class="diff-item reveal" style="--delay: 120ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 15a2 2 0 0 1 2.3-2L24 15l16-2 12.7 2a2 2 0 0 1 1.7 2v30a2 2 0 0 1-2.3 2L40 51l-16-2-11.7 2a2 2 0 0 1-2.3-2V15z" pathLength="1"/><line x1="24" y1="15" x2="24" y2="49" pathLength="1"/><line x1="40" y1="13" x2="40" y2="51" pathLength="1"/><circle cx="19" cy="41" r="2.6" pathLength="1"/><circle cx="31" cy="26" r="2.6" pathLength="1"/><circle cx="46" cy="23" r="2.6" pathLength="1"/><path d="M21 39l8.2-10.8M33.6 26l6.4-.4 3.6-1.5" pathLength="1"/></svg></span><p class="diff-label">Percursos traçados via GPS</p></li>
+<li class="diff-item reveal" style="--delay: 180ms"><span class="diff-icon"><svg class="diff-ring" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="41" pathLength="1"/></svg><svg class="diff-glyph" width="54" height="54" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 29v-2a17 17 0 0 1 34 0v2M19 29v-2a13 13 0 0 1 26 0v2" pathLength="1"/><path d="M19 28h-3a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h3zM45 28h3a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4h-3z" pathLength="1"/><rect x="19" y="27" width="4" height="18" rx="1" pathLength="1"/><rect x="41" y="27" width="4" height="18" rx="1" pathLength="1"/><path d="M46 44c0 6-3 9-8 9h-2" pathLength="1"/><rect x="31" y="50" width="5" height="5" rx="0.5" pathLength="1"/></svg></span><p class="diff-label">Assessoria e plantão 24h</p></li>
 </ul>
 <div class="section-cta reveal"><a class="btn btn-primary btn-shine btn-magnetic" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
@@ -195,7 +199,7 @@ document.documentElement.classList.add('js-motion');
 <div class="fleet-media reveal">
 <div class="img-skel img-skel--transparent fleet-img-wrap">
 <picture>
-<source srcset="assets/brand/frota-veiculos-recorte.webp" type="image/webp">
+<source srcset="assets/brand/frota-veiculos-recorte-480.webp 480w, assets/brand/frota-veiculos-recorte-960.webp 960w, assets/brand/frota-veiculos-recorte-1600.webp 1600w" sizes="(min-width: 960px) 52vw, 92vw" type="image/webp">
 <img class="fleet-img" src="assets/brand/frota-veiculos-recorte.png" alt="Frota da Mobilità composta por sedã executivo, van Sprinter e ônibus rodoviário" width="1200" height="600" loading="lazy" decoding="async">
 </picture>
 </div>
@@ -227,7 +231,11 @@ document.documentElement.classList.add('js-motion');
 
 <div class="contact-panel reveal" style="--delay: 90ms">
 <h3 class="form-title">Mande uma mensagem</h3>
-<form id="contact-form" class="contact-form" novalidate>
+<form id="contact-form" class="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+<input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY_AQUI">
+<input type="hidden" name="subject" value="Novo contato pelo site — Mobilità Transportes">
+<input type="hidden" name="from_name" value="Site Mobilità Transportes">
+<input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
 <div class="form-row">
 <div class="field">
 <label class="field-label" for="nome">Nome</label>
@@ -251,6 +259,7 @@ document.documentElement.classList.add('js-motion');
 <p id="mensagem-erro" class="field-error" role="alert" hidden></p>
 </div>
 <button type="submit" id="contact-submit" class="btn btn-primary btn-full">Enviar mensagem</button>
+<p class="form-wa-alt">Prefere falar agora? <a id="form-whatsapp-shortcut" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20de%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de solicitar um orçamento de transporte executivo." target="_blank" rel="noopener noreferrer">Enviar pelo WhatsApp</a></p>
 <div id="form-status" class="form-status" role="status" aria-live="polite" hidden></div>
 </form>
 </div>
@@ -263,7 +272,7 @@ document.documentElement.classList.add('js-motion');
 <div class="container footer-grid">
 <div class="footer-brand">
 <div class="img-skel img-skel--transparent footer-logo-wrap">
-<img class="footer-logo" src="assets/brand/logo-mobilita-branco.png" alt="Mobilità Transporte Executivo" width="200" height="53" loading="lazy" decoding="async">
+<img class="footer-logo" src="assets/brand/logo-mobilita-branco.svg" alt="Mobilità Transporte Executivo" width="200" height="53" loading="lazy" decoding="async">
 </div>
 <p class="footer-tag">Você no seu destino, sem preocupações.</p>
 <div class="footer-social">

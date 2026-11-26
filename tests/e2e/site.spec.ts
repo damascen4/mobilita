@@ -7,8 +7,9 @@ import AxeBuilder from '@axe-core/playwright';
 const PRIMARY_PHONE = '5519998108070';
 const SECONDARY_PHONE = '5519992638676';
 
-test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações', () => {
-  test('SEO, fontes KoHo 400-700, tokens, <picture> WebP e zero imagens quebradas', async ({ page }) => {
+test.describe('Mobilità Transportes — v13 SVG animado, imagens responsivas e formulário Web3Forms', () => {
+  test('SEO, fontes KoHo 400-700, tokens, SVG inline/marca, <picture> srcset WebP e zero imagens quebradas', async ({ page }, testInfo) => {
+    const isMobile = testInfo.project.name.startsWith('mobile-');
     await page.goto('/');
 
     await expect(page).toHaveTitle('Transporte Executivo com Segurança e Conforto - Mobilità Transportes');
@@ -41,14 +42,38 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
     expect(metrics.textHover).toBe('#606167');
     expect(metrics.surfaceAlt).toBe('#f2f2f2');
 
-    // 3 fotos de marca via <picture> com source WebP
-    const webpSources = await page.locator('picture source[type="image/webp"]').evaluateAll((els) =>
-      els.map((el) => el.getAttribute('srcset') || '')
+    // SVGs de marca + folha inline do hero + 7 ícones de diferenciais inline (stroke currentColor)
+    await expect(page.locator('.brand-logo')).toHaveAttribute('src', /logo-mobilita-cor\.svg$/);
+    await expect(page.locator('.footer-logo')).toHaveAttribute('src', /logo-mobilita-branco\.svg$/);
+    await expect(page.locator('.about-leaf')).toHaveAttribute('src', /simbolo-folha-branco\.svg$/);
+    await expect(page.locator('.hero-leaf-svg .leaf-blade')).toHaveCount(3);
+    await expect(page.locator('#diferenciais .diff-glyph')).toHaveCount(7);
+    const glyphStrokes = await page.locator('#diferenciais .diff-glyph').evaluateAll((els) =>
+      els.map((el) => el.getAttribute('stroke'))
     );
-    expect(webpSources).toHaveLength(3);
-    expect(webpSources.some((s) => s.includes('hero-passageiro-executivo.webp'))).toBe(true);
-    expect(webpSources.some((s) => s.includes('servicos-onibus-estrada.webp'))).toBe(true);
-    expect(webpSources.some((s) => s.includes('frota-veiculos-recorte.webp'))).toBe(true);
+    expect(glyphStrokes).toEqual(Array(7).fill('currentColor'));
+
+    // 3 fotos de marca via <picture> com srcset 480w/960w/1600w e sizes
+    const webpSources = await page.locator('picture source[type="image/webp"]').evaluateAll((els) =>
+      els.map((el) => ({
+        srcset: el.getAttribute('srcset') || '',
+        sizes: el.getAttribute('sizes') || '',
+      }))
+    );
+    expect(webpSources.length).toBeGreaterThanOrEqual(4);
+    for (const base of ['hero-passageiro-executivo', 'servicos-onibus-estrada', 'frota-veiculos-recorte']) {
+      const match = webpSources.find(
+        (s) => s.srcset.includes(`${base}-480.webp 480w`) && s.srcset.includes(`${base}-960.webp 960w`) && s.srcset.includes(`${base}-1600.webp 1600w`)
+      );
+      expect(match, `srcset completo ausente para ${base}`).toBeTruthy();
+      expect(match!.sizes.length).toBeGreaterThan(0);
+    }
+
+    // Hero mobile carrega 960w
+    if (isMobile) {
+      const heroCurrentSrc = await page.locator('.hero-img').evaluate((img: HTMLImageElement) => img.currentSrc);
+      expect(heroCurrentSrc).toContain('hero-passageiro-executivo-960.webp');
+    }
 
     // Todas as imagens carregam sem erro
     const broken = await page.evaluate(async () => {
@@ -125,26 +150,35 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
     expect(wrappedPhones).toEqual([]);
   });
 
-  test('formulário de contato: labels visíveis, validação acessível e envio para WhatsApp', async ({ page }, testInfo) => {
-    const isMobile = testInfo.project.name.startsWith('mobile-');
+  test('formulário de contato: validação acessível, envio Web3Forms (sucesso/erro mock) e atalho WhatsApp', async ({ page }) => {
+    let mockMode: 'success' | 'error' = 'success';
+    const capturedPayloads: Array<Record<string, unknown>> = [];
 
-    await page.addInitScript(() => {
-      const w = window as unknown as {
-        __navigatedUrls?: string[];
-        __openedUrls?: string[];
-        __mobilitaNavigate?: (url: string) => void;
-      };
-      w.__navigatedUrls = [];
-      w.__openedUrls = [];
-      w.__mobilitaNavigate = (url: string) => w.__navigatedUrls!.push(url);
-      window.open = ((url?: string | URL) => {
-        w.__openedUrls!.push(String(url || ''));
-        return null;
-      }) as typeof window.open;
+    await page.route('https://api.web3forms.com/submit', async (route) => {
+      const postData = route.request().postDataJSON() as Record<string, unknown>;
+      capturedPayloads.push(postData);
+      if (mockMode === 'success') {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, message: 'Email sent successfully' }),
+        });
+      } else {
+        await route.fulfill({
+          status: 500,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: false, message: 'Server error' }),
+        });
+      }
     });
 
     await page.goto('/');
     await page.locator('#contato').scrollIntoViewIfNeeded();
+
+    // Placeholder de access_key, honeypot anti-spam e atalho WhatsApp presentes
+    await expect(page.locator('#contact-form input[name="access_key"]')).toHaveValue('WEB3FORMS_ACCESS_KEY_AQUI');
+    await expect(page.locator('#contact-form input[name="botcheck"]')).toHaveCount(1);
+    await expect(page.locator('#form-whatsapp-shortcut')).toHaveAttribute('href', new RegExp(`^https://wa\\.me/${PRIMARY_PHONE}\\?text=`));
 
     // Envio vazio mostra erros acessíveis e foca o primeiro campo inválido
     await page.click('#contact-submit');
@@ -152,34 +186,39 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
     await expect(page.locator('#nome-erro')).toBeVisible();
     await expect(page.locator('#nome')).toBeFocused();
 
-    // Máscara leve de telefone e preenchimento completo
+    // 1. Cenário de sucesso (mock Web3Forms 200)
     await page.fill('#nome', 'Carlos Mendes');
     await page.fill('#telefone', '19991234567');
     await expect(page.locator('#telefone')).toHaveValue('(19) 99123-4567');
     await page.fill('#email', 'carlos@empresa.com.br');
     await page.fill('#mensagem', 'Transfer Campinas para Viracopos amanhã às 07h.');
-
     await page.click('#contact-submit');
 
-    const triggered = await page.evaluate((mobile) => {
-      const w = window as unknown as { __navigatedUrls: string[]; __openedUrls: string[] };
-      return mobile ? w.__navigatedUrls[0] || '' : w.__openedUrls[0] || '';
-    }, isMobile);
-
-    if (isMobile) {
-      expect(triggered).toMatch(new RegExp(`^whatsapp://send\\?phone=${PRIMARY_PHONE}&text=`));
-    } else {
-      expect(triggered).toMatch(new RegExp(`^https://web\\.whatsapp\\.com/send\\?phone=${PRIMARY_PHONE}&text=`));
-    }
-
-    const decoded = decodeURIComponent(triggered.split('&text=')[1] || '');
-    expect(decoded).toContain('Carlos Mendes');
-    expect(decoded).toContain('(19) 99123-4567');
-    expect(decoded).toContain('carlos@empresa.com.br');
-    expect(decoded).toContain('Transfer Campinas para Viracopos');
-
-    // Status acessível + link fallback
     await expect(page.locator('#form-status')).toBeVisible();
+    await expect(page.locator('#form-status')).toHaveClass(/is-success/);
+    await expect(page.locator('#form-status')).toHaveAttribute('aria-live', 'polite');
+    await expect(page.locator('#form-status')).toContainText(/sucesso/i);
+    await expect(page.locator('#nome')).toHaveValue('');
+    expect(capturedPayloads).toHaveLength(1);
+    expect(capturedPayloads[0]).toMatchObject({
+      access_key: 'WEB3FORMS_ACCESS_KEY_AQUI',
+      botcheck: false,
+      nome: 'Carlos Mendes',
+      telefone: '(19) 99123-4567',
+      email: 'carlos@empresa.com.br',
+    });
+
+    // 2. Cenário de erro (mock Web3Forms 500) exibe alerta acessível + fallback WhatsApp
+    mockMode = 'error';
+    await page.fill('#nome', 'Maria Silva');
+    await page.fill('#telefone', '19998887766');
+    await page.fill('#email', 'maria@empresa.com.br');
+    await page.fill('#mensagem', 'Cotação van executiva para evento corporativo.');
+    await page.click('#contact-submit');
+
+    await expect(page.locator('#form-status')).toBeVisible();
+    await expect(page.locator('#form-status')).toHaveClass(/is-error/);
+    await expect(page.locator('#form-status')).toHaveAttribute('role', 'alert');
     await expect(page.locator('#whatsapp-fallback-link')).toHaveAttribute('href', new RegExp(`^https://wa\\.me/${PRIMARY_PHONE}\\?text=`));
   });
 
@@ -304,7 +343,7 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
   });
 
   test('lazy load + skeleton shimmer abaixo da dobra e hero com fetchpriority=high', async ({ page }) => {
-    await page.route('**/assets/brand/frota-veiculos-recorte.*', async (route) => {
+    await page.route('**/assets/brand/frota-veiculos-recorte*', async (route) => {
       await new Promise((r) => setTimeout(r, 350));
       await route.continue();
     });
@@ -327,7 +366,7 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
         }))
         .filter((i) => i.top > vh);
     });
-    expect(belowFold.length).toBeGreaterThanOrEqual(10);
+    expect(belowFold.length).toBeGreaterThanOrEqual(4);
     expect(belowFold.filter((i) => i.loading !== 'lazy')).toEqual([]);
     expect(belowFold.filter((i) => i.decoding !== 'async')).toEqual([]);
     expect(belowFold.filter((i) => !i.hasSize)).toEqual([]);
@@ -354,16 +393,21 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
     const reduced = await page.evaluate(() => ({
       heroAnim: getComputedStyle(document.querySelector('.hero-title .w > span')!).animationName,
       revealOp: getComputedStyle(document.querySelector('.reveal')!).opacity,
+      leafOffset: parseFloat(getComputedStyle(document.querySelector('.hero-leaf .leaf-blade')!).strokeDashoffset),
+      glyphOffset: parseFloat(getComputedStyle(document.querySelector('.diff-glyph path')!).strokeDashoffset),
       overflowX: document.documentElement.scrollWidth > window.innerWidth,
     }));
     expect(reduced.heroAnim).toBe('none');
     expect(reduced.revealOp).toBe('1');
+    expect(reduced.leafOffset).toBe(0);
+    expect(reduced.glyphOffset).toBe(0);
     expect(reduced.overflowX).toBe(false);
 
     // 2. Com movimento
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/');
     await expect(page.locator('html')).toHaveClass(/js-motion/);
+    await expect(page.locator('.hero-leaf')).toHaveClass(/is-visible/, { timeout: 3000 });
     await page.locator('#diferenciais .diff-item').first().scrollIntoViewIfNeeded();
     await expect(page.locator('#diferenciais .diff-item').first()).toHaveClass(/is-visible/, { timeout: 3000 });
   });
@@ -424,15 +468,15 @@ test.describe('Mobilità Transportes — v12 hero moderno, fundos e animações'
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v12-1440-fold.png' });
-    await page.screenshot({ path: 'test-results/v12-1440-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v13-1440-fold.png' });
+    await page.screenshot({ path: 'test-results/v13-1440-full.png', fullPage: true });
 
     // Mobile 375
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v12-375-fold.png' });
-    await page.screenshot({ path: 'test-results/v12-375-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v13-375-fold.png' });
+    await page.screenshot({ path: 'test-results/v13-375-full.png', fullPage: true });
   });
 });

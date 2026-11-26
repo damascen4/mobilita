@@ -116,8 +116,8 @@
     trackedSections.forEach(({ section }) => navObserver.observe(section));
   }
 
-  /* 4. Scroll reveal (progressive enhancement) */
-  const reveals = Array.from(document.querySelectorAll('.reveal'));
+  /* 4. Scroll reveal & SVG stroke-draw trigger (progressive enhancement) */
+  const reveals = Array.from(document.querySelectorAll('.reveal, [data-draw]'));
   if (!prefersReducedMotion && 'IntersectionObserver' in window && reveals.length) {
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -247,11 +247,13 @@
     });
   }
 
-  /* 8. Accessible contact form validation + WhatsApp handoff */
+  /* 8. Accessible contact form validation + Web3Forms email submit (with WhatsApp fallback) */
   const form = document.getElementById('contact-form');
   const statusEl = document.getElementById('form-status');
+  const submitBtn = document.getElementById('contact-submit');
 
   if (form instanceof HTMLFormElement && statusEl) {
+    const WEB3FORMS_URL = form.getAttribute('action') || 'https://api.web3forms.com/submit';
     const fields = {
       nome: {
         el: document.getElementById('nome'),
@@ -288,6 +290,13 @@
       }
     };
 
+    const setStatus = (kind, html) => {
+      statusEl.className = `form-status${kind ? ` is-${kind}` : ''}`;
+      statusEl.setAttribute('role', kind === 'error' ? 'alert' : 'status');
+      statusEl.innerHTML = html;
+      statusEl.hidden = false;
+    };
+
     Object.values(fields).forEach((field) => {
       field.el?.addEventListener('input', () => {
         if (field.el.getAttribute('aria-invalid') === 'true') {
@@ -296,7 +305,7 @@
       });
     });
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       let firstInvalid = null;
 
@@ -312,10 +321,20 @@
         return;
       }
 
+      const honeypot = form.querySelector('input[name="botcheck"]');
+      if (honeypot instanceof HTMLInputElement && honeypot.checked) {
+        setStatus('success', 'Mensagem enviada com sucesso! Responderemos em breve.');
+        form.reset();
+        return;
+      }
+
       const nome = fields.nome.el.value.trim();
       const telefone = fields.telefone.el.value.trim();
       const email = fields.email.el.value.trim();
       const mensagem = fields.mensagem.el.value.trim();
+      const accessKey = form.querySelector('input[name="access_key"]')?.value || '';
+      const subject = form.querySelector('input[name="subject"]')?.value || 'Novo contato pelo site — Mobilità Transportes';
+      const fromName = form.querySelector('input[name="from_name"]')?.value || 'Site Mobilità Transportes';
 
       const composed = [
         'Olá, Mobilità Transportes!',
@@ -324,12 +343,54 @@
         `E-mail: ${email}`,
         `Mensagem: ${mensagem}`,
       ].join('\n');
-
-      openWhatsApp(PRIMARY_PHONE, composed);
-
       const fallbackHref = `https://wa.me/${PRIMARY_PHONE}?text=${encodeURIComponent(composed)}`;
-      statusEl.innerHTML = `Mensagem preparada para envio. Caso o WhatsApp não abra automaticamente, <a id="whatsapp-fallback-link" href="${fallbackHref}" target="_blank" rel="noopener noreferrer">clique aqui para abrir no WhatsApp</a>.`;
-      statusEl.hidden = false;
+
+      if (submitBtn instanceof HTMLButtonElement) {
+        submitBtn.disabled = true;
+        submitBtn.setAttribute('aria-busy', 'true');
+        submitBtn.textContent = 'Enviando...';
+      }
+      setStatus('sending', 'Enviando sua mensagem...');
+
+      try {
+        const response = await fetch(WEB3FORMS_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            subject,
+            from_name: fromName,
+            botcheck: false,
+            nome,
+            telefone,
+            email,
+            mensagem,
+          }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.success !== true) {
+          throw new Error(data.message || 'Falha no envio');
+        }
+        setStatus(
+          'success',
+          `Mensagem enviada com sucesso! Responderemos em breve. Se preferir atendimento imediato, <a id="whatsapp-fallback-link" href="${fallbackHref}" target="_blank" rel="noopener noreferrer">fale pelo WhatsApp</a>.`
+        );
+        form.reset();
+      } catch {
+        setStatus(
+          'error',
+          `Não foi possível enviar por e-mail agora. Tente novamente ou <a id="whatsapp-fallback-link" href="${fallbackHref}" target="_blank" rel="noopener noreferrer">envie sua mensagem pelo WhatsApp</a>.`
+        );
+      } finally {
+        if (submitBtn instanceof HTMLButtonElement) {
+          submitBtn.disabled = false;
+          submitBtn.removeAttribute('aria-busy');
+          submitBtn.textContent = 'Enviar mensagem';
+        }
+      }
     });
   }
 })();
