@@ -16,7 +16,13 @@ DEPLOY_DIR="${DEPLOY_DIR:-/opt/sites/${APP}}"
 BACKUP_DIR="${BACKUP_DIR:-/opt/sites-backups/${APP}}"
 TARGET="${1:-}"
 
-SSH_OPTS=(-p "${DEPLOY_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=accept-new)
+DEPLOY_KNOWN_HOSTS="${DEPLOY_KNOWN_HOSTS:-${HOME}/.ssh/known_hosts}"
+if [[ ! -f "${DEPLOY_KNOWN_HOSTS}" ]]; then
+  echo "Erro: arquivo known_hosts não encontrado em DEPLOY_KNOWN_HOSTS='${DEPLOY_KNOWN_HOSTS}'." >&2
+  exit 1
+fi
+
+SSH_OPTS=(-p "${DEPLOY_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=${DEPLOY_KNOWN_HOSTS}")
 if [[ -n "${DEPLOY_KEY}" ]]; then
   if [[ ! -f "${DEPLOY_KEY}" ]]; then
     echo "Erro: chave SSH não encontrada em DEPLOY_KEY='${DEPLOY_KEY}'." >&2

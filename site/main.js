@@ -18,10 +18,12 @@
   }
 
   function navigateTo(url) {
+    /* __MOBILITA_TEST_HOOK_START__ */
     if (typeof window.__mobilitaNavigate === 'function') {
       window.__mobilitaNavigate(url);
       return;
     }
+    /* __MOBILITA_TEST_HOOK_END__ */
     window.location.href = url;
   }
 

@@ -52,6 +52,19 @@ export function buildSite() {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.cpSync(srcDir, outDir, { recursive: true });
 
+  const outMainJs = path.join(outDir, 'main.js');
+  if (fs.existsSync(outMainJs)) {
+    const rawMain = fs.readFileSync(outMainJs, 'utf8');
+    const strippedMain = rawMain.replace(
+      /\r?\n?[ \t]*\/\* __MOBILITA_TEST_HOOK_START__ \*\/[\s\S]*?\/\* __MOBILITA_TEST_HOOK_END__ \*\//g,
+      ''
+    );
+    if (strippedMain.includes('__mobilitaNavigate')) {
+      throw new Error('Production build still exposes __mobilitaNavigate in dist/main.js');
+    }
+    fs.writeFileSync(outMainJs, strippedMain, 'utf8');
+  }
+
   const builtFiles = walk(outDir);
   if (!fs.existsSync(path.join(outDir, 'index.html'))) {
     throw new Error('Build failed: dist/index.html missing');

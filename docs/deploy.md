@@ -41,6 +41,7 @@ O script empacota `site/` via `git archive` + `tar` por SSH, faz troca atômica 
 ```bash
 export DEPLOY_HOST="<usuario>@<host-da-vps>"
 export DEPLOY_KEY="$HOME/.ssh/<sua-chave>"
+export DEPLOY_KNOWN_HOSTS="$HOME/.ssh/known_hosts"   # fixado; gere antes com ssh-keyscan -p <porta> <host> >> "$DEPLOY_KNOWN_HOSTS"
 # Opcionais (valores padrão já configurados):
 # export APP="mobilita"
 # export DEPLOY_PORT="22"
@@ -51,7 +52,7 @@ export DEPLOY_KEY="$HOME/.ssh/<sua-chave>"
 ./scripts/deploy.sh v1.2.0   # publica tag/branch/commit específico
 ```
 
-> Nunca salve `DEPLOY_HOST`, IPs ou chaves SSH em arquivos versionados.
+> Nunca salve `DEPLOY_HOST`, IPs ou chaves SSH em arquivos versionados. Os scripts usam `StrictHostKeyChecking=yes` com `UserKnownHostsFile="${DEPLOY_KNOWN_HOSTS}"` (padrão `~/.ssh/known_hosts`).
 
 ## 3. Rollback
 
