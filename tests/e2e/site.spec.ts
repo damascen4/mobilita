@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
 const PRIMARY_PHONE = '5519998108070';
 const SECONDARY_PHONE = '5519992638676';
 
-test.describe('Mobilità Transportes — v10 Redesign Moderno', () => {
+test.describe('Mobilità Transportes — v11 marca original modernizada', () => {
   test('SEO, fontes KoHo 400-700, tokens, <picture> WebP e zero imagens quebradas', async ({ page }) => {
     await page.goto('/');
 
@@ -415,15 +415,15 @@ test.describe('Mobilità Transportes — v10 Redesign Moderno', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v10-1440-fold.png' });
-    await page.screenshot({ path: 'test-results/v10-1440-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v11-1440-fold.png' });
+    await page.screenshot({ path: 'test-results/v11-1440-full.png', fullPage: true });
 
     // Mobile 375
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v10-375-fold.png' });
-    await page.screenshot({ path: 'test-results/v10-375-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v11-375-fold.png' });
+    await page.screenshot({ path: 'test-results/v11-375-full.png', fullPage: true });
   });
 });

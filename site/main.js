@@ -165,19 +165,6 @@
     });
   }
 
-  /* 5c. Carrossel da frota (scroll-snap + botões) */
-  const track = document.getElementById('fleet-track');
-  const prev = document.getElementById('fleet-prev');
-  const next = document.getElementById('fleet-next');
-  if (track && prev && next) {
-    const step = (dir) => {
-      const slide = track.querySelector('.fleet-slide');
-      const amount = (slide ? slide.getBoundingClientRect().width : track.clientWidth * 0.8) + 16;
-      track.scrollBy({ left: dir * amount, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-    };
-    prev.addEventListener('click', () => step(-1));
-    next.addEventListener('click', () => step(1));
-  }
 
   /* 6. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */
   const openWhatsApp = (phone, text) => {

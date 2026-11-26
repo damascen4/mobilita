@@ -1,4 +1,4 @@
-/* Mobilità Transporte Executivo — Design Tokens (v10)
+/* Mobilità Transporte Executivo — Design Tokens (v11)
  * Fonte: docs/brand-manual.md
  */
 :root {
@@ -10,11 +10,13 @@
   --mb-green-light: #55b944;
   --mb-green-success: #3dc372;
   --mb-green-tint: #eef5ea;
+  --mb-band: #468232; /* #508f3b escurecido p/ AA com texto branco pequeno */
+  --mb-band-deep: #3f7a2e;
 
   /* Neutros */
   --mb-ink: #2d2e33;
   --mb-ink-strong: #09090a;
-  --mb-text: #6c6d74;
+  --mb-text: #2d2e33;
   --mb-text-hover: #606167;
   --mb-text-soft: #b4b5ba;
   --mb-line: #e5e5e7;
@@ -72,11 +74,11 @@
 
   /* Forma e elevação */
   --mb-r-sm: 8px;
-  --mb-r-md: 14px;
-  --mb-r-lg: 24px;
+  --mb-r-md: 12px;
+  --mb-r-lg: 16px;
   --mb-r-pill: 500px;
-  --mb-r-xl: 28px;
-  --mb-r-2xl: 36px;
+  --mb-r-xl: 20px;
+  --mb-r-2xl: 20px;
   --mb-shadow-1: 0 2px 8px rgba(18, 22, 19, 0.07);
   --mb-shadow-2: 0 10px 28px rgba(18, 22, 19, 0.1);
   --mb-shadow-3: 0 24px 48px rgba(18, 22, 19, 0.16);
