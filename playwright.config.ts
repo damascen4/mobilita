@@ -12,17 +12,22 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'mobile-pixel',
+      name: 'mobile-iphone-13',
       use: {
-        ...devices['Pixel 5'],
-        viewport: { width: 375, height: 812 },
+        ...devices['iPhone 13'],
+        defaultBrowserType: 'chromium',
       },
     },
     {
-      name: 'desktop-chromium',
+      name: 'mobile-pixel-7',
+      use: {
+        ...devices['Pixel 7'],
+      },
+    },
+    {
+      name: 'desktop-chrome',
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1440, height: 900 },
       },
     },
   ],

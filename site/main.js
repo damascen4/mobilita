@@ -8,101 +8,92 @@
     document.documentElement.classList.add('js-enabled');
   }
 
-  // Mobile UA detection for direct WhatsApp app launch
+  // WhatsApp direct routing helper (mobile deep link + fallback, desktop web.whatsapp.com)
   function isMobileDevice() {
-    return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
   }
 
   function sanitizePhone(phone) {
-    return String(phone || WHATSAPP_NUMBER).replace(/\D/g, '');
+    return String(phone || WHATSAPP_NUMBER).replace(/\D/g, '') || WHATSAPP_NUMBER;
   }
 
-  function buildFallbackWaUrl(phone, text) {
-    const cleanPhone = sanitizePhone(phone);
-    const encoded = encodeURIComponent(text || '');
-    return 'https://wa.me/' + cleanPhone + (encoded ? '?text=' + encoded : '');
+  function navigateTo(url) {
+    if (typeof window.__mobilitaNavigate === 'function') {
+      window.__mobilitaNavigate(url);
+      return;
+    }
+    window.location.href = url;
   }
 
-  function buildDirectWhatsAppUrl(phone, text) {
-    const cleanPhone = sanitizePhone(phone);
+  function buildWaMeUrl(phone, text) {
+    const digits = sanitizePhone(phone);
+    const query = text ? '?text=' + encodeURIComponent(text) : '';
+    return 'https://wa.me/' + digits + query;
+  }
+
+  function openWhatsApp(phone, text) {
+    const digits = sanitizePhone(phone);
     const encoded = encodeURIComponent(text || '');
-    const query = 'phone=' + cleanPhone + (encoded ? '&text=' + encoded : '');
+    const waMeUrl = buildWaMeUrl(digits, text);
 
     if (isMobileDevice()) {
-      return {
-        mode: 'mobile',
-        url: 'whatsapp://send?' + query,
-        fallbackUrl: buildFallbackWaUrl(cleanPhone, text),
-      };
-    }
+      const deepLink = 'whatsapp://send?phone=' + digits + (encoded ? '&text=' + encoded : '');
+      let leftPage = false;
 
-    return {
-      mode: 'desktop',
-      url: 'https://web.whatsapp.com/send?' + query,
-      fallbackUrl: buildFallbackWaUrl(cleanPhone, text),
-    };
-  }
-
-  /**
-   * Abre o WhatsApp diretamente sem passar pela página intermediária do wa.me.
-   * - Mobile (Android/iOS): whatsapp://send?phone=...&text=... com fallback para wa.me após 1500ms se a aba continuar visível.
-   * - Desktop: abre https://web.whatsapp.com/send?phone=...&text=... em nova aba.
-   */
-  function openWhatsApp(phone, text) {
-    const target = buildDirectWhatsAppUrl(phone, text);
-    document.documentElement.dataset.lastWhatsappMode = target.mode;
-    document.documentElement.dataset.lastWhatsappUrl = target.url;
-    document.documentElement.dataset.lastWhatsappFallback = target.fallbackUrl;
-
-    const event = new CustomEvent('mobilita:whatsapp', {
-      cancelable: true,
-      detail: {
-        phone: sanitizePhone(phone),
-        text: text || '',
-        mode: target.mode,
-        url: target.url,
-        fallbackUrl: target.fallbackUrl,
-      },
-    });
-    const shouldNavigate = window.dispatchEvent(event);
-
-    if (target.mode === 'mobile') {
-      let appOpened = false;
-      function handleVisibilityChange() {
-        if (document.visibilityState === 'hidden') {
-          appOpened = true;
-          document.removeEventListener('visibilitychange', handleVisibilityChange);
+      function onVisibilityChange() {
+        if (document.hidden || document.visibilityState === 'hidden') {
+          leftPage = true;
         }
       }
-      document.addEventListener('visibilitychange', handleVisibilityChange);
 
-      if (shouldNavigate) {
-        window.location.href = target.url;
+      function onBlur() {
+        leftPage = true;
       }
+
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      window.addEventListener('blur', onBlur);
+
+      navigateTo(deepLink);
 
       window.setTimeout(function () {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        if (!appOpened && document.visibilityState === 'visible' && shouldNavigate) {
-          window.location.href = target.fallbackUrl;
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        window.removeEventListener('blur', onBlur);
+        if (!leftPage && !document.hidden) {
+          navigateTo(waMeUrl);
         }
       }, 1500);
-    } else if (shouldNavigate) {
-      window.open(target.url, '_blank', 'noopener,noreferrer');
+
+      return deepLink;
     }
 
-    return target;
+    const webUrl = 'https://web.whatsapp.com/send?phone=' + digits + (encoded ? '&text=' + encoded : '');
+    window.open(webUrl, '_blank', 'noopener,noreferrer');
+    return webUrl;
   }
 
   window.openWhatsApp = openWhatsApp;
 
-  // Intercepta todos os CTAs WhatsApp mantendo href="https://wa.me/..." como fallback sem JS/SEO
-  document.querySelectorAll('a[data-wa-phone]').forEach(function (anchor) {
-    anchor.addEventListener('click', function (event) {
-      event.preventDefault();
-      const phone = anchor.dataset.waPhone || WHATSAPP_NUMBER;
-      const text = anchor.dataset.waText || '';
-      openWhatsApp(phone, text);
-    });
+  // Intercept clicks on all WhatsApp links keeping href="https://wa.me/..." as no-JS fallback
+  document.addEventListener('click', function (event) {
+    const link = event.target.closest('a[data-wa-phone], a[href^="https://wa.me/"]');
+    if (!link) return;
+
+    event.preventDefault();
+
+    let phone = link.dataset.waPhone || '';
+    let text = link.dataset.waText || '';
+
+    if (!phone || !text) {
+      try {
+        const parsed = new URL(link.href);
+        if (!phone) phone = parsed.pathname.replace(/\D/g, '');
+        if (!text) text = parsed.searchParams.get('text') || '';
+      } catch (_) {
+        // Ignore malformed href; sanitizePhone falls back to WHATSAPP_NUMBER
+      }
+    }
+
+    openWhatsApp(phone, text);
   });
 
   // Header scroll state
@@ -157,7 +148,7 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -24px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
     );
 
     revealElements.forEach(function (el) {
@@ -197,24 +188,72 @@
     updateParallax();
   }
 
-  // Format date (YYYY-MM-DD) for readable Portuguese message
-  function formatDateBr(value) {
-    if (!value) return '';
-    const parts = value.split('-');
-    if (parts.length !== 3) return value;
-    return parts[2] + '/' + parts[1] + '/' + parts[0];
+  // Light BR phone mask (permite dígitos livres / internacionais)
+  function formatBrPhone(raw) {
+    const trimmed = String(raw || '');
+    if (trimmed.trim().startsWith('+')) {
+      return trimmed.replace(/[^\d+\s()-]/g, '');
+    }
+
+    const digits = trimmed.replace(/\D/g, '');
+    if (!digits) return '';
+    if (digits.length > 11) {
+      return digits;
+    }
+    if (digits.length <= 2) {
+      return '(' + digits;
+    }
+    if (digits.length <= 6) {
+      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2);
+    }
+    if (digits.length <= 10) {
+      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 6) + '-' + digits.slice(6);
+    }
+    return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 7) + '-' + digits.slice(7);
   }
 
-  function buildQuoteMessage(data) {
+  const phoneInput = document.getElementById('telefone');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', function () {
+      const formatted = formatBrPhone(phoneInput.value);
+      if (phoneInput.value !== formatted) {
+        phoneInput.value = formatted;
+      }
+    });
+  }
+
+  // Local today string YYYY-MM-DD and min date on #data
+  function getLocalTodayIso() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + day;
+  }
+
+  const dateInput = document.getElementById('data');
+  const todayIso = getLocalTodayIso();
+  if (dateInput) {
+    dateInput.min = todayIso;
+  }
+
+  // Format YYYY-MM-DD + HH:MM for readable Portuguese message
+  function formatDateAndTime(dateVal, timeVal) {
+    const parts = String(dateVal || '').split('-');
+    const formattedDate = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : dateVal;
+    return timeVal ? formattedDate + ' às ' + timeVal : formattedDate;
+  }
+
+  // Build WhatsApp message text from form fields
+  function buildQuoteText(data) {
     const lines = [
-      'Olá, Mobilità! Vim pelo site e gostaria de solicitar um orçamento:',
+      'Olá, Mobilità! Gostaria de solicitar um orçamento:',
       '',
       'Nome: ' + data.nome,
       'Telefone: ' + data.telefone,
       'Origem: ' + data.origem,
       'Destino: ' + data.destino,
-      'Data: ' + formatDateBr(data.data),
-      'Horário: ' + data.hora,
+      'Data e horário: ' + formatDateAndTime(data.data, data.hora),
       'Nº de passageiros: ' + data.passageiros,
     ];
 
@@ -270,25 +309,35 @@
         return;
       }
 
+      if (data.data < getLocalTodayIso()) {
+        if (formError) {
+          formError.textContent = 'Por favor, escolha uma data igual ou posterior a hoje.';
+          formError.hidden = false;
+        }
+        if (formResult) formResult.hidden = true;
+        quoteForm.data.focus();
+        return;
+      }
+
       if (formError) {
         formError.textContent = '';
         formError.hidden = true;
       }
 
-      const message = buildQuoteMessage(data);
-      const fallbackUrl = buildFallbackWaUrl(WHATSAPP_NUMBER, message);
-      quoteForm.dataset.lastWhatsappUrl = fallbackUrl;
+      const text = buildQuoteText(data);
+      const waMeUrl = buildWaMeUrl(WHATSAPP_NUMBER, text);
+      quoteForm.dataset.lastWhatsappUrl = waMeUrl;
 
       if (generatedLink) {
-        generatedLink.href = fallbackUrl;
+        generatedLink.href = waMeUrl;
         generatedLink.dataset.waPhone = WHATSAPP_NUMBER;
-        generatedLink.dataset.waText = message;
+        generatedLink.dataset.waText = text;
       }
       if (formResult) {
         formResult.hidden = false;
       }
 
-      openWhatsApp(WHATSAPP_NUMBER, message);
+      openWhatsApp(WHATSAPP_NUMBER, text);
     });
   }
 

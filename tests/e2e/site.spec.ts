@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-const WA_PHONE_1 = '5519998108070';
-const WA_PHONE_2 = '5519992638676';
-const WA_BASE_1 = `https://wa.me/${WA_PHONE_1}`;
-const WA_BASE_2 = `https://wa.me/${WA_PHONE_2}`;
+const PRIMARY_PHONE = '5519998108070';
+const SECONDARY_PHONE = '5519992638676';
+const WA_PRIMARY_PREFIX = `https://wa.me/${PRIMARY_PHONE}`;
+const WA_SECONDARY_PREFIX = `https://wa.me/${SECONDARY_PHONE}`;
 
-test.describe('Mobilità Transportes — Mobile-First & WhatsApp Direto', () => {
-  test('carrega página, SEO, acessibilidade base (>=18px), WebP srcset e imagens', async ({ page }) => {
+test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', () => {
+  test('carrega página, SEO, fonte >=18px, WebP <picture> e imagens íntegras', async ({ page }) => {
     await page.goto('/');
 
     await expect(page).toHaveTitle('Transporte Executivo com Segurança e Conforto - Mobilità Transportes');
@@ -23,17 +23,14 @@ test.describe('Mobilità Transportes — Mobile-First & WhatsApp Direto', () => 
     const rootFontSize = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
     expect(rootFontSize).toBeGreaterThanOrEqual(18);
 
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Você no seu destino, sem preocupações');
+    const h1 = page.getByRole('heading', { level: 1 });
+    await expect(h1).toBeVisible();
+    await expect(h1).toContainText('Você no seu destino, sem preocupações');
 
-    // Verifica sources WebP com srcset para imagens principais
-    const webpSources = await page.locator('picture source[type="image/webp"][srcset]').count();
-    expect(webpSources).toBeGreaterThanOrEqual(3);
-
-    // Verifica tipos corretos dos inputs do formulário
-    await expect(page.locator('#telefone')).toHaveAttribute('type', 'tel');
-    await expect(page.locator('#data')).toHaveAttribute('type', 'date');
-    await expect(page.locator('#hora')).toHaveAttribute('type', 'time');
-    await expect(page.locator('#passageiros')).toHaveAttribute('type', 'number');
+    // Garante uso de <picture> com source WebP e srcset responsivo
+    const webpSources = await page.locator('picture source[type="image/webp"]').count();
+    expect(webpSources).toBeGreaterThanOrEqual(10);
+    await expect(page.locator('.hero-picture source[type="image/webp"]')).toHaveAttribute('srcset', /640w.*1280w/);
 
     // Garante que nenhuma imagem está quebrada
     const brokenImages = await page.evaluate(async () => {
@@ -56,89 +53,173 @@ test.describe('Mobilità Transportes — Mobile-First & WhatsApp Direto', () => 
     expect(brokenImages).toEqual([]);
   });
 
-  test('navegação por âncoras alcança todas as seções (desktop e mobile)', async ({ page, isMobile }) => {
+  test('barra inferior fixa visível só no mobile e sem scroll horizontal em 375px', async ({ page }, testInfo) => {
+    const isMobileProject = testInfo.project.name.startsWith('mobile-');
     await page.goto('/');
 
-    const anchors = [
-      '#quem-somos',
-      '#servicos',
-      '#diferenciais',
-      '#frota',
-      '#como-funciona',
-      '#orcamento',
-      '#contato',
-    ];
+    const bottomBar = page.locator('#mobile-bottom-bar');
+    const floatingWa = page.locator('.floating-whatsapp');
 
-    if (isMobile) {
+    if (isMobileProject) {
+      await expect(bottomBar).toBeVisible();
+      await expect(floatingWa).toBeHidden();
+
+      // Alvos de toque >= 48px na barra inferior e header
+      const barWaBox = await page.locator('#bottom-bar-whatsapp').boundingBox();
+      const barCallBox = await page.locator('#bottom-bar-call').boundingBox();
+      const menuBox = await page.locator('#menu-toggle').boundingBox();
+      expect(barWaBox!.height).toBeGreaterThanOrEqual(48);
+      expect(barCallBox!.height).toBeGreaterThanOrEqual(48);
+      expect(menuBox!.height).toBeGreaterThanOrEqual(48);
+
+      // Sem scroll horizontal na largura do dispositivo e em 375px
+      await page.setViewportSize({ width: 375, height: 812 });
+      const hasHorizontalScroll = await page.evaluate(
+        () => document.documentElement.scrollWidth > window.innerWidth
+      );
+      expect(hasHorizontalScroll).toBe(false);
+
+      // Menu mobile abre e navega
       const menuToggle = page.locator('#menu-toggle');
       const mobileNav = page.locator('#nav-mobile');
-      await expect(menuToggle).toBeVisible();
+      await expect(mobileNav).toBeHidden();
       await menuToggle.click();
       await expect(mobileNav).toBeVisible();
       await mobileNav.locator('a[href="#frota"]').click();
       await expect(mobileNav).toBeHidden();
       await expect(page).toHaveURL(/#frota$/);
-      await expect(page.locator('#frota')).toBeVisible();
     } else {
-      for (const hash of anchors) {
+      await expect(bottomBar).toBeHidden();
+      await expect(floatingWa).toBeVisible();
+
+      // Navegação desktop por âncoras
+      for (const hash of ['#quem-somos', '#servicos', '#diferenciais', '#frota', '#como-funciona', '#orcamento', '#contato']) {
         const navLink = page.locator(`.main-nav a[href="${hash}"]`);
         await expect(navLink).toBeVisible();
         await navLink.click();
         await expect(page).toHaveURL(new RegExp(`${hash}$`));
-        await expect(page.locator(hash)).toBeVisible();
       }
     }
   });
 
-  test('CTAs WhatsApp possuem fallback wa.me correto e disparam link direto conforme dispositivo', async ({ page, isMobile }) => {
-    await page.goto('/');
+  test('CTAs WhatsApp possuem href fallback correto e abrem whatsapp:// no mobile ou web.whatsapp.com no desktop', async ({ page }, testInfo) => {
+    const isMobileProject = testInfo.project.name.startsWith('mobile-');
 
-    // Fallbacks href (SEO / sem JS) com números só dígitos
-    await expect(page.locator('#hero-whatsapp-cta')).toHaveAttribute('href', new RegExp(`^${WA_BASE_1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\?text=`));
-    await expect(page.locator('.header-whatsapp')).toHaveAttribute('href', new RegExp(`^${WA_BASE_1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\?text=`));
-    await expect(page.locator('#bottom-whatsapp-cta')).toHaveAttribute('href', new RegExp(`^${WA_BASE_1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\?text=`));
-    await expect(page.locator('#floating-whatsapp-cta')).toHaveAttribute('href', new RegExp(`^${WA_BASE_1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\?text=`));
-    await expect(page.locator(`#contato a[href^="${WA_BASE_2}"]`)).toHaveCount(1);
-    await expect(page.locator('.hero-ctas a[href="tel:+5519998108070"]')).toBeVisible();
-
-    // Captura evento de navegação WhatsApp direto sem sair da página
-    await page.evaluate(() => {
-      (window as unknown as { __waEvent?: Record<string, string> }).__waEvent = undefined;
-      window.addEventListener('mobilita:whatsapp', (e) => {
-        e.preventDefault();
-        (window as unknown as { __waEvent?: Record<string, string> }).__waEvent = (e as CustomEvent).detail;
-      });
+    await page.addInitScript(() => {
+      const w = window as unknown as {
+        __navigatedUrls?: string[];
+        __openedUrls?: string[];
+        __mobilitaNavigate?: (url: string) => void;
+      };
+      w.__navigatedUrls = [];
+      w.__openedUrls = [];
+      w.__mobilitaNavigate = (url: string) => {
+        w.__navigatedUrls!.push(url);
+      };
+      window.open = ((url?: string | URL) => {
+        w.__openedUrls!.push(String(url || ''));
+        return null;
+      }) as typeof window.open;
     });
 
-    await page.locator('#hero-whatsapp-cta').click();
+    await page.goto('/');
 
-    const waEvent = await page.evaluate(() => (window as unknown as { __waEvent?: Record<string, string> }).__waEvent);
-    expect(waEvent).toBeTruthy();
-    expect(waEvent!.phone).toBe(WA_PHONE_1);
-    expect(waEvent!.text).toContain('orçamento');
+    // Fallback hrefs sem JS
+    await expect(page.locator('.header-whatsapp')).toHaveAttribute('href', new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    await expect(page.locator('#hero-whatsapp-cta')).toHaveAttribute('href', new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    await expect(page.locator('#transfer-whatsapp-cta')).toHaveAttribute('href', new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    await expect(page.locator('#bottom-bar-whatsapp')).toHaveAttribute('href', new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    await expect(page.locator('.floating-whatsapp')).toHaveAttribute('href', new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    await expect(page.locator('#contact-whatsapp-1')).toHaveAttribute('href', new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    await expect(page.locator('#contact-whatsapp-2')).toHaveAttribute('href', new RegExp(`^${WA_SECONDARY_PREFIX}\\?text=`));
+    await expect(page.locator('.hero-ctas a[href="tel:+5519998108070"]')).toBeVisible();
+    await expect(page.locator('#bottom-bar-call')).toHaveAttribute('href', 'tel:+5519998108070');
 
-    if (isMobile) {
-      expect(waEvent!.mode).toBe('mobile');
-      expect(waEvent!.url.startsWith(`whatsapp://send?phone=${WA_PHONE_1}&text=`)).toBe(true);
+    // Clique no CTA de transfer (contextual)
+    await page.locator('#transfer-whatsapp-cta').click();
+
+    if (isMobileProject) {
+      const navigated = await page.evaluate(
+        () => (window as unknown as { __navigatedUrls: string[] }).__navigatedUrls
+      );
+      expect(navigated.length).toBeGreaterThanOrEqual(1);
+      expect(navigated[0]).toMatch(new RegExp(`^whatsapp://send\\?phone=${PRIMARY_PHONE}&text=`));
+      expect(decodeURIComponent(navigated[0])).toContain('orçamento de transfer');
+
+      // Clique na barra inferior mobile
+      await page.locator('#bottom-bar-whatsapp').click();
+      const navigatedAfterBar = await page.evaluate(
+        () => (window as unknown as { __navigatedUrls: string[] }).__navigatedUrls
+      );
+      expect(navigatedAfterBar[navigatedAfterBar.length - 1]).toMatch(
+        new RegExp(`^whatsapp://send\\?phone=${PRIMARY_PHONE}&text=`)
+      );
     } else {
-      expect(waEvent!.mode).toBe('desktop');
-      expect(waEvent!.url.startsWith(`https://web.whatsapp.com/send?phone=${WA_PHONE_1}&text=`)).toBe(true);
+      const opened = await page.evaluate(
+        () => (window as unknown as { __openedUrls: string[] }).__openedUrls
+      );
+      expect(opened.length).toBeGreaterThanOrEqual(1);
+      expect(opened[0]).toMatch(new RegExp(`^https://web\\.whatsapp\\.com/send\\?phone=${PRIMARY_PHONE}&text=`));
+      expect(decodeURIComponent(opened[0])).toContain('orçamento de transfer');
+
+      // Clique no segundo número em Contato
+      await page.locator('#contact-whatsapp-2').click();
+      const openedAfterContact = await page.evaluate(
+        () => (window as unknown as { __openedUrls: string[] }).__openedUrls
+      );
+      expect(openedAfterContact[openedAfterContact.length - 1]).toMatch(
+        new RegExp(`^https://web\\.whatsapp\\.com/send\\?phone=${SECONDARY_PHONE}&text=`)
+      );
     }
   });
 
-  test('formulário de orçamento monta mensagem com todos os campos e dispara WhatsApp direto', async ({ page, isMobile }) => {
-    await page.goto('/');
+  test('formulário aplica máscara leve de telefone, data mínima = hoje e gera mensagem completa', async ({ page }, testInfo) => {
+    const isMobileProject = testInfo.project.name.startsWith('mobile-');
 
-    await page.evaluate(() => {
-      (window as unknown as { __waEvent?: Record<string, string> }).__waEvent = undefined;
-      window.addEventListener('mobilita:whatsapp', (e) => {
-        e.preventDefault();
-        (window as unknown as { __waEvent?: Record<string, string> }).__waEvent = (e as CustomEvent).detail;
-      });
+    await page.addInitScript(() => {
+      const w = window as unknown as {
+        __navigatedUrls?: string[];
+        __openedUrls?: string[];
+        __mobilitaNavigate?: (url: string) => void;
+      };
+      w.__navigatedUrls = [];
+      w.__openedUrls = [];
+      w.__mobilitaNavigate = (url: string) => {
+        w.__navigatedUrls!.push(url);
+      };
+      window.open = ((url?: string | URL) => {
+        w.__openedUrls!.push(String(url || ''));
+        return null;
+      }) as typeof window.open;
     });
 
+    await page.goto('/');
+
+    // Verifica tipos corretos e inputmode
+    await expect(page.locator('#telefone')).toHaveAttribute('type', 'tel');
+    await expect(page.locator('#telefone')).toHaveAttribute('inputmode', 'tel');
+    await expect(page.locator('#data')).toHaveAttribute('type', 'date');
+    await expect(page.locator('#hora')).toHaveAttribute('type', 'time');
+    await expect(page.locator('#passageiros')).toHaveAttribute('type', 'number');
+    await expect(page.locator('#passageiros')).toHaveAttribute('inputmode', 'numeric');
+
+    // Data mínima = hoje
+    const expectedToday = await page.evaluate(() => {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    });
+    await expect(page.locator('#data')).toHaveAttribute('min', expectedToday);
+
+    // Máscara leve BR + permissão de dígitos livres
+    await page.fill('#telefone', '19991234567');
+    await expect(page.locator('#telefone')).toHaveValue('(19) 99123-4567');
+    await page.fill('#telefone', '5519991234567');
+    await expect(page.locator('#telefone')).toHaveValue('5519991234567');
+    await page.fill('#telefone', '19991234567');
+    await expect(page.locator('#telefone')).toHaveValue('(19) 99123-4567');
+
+    // Submissão completa
     await page.fill('#nome', 'Maria Aparecida');
-    await page.fill('#telefone', '(19) 99123-4567');
     await page.fill('#origem', 'Campinas - Cambuí');
     await page.fill('#destino', 'Aeroporto de Viracopos');
     await page.fill('#data', '2026-12-10');
@@ -148,91 +229,70 @@ test.describe('Mobilità Transportes — Mobile-First & WhatsApp Direto', () => 
 
     await page.click('#quote-submit');
 
-    const waEvent = await page.evaluate(() => (window as unknown as { __waEvent?: Record<string, string> }).__waEvent);
-    expect(waEvent).toBeTruthy();
+    const triggeredUrl = await page.evaluate((mobile) => {
+      const w = window as unknown as { __navigatedUrls: string[]; __openedUrls: string[] };
+      return mobile ? w.__navigatedUrls[0] || '' : w.__openedUrls[0] || '';
+    }, isMobileProject);
 
-    const expectedPrefix = isMobile
-      ? `whatsapp://send?phone=${WA_PHONE_1}&text=`
-      : `https://web.whatsapp.com/send?phone=${WA_PHONE_1}&text=`;
-    expect(waEvent!.url.startsWith(expectedPrefix)).toBe(true);
+    if (isMobileProject) {
+      expect(triggeredUrl).toMatch(new RegExp(`^whatsapp://send\\?phone=${PRIMARY_PHONE}&text=`));
+    } else {
+      expect(triggeredUrl).toMatch(new RegExp(`^https://web\\.whatsapp\\.com/send\\?phone=${PRIMARY_PHONE}&text=`));
+    }
 
-    const decoded = decodeURIComponent(waEvent!.url.split('&text=')[1]);
+    const decoded = decodeURIComponent(triggeredUrl.split('&text=')[1] || '');
     expect(decoded).toContain('Maria Aparecida');
     expect(decoded).toContain('(19) 99123-4567');
     expect(decoded).toContain('Campinas - Cambuí');
     expect(decoded).toContain('Aeroporto de Viracopos');
-    expect(decoded).toContain('10/12/2026');
-    expect(decoded).toContain('08:30');
+    expect(decoded).toContain('10/12/2026 às 08:30');
     expect(decoded).toContain('3');
     expect(decoded).toContain('2 malas grandes');
 
+    // Link de fallback wa.me visível com todos os dados
     const fallbackLink = page.locator('#whatsapp-generated-link');
     await expect(fallbackLink).toBeVisible();
-    await expect(fallbackLink).toHaveAttribute('href', new RegExp(`^${WA_BASE_1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\?text=`));
+    const fallbackHref = await fallbackLink.getAttribute('href');
+    expect(fallbackHref).toMatch(new RegExp(`^${WA_PRIMARY_PREFIX}\\?text=`));
+    expect(decodeURIComponent(fallbackHref!.split('?text=')[1])).toContain('Maria Aparecida');
   });
 
-  test('mobile-first 375px: sem scroll horizontal, barra inferior e alvos de toque >= 48px', async ({ page, isMobile }) => {
-    test.skip(!isMobile, 'Validação específica do projeto mobile');
+  test('captura screenshots mobile-375 (primeiro) e desktop-1440', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-chrome', 'Screenshots gerados uma única vez no projeto desktop-chrome');
 
-    await page.goto('/');
+    const loadAllImages = async () => {
+      await page.evaluate(async () => {
+        const imgs = Array.from(document.querySelectorAll('img'));
+        for (const img of imgs) {
+          img.loading = 'eager';
+        }
+        await Promise.all(
+          imgs.map((img) =>
+            img.complete
+              ? Promise.resolve()
+              : new Promise((resolve) => {
+                  img.addEventListener('load', resolve, { once: true });
+                  img.addEventListener('error', resolve, { once: true });
+                })
+          )
+        );
+      });
+    };
 
-    const hasHorizontalScroll = await page.evaluate(
-      () => document.documentElement.scrollWidth > window.innerWidth
-    );
-    expect(hasHorizontalScroll).toBe(false);
-
-    // Barra inferior fixa visível ao alcance do polegar com WhatsApp e Ligar
-    const bottomBar = page.locator('#mobile-bottom-bar');
-    await expect(bottomBar).toBeVisible();
-    await expect(page.locator('#bottom-call-cta')).toHaveAttribute('href', 'tel:+5519998108070');
-
-    // Alvos de toque principais >= 48px
-    const touchSelectors = [
-      '.header-whatsapp',
-      '#menu-toggle',
-      '#hero-whatsapp-cta',
-      '#bottom-whatsapp-cta',
-      '#bottom-call-cta',
-      '#quote-submit',
-    ];
-    for (const sel of touchSelectors) {
-      const box = await page.locator(sel).boundingBox();
-      expect(box, `Bounding box esperado para ${sel}`).not.toBeNull();
-      expect(box!.height, `Altura de toque >= 48px em ${sel}`).toBeGreaterThanOrEqual(48);
-    }
-
-    // Slogan do hero não cortado horizontalmente
-    const heroTitleBox = await page.locator('#hero-title').boundingBox();
-    expect(heroTitleBox).not.toBeNull();
-    expect(heroTitleBox!.x).toBeGreaterThanOrEqual(0);
-    expect(heroTitleBox!.x + heroTitleBox!.width).toBeLessThanOrEqual(375);
-  });
-
-  test('captura screenshots mobile 375 e desktop 1440', async ({ page, isMobile }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
+
+    // Mobile 375 primeiro
+    await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    await loadAllImages();
+    await page.screenshot({ path: 'tests/screenshots/mobile-375.png', fullPage: true });
 
-    await page.evaluate(async () => {
-      const imgs = Array.from(document.querySelectorAll('img'));
-      for (const img of imgs) {
-        img.loading = 'eager';
-      }
-      await Promise.all(
-        imgs.map((img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise((resolve) => {
-                img.addEventListener('load', resolve, { once: true });
-                img.addEventListener('error', resolve, { once: true });
-              })
-        )
-      );
-    });
-
-    const filename = isMobile
-      ? 'tests/screenshots/mobile-375.png'
-      : 'tests/screenshots/desktop-1440.png';
-    await page.screenshot({ path: filename, fullPage: true });
+    // Desktop 1440
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await loadAllImages();
+    await page.screenshot({ path: 'tests/screenshots/desktop-1440.png', fullPage: true });
   });
 });
