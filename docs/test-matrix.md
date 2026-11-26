@@ -22,6 +22,7 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | TC-06 | Reduced-motion: animações desligadas, conteúdo visível, sem loader/overflow | `tests/e2e/site.spec.ts` — `reduced-motion desliga animações...` | todos | `html` sem `js-enabled`, animação do hero/Ken Burns `none`, `.reveal` opacidade 1, sem scroll horizontal. |
 | TC-07 | Com movimento: loader 1ª visita some, reveal ao rolar, sem overflow | `tests/e2e/site.spec.ts` — `com movimento: loader da 1ª visita...` | todos | `.intro-loader` removido <3s; `.diff-card` (1º card rolado à vista) recebe `is-visible`; v5: prints 375/1440 em `tests/screenshots/v5-*.png`. |
 | TC-08 | Capturas de seções no meio da rolagem (hero, diferenciais, como-funciona, frota) | `tests/e2e/site.spec.ts` — `screenshots de seções no meio da rolagem` | `desktop-chrome` | Gera `tests/screenshots/{hero,diferenciais,como-funciona,frota}-{mobile,desktop}.png`. |
+| TC-09 | Deploy estático em subpath `/projetos/mobilita` (redirect 308 + zero 404 de assets) | `tests/e2e/subpath.spec.ts` — `redireciona /projetos/mobilita...` e `carrega build estático em /projetos/mobilita/ sem 404...` | `mobile-iphone-13`, `mobile-pixel-7`, `desktop-chrome` | `npm run build` gera `dist/` sem caminhos root-relative; `GET /projetos/mobilita` retorna `308 -> /projetos/mobilita/`; `GET /projetos/mobilita/` retorna `200`, CSS/JS/imagens carregam sob `/projetos/mobilita/` sem 404, sem vazamento para raiz `/` e sem erros JS. |
 
 ## v4 (ajustes de cliente) — tests/e2e/site.spec.ts
 | Funcionalidade | Tipo | Teste |
