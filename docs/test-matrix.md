@@ -44,3 +44,4 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | Diferenciais desktop 2 colunas (último largura total) | e2e | "diferenciais: 7 itens…" |
 
 | Fotos ≤6, frota sem foto de fundo, sem flicker (v7) | e2e | tests/e2e/site.spec.ts |
+| v8: frota visível via `file://` e `http://`, folha centralizada, Como funciona anima (`.is-animated`), diferenciais 4+3 sem órfão, selo hero pill + prints `v8-*` | e2e (Playwright) | `tests/e2e/site.spec.ts` |

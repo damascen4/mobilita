@@ -164,15 +164,17 @@
     });
   })();
 
-  // Reveal on scroll com stagger entre irmãos
-  const revealElements = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  // Reveal on scroll com stagger entre irmãos (exclui frota e passos, que têm coreografia própria)
+  const revealElements = Array.prototype.filter.call(document.querySelectorAll('.reveal'), function (el) {
+    return el.id !== 'fleet-parallax-stage' && !el.closest('.steps-wrap');
+  });
   revealElements.forEach(function (el) {
     const siblings = Array.prototype.filter.call(el.parentElement.children, function (c) { return c.classList.contains('reveal'); });
-    el.style.setProperty('--d', Math.min(siblings.indexOf(el), 6) * 90 + 'ms');
+    el.style.setProperty('--d', Math.min(siblings.indexOf(el), 6) * 65 + 'ms');
   });
   // Só revela a moldura depois que a foto decodificou: máscara/clip-path nunca mostra moldura vazia nem imagem "estourando" depois (anti-flicker)
   function whenImagesReady(el, cb) {
-    const pending = Array.prototype.filter.call(el.querySelectorAll('.media img, .fleet-stage img'), function (img) {
+    const pending = Array.prototype.filter.call(el.querySelectorAll('.media img'), function (img) {
       return !(img.complete && img.naturalWidth > 0) && img.getClientRects().length > 0;
     });
     if (!pending.length || el.classList.contains('is-visible')) { cb(); return; }
@@ -180,7 +182,7 @@
     function go() { if (!fired) { fired = true; cb(); } }
     pending.forEach(function (img) { img.loading = 'eager'; });
     Promise.all(pending.map(function (img) { return img.decode ? img.decode().catch(function () {}) : Promise.resolve(); })).then(go);
-    window.setTimeout(go, 1800);
+    window.setTimeout(go, 1500);
   }
   if (!prefersReducedMotion && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
@@ -199,6 +201,87 @@
   } else {
     revealElements.forEach(function (el) { el.classList.add('is-visible'); });
   }
+
+  // Frota: imagem sempre visível (inclusive em file:// e cache), entrada cinemática com fallback garantido
+  (function initFleetReveal() {
+    const stage = document.getElementById('fleet-parallax-stage');
+    const section = document.getElementById('frota');
+    const img = document.getElementById('fleet-parallax-img');
+    if (!stage) return;
+
+    function markLoaded() { stage.classList.add('is-loaded'); }
+    function revealFleet() { stage.classList.add('is-visible'); }
+
+    if (img) {
+      if (img.complete && img.naturalWidth > 0) {
+        markLoaded();
+      } else {
+        img.addEventListener('load', markLoaded, { once: true });
+        img.addEventListener('error', markLoaded, { once: true });
+      }
+    }
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      revealFleet();
+      return;
+    }
+
+    const target = section || stage;
+    const fleetIO = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            fleetIO.disconnect();
+            if (img && !(img.complete && img.naturalWidth > 0)) {
+              img.loading = 'eager';
+              let done = false;
+              function go() { if (!done) { done = true; revealFleet(); } }
+              img.addEventListener('load', go, { once: true });
+              img.addEventListener('error', go, { once: true });
+              window.setTimeout(go, 600);
+            } else {
+              revealFleet();
+            }
+          }
+        });
+      },
+      { threshold: 0.01, rootMargin: '120px 0px 120px 0px' }
+    );
+    fleetIO.observe(target);
+
+    // Fallback de segurança: garante estado final mesmo se IO não disparar (ex. file:// ou janela já posicionada)
+    window.setTimeout(revealFleet, 1800);
+  })();
+
+  // Como funciona: coreografia de entrada na viewport (cards stagger + círculos pop + linha desenhando)
+  (function initStepsAnimation() {
+    const wrap = document.querySelector('.steps-wrap');
+    if (!wrap) return;
+    const cards = Array.prototype.slice.call(wrap.querySelectorAll('.step-card'));
+
+    function activate() {
+      wrap.classList.add('is-animated');
+      cards.forEach(function (c) { c.classList.add('is-visible'); });
+    }
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      activate();
+      return;
+    }
+
+    const stepsIO = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            stepsIO.disconnect();
+            activate();
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -30px 0px' }
+    );
+    stepsIO.observe(wrap);
+  })();
 
   // Skeleton: imagens lazy ainda não carregadas ganham shimmer e entram com fade (sem layout shift: width/height + aspect-ratio)
   (function initSkeleton() {
@@ -315,10 +398,9 @@
     });
   }
 
-  // Parallax (fundos fotográficos, folhas, frota entrando de lado) e rota animada
+  // Parallax (fundos fotográficos, folhas, frota entrando de lado)
   const parallaxEls = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
   const fleetStage = document.getElementById('fleet-parallax-stage');
-  const routeEl = document.querySelector('.steps-route');
   if (!prefersReducedMotion) {
     let ticking = false;
     const vh = function () { return window.innerHeight || 800; };
@@ -341,20 +423,6 @@
         if (rect.bottom > 0 && rect.top < h) {
           const p = Math.max(0, Math.min(1, (rect.top - h * 0.15) / (h * 0.75)));
           fleetStage.style.setProperty('--fx', (p * 4).toFixed(2) + '%');
-        }
-      }
-
-      if (routeEl) {
-        const host = routeEl.parentElement.getBoundingClientRect();
-        if (host.bottom > 0 && host.top < h) {
-          const p = Math.max(0, Math.min(1, (h * 0.75 - host.top) / (host.height + h * 0.1)));
-          routeEl.style.setProperty('--route', p.toFixed(3));
-          const horizontal = window.matchMedia('(min-width: 900px)').matches;
-          if (horizontal) {
-            routeEl.style.setProperty('--route-x', (p * routeEl.getBoundingClientRect().width).toFixed(1) + 'px');
-          } else {
-            routeEl.style.setProperty('--route-y', (p * routeEl.getBoundingClientRect().height).toFixed(1) + 'px');
-          }
         }
       }
     }

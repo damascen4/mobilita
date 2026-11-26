@@ -1,3 +1,5 @@
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { test, expect } from '@playwright/test';
 
 const PRIMARY_PHONE = '5519998108070';
@@ -455,20 +457,25 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     }
   });
 
-  test('diferenciais: 7 itens (desktop em 2 colunas, último em largura total) e contato lista todos os canais', async ({ page }, testInfo) => {
+  test('diferenciais: 7 itens em 4+3 centralizados sem folha gigante nem item órfão e contato lista todos os canais', async ({ page }, testInfo) => {
     await page.goto('/');
-    const rects = await page.evaluate(() => Array.from(document.querySelectorAll('.diff-card')).map((c) => {
+    await expect(page.locator('#diferenciais .diff-mark')).toHaveCount(0);
+    const info = await page.evaluate(() => Array.from(document.querySelectorAll('.diff-card')).map((c) => {
       const r = c.getBoundingClientRect();
-      return { l: r.left, r: r.right, t: Math.round(r.top + window.scrollY) };
+      const h3 = c.querySelector('h3') as HTMLElement;
+      return { l: r.left, r: r.right, t: Math.round(r.top + window.scrollY), tt: getComputedStyle(h3).textTransform };
     }));
-    expect(rects).toHaveLength(7);
+    expect(info).toHaveLength(7);
+    info.forEach((c) => expect(c.tt).toBe('none'));
     if (!testInfo.project.name.startsWith('mobile-')) {
-      const rows = new Map<number, typeof rects>();
-      rects.forEach((c) => rows.set(c.t, [...(rows.get(c.t) || []), c]));
+      const rows = new Map<number, typeof info>();
+      info.forEach((c) => rows.set(c.t, [...(rows.get(c.t) || []), c]));
       const lines = Array.from(rows.values());
-      expect(lines.map((l) => l.length)).toEqual([2, 2, 2, 1]);
-      // último item ocupa a largura das 2 colunas
-      expect(lines[3][0].r - lines[3][0].l).toBeGreaterThan((lines[0][0].r - lines[0][0].l) * 1.8);
+      expect(lines.map((l) => l.length)).toEqual([4, 3]);
+      // 2ª linha (3 itens) centralizada em relação à 1ª linha (4 itens)
+      const c1 = (lines[0][0].l + lines[0][lines[0].length - 1].r) / 2;
+      const c2 = (lines[1][0].l + lines[1][lines[1].length - 1].r) / 2;
+      expect(Math.abs(c1 - c2)).toBeLessThanOrEqual(4);
     }
     const channels = page.locator('#contato .channel');
     await expect(channels).toHaveCount(6);
@@ -561,6 +568,93 @@ test.describe('Mobilità Transportes — Site Mobile-First & WhatsApp Direto', (
     }
     expect(samples.some((x) => x.c)).toBe(false);
     expect(samples[samples.length - 1].s).toBe(1);
+  });
+
+  test('v8: frota visível inclusive via file://, folha centralizada, Como funciona anima ao entrar e prints v8', async ({ page }, testInfo) => {
+    // 1. Verifica Como funciona animando (classe is-animated) em todos os projetos
+    await page.goto('/');
+    await page.locator('#como-funciona .steps-wrap').scrollIntoViewIfNeeded();
+    await expect(page.locator('#como-funciona .steps-wrap')).toHaveClass(/is-animated/, { timeout: 5000 });
+    await expect(page.locator('#como-funciona .step-card').first()).toHaveClass(/is-visible/);
+
+    // 2. Verifica frota via file:// (naturalWidth > 0, opacity 1, folha dentro da seção e centralizada)
+    const fileUrl = pathToFileURL(path.resolve('site/index.html')).href;
+    await page.goto(fileUrl);
+    await page.locator('#frota').scrollIntoViewIfNeeded();
+    await expect(page.locator('#fleet-parallax-stage')).toHaveClass(/is-visible/, { timeout: 6000 });
+    await page.waitForTimeout(800);
+    const fleetState = await page.evaluate(() => {
+      const stage = document.getElementById('fleet-parallax-stage') as HTMLElement;
+      const img = document.getElementById('fleet-parallax-img') as HTMLImageElement;
+      const leaf = document.querySelector('.leaf-decor--fleet') as HTMLElement;
+      const sec = document.getElementById('frota') as HTMLElement;
+      const sr = sec.getBoundingClientRect();
+      const lr = leaf.getBoundingClientRect();
+      const ir = img.getBoundingClientRect();
+      return {
+        nw: img.naturalWidth,
+        stageOp: parseFloat(getComputedStyle(stage).opacity),
+        imgOp: parseFloat(getComputedStyle(img).opacity),
+        imgW: ir.width,
+        leafLeftRel: lr.left - sr.left,
+        leafCenterDiff: Math.abs((lr.left + lr.width / 2) - (sr.left + sr.width / 2)),
+      };
+    });
+    expect(fleetState.nw).toBeGreaterThan(0);
+    expect(fleetState.stageOp).toBe(1);
+    expect(fleetState.imgOp).toBe(1);
+    expect(fleetState.imgW).toBeGreaterThan(200);
+    expect(fleetState.leafLeftRel).toBeGreaterThanOrEqual(-2);
+    expect(fleetState.leafCenterDiff).toBeLessThanOrEqual(4);
+
+    // 3. Captura prints v8 no desktop-chrome (com animações concluídas)
+    if (testInfo.project.name === 'desktop-chrome') {
+      const loadAll = async () => {
+        await page.evaluate(async () => {
+          const imgs = Array.from(document.querySelectorAll('img'));
+          imgs.forEach((i) => (i.loading = 'eager'));
+          await Promise.all(imgs.map((i) => i.complete ? Promise.resolve() : new Promise((r) => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); })));
+        });
+      };
+
+      // 1440x900
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto('/');
+      await page.waitForLoadState('networkidle');
+      await loadAll();
+      await expect(page.locator('.intro-loader')).toHaveCount(0, { timeout: 5000 });
+      await page.waitForTimeout(1400);
+      await page.screenshot({ path: 'tests/screenshots/v8-1440-hero.png' });
+
+      await page.addStyleTag({ content: '.site-header,.skip-link,.floating-whatsapp,.mobile-bottom-bar{visibility:hidden!important}' });
+      for (const [sel, out] of [
+        ['#diferenciais', 'tests/screenshots/v8-1440-diferenciais.png'],
+        ['#frota', 'tests/screenshots/v8-1440-frota.png'],
+        ['#como-funciona', 'tests/screenshots/v8-1440-como.png'],
+      ] as const) {
+        await page.locator(sel).scrollIntoViewIfNeeded();
+        await page.waitForTimeout(1200);
+        await page.locator(sel).screenshot({ path: out });
+      }
+
+      // 1920x1080 frota via file://
+      await page.setViewportSize({ width: 1920, height: 1080 });
+      await page.goto(fileUrl);
+      await loadAll();
+      await expect(page.locator('.intro-loader')).toHaveCount(0, { timeout: 5000 });
+      await page.addStyleTag({ content: '.site-header,.skip-link,.floating-whatsapp,.mobile-bottom-bar{visibility:hidden!important}' });
+      await page.locator('#frota').scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1200);
+      await page.locator('#frota').screenshot({ path: 'tests/screenshots/v8-1920-frota.png' });
+
+      // 375x812 mobile full page
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.goto('/');
+      await page.waitForLoadState('networkidle');
+      await loadAll();
+      await page.screenshot({ path: 'tests/screenshots/v8-375.png', fullPage: true });
+    }
   });
 
   test('imagens fora da primeira dobra são lazy, com width/height e fotos novas sem repetir entre seções', async ({ page }) => {
