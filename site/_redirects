@@ -1,0 +1,12 @@
+# www -> apex
+https://www.mobilitatransportes.com.br/* https://mobilitatransportes.com.br/:splat 301
+http://www.mobilitatransportes.com.br/* https://mobilitatransportes.com.br/:splat 301
+
+# Antigos caminhos do WordPress
+/wp-admin / 410
+/wp-admin/* / 410
+/wp-login.php / 410
+/wp-content/* / 301
+/wp-includes/* / 410
+/wp-json/* / 410
+/xmlrpc.php / 410
