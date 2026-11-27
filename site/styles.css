@@ -39,6 +39,34 @@ a { color: inherit; }
 }
 .skip-link:focus { transform: none; }
 
+/* ---------- Loading inicial (splash curto <1s, não bloqueia conteúdo) ---------- */
+.page-splash { display: none; }
+.js-motion .page-splash {
+  position: fixed; inset: 0; z-index: 400; display: grid; place-items: center;
+  background: var(--mb-forest); pointer-events: none;
+  opacity: 1; transform: scale(1);
+  transition: opacity 420ms var(--mb-ease-out), transform 420ms var(--mb-ease-out);
+}
+.js-motion .page-splash-leaf {
+  width: 68px; height: auto; opacity: 0.96; transform: scale(0.94);
+  animation: splashLeaf 360ms var(--mb-ease-out) forwards;
+}
+.js-motion .page-splash.is-done { opacity: 0; transform: scale(1.02); }
+.js-motion .page-splash[hidden] { display: none; }
+@keyframes splashLeaf { to { transform: scale(1); opacity: 1; } }
+
+/* ---------- Barra de progresso de scroll (GPU transform: scaleX) ---------- */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 250;
+  pointer-events: none; background: transparent;
+}
+.scroll-progress-bar {
+  display: block; width: 100%; height: 100%;
+  background: var(--mb-green-light);
+  transform: scaleX(0); transform-origin: left center;
+  will-change: transform;
+}
+
 /* ---------- Botões ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
@@ -56,6 +84,8 @@ a { color: inherit; }
 .btn-outline-light { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.75); color: #fff; }
 
 @media (hover: hover) and (pointer: fine) {
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: scale(0.97); }
   .btn:hover svg { transform: translateX(3px); }
   .btn-primary:hover { background: var(--mb-green-deep-hover); }
   .btn-light:hover { background: var(--mb-green-tint); }
@@ -312,6 +342,7 @@ a { color: inherit; }
   flex: none; width: 64px; height: 64px; border-radius: var(--mb-r-md);
   background: var(--mb-white); border: 1px solid var(--mb-line);
   display: grid; place-items: center; color: var(--mb-green-deep);
+  transition: transform var(--mb-dur-ui) var(--mb-ease-out);
 }
 .diff-glyph { width: 38px; height: 38px; display: block; }
 .diff-glyph :is(path, circle, rect, line, polyline) { stroke-dasharray: 1; stroke-dashoffset: 0; }
@@ -325,6 +356,7 @@ a { color: inherit; }
 
 @media (hover: hover) and (pointer: fine) {
   .diff-item:hover { transform: translateY(-2px); background: var(--mb-white); border-color: var(--mb-line-strong); box-shadow: var(--mb-shadow-1); }
+  .diff-item:hover .diff-icon { transform: scale(1.05); }
 }
 @media (min-width: 640px) { .diff-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) {
@@ -383,7 +415,7 @@ a { color: inherit; }
 .channel-k { font: 500 0.875rem/1.2 var(--mb-font-display); color: var(--mb-text); }
 .channel-text strong { font: 600 1.125rem/1.3 var(--mb-font-display); color: var(--mb-ink); }
 @media (hover: hover) and (pointer: fine) {
-  .contact-channel:hover { background: var(--mb-white); border-color: var(--mb-green); }
+  .contact-channel:hover { background: var(--mb-white); border-color: var(--mb-green); transform: translateX(3px); }
 }
 
 .contact-panel {
@@ -439,7 +471,7 @@ a { color: inherit; }
 }
 .social-btn:active { transform: scale(0.95); }
 @media (hover: hover) and (pointer: fine) {
-  .social-btn:hover { background: var(--mb-green); border-color: var(--mb-green); color: #fff; }
+  .social-btn:hover { background: var(--mb-green); border-color: var(--mb-green); color: #fff; transform: translateY(-2px); }
 }
 .footer-heading { font-size: 1.25rem; color: #fff; margin-bottom: 0.65rem; }
 .footer-list { display: grid; }
@@ -513,6 +545,7 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: 0ms !important; transition-delay: 0ms !important; }
+  .page-splash, .scroll-progress { display: none !important; }
   .hero-leaf .leaf-blade { stroke-dashoffset: 0 !important; fill-opacity: 0.85 !important; }
   .diff-glyph :is(path, circle, rect, line, polyline) { stroke-dashoffset: 0 !important; }
   .img-skel::after { display: none; }

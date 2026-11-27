@@ -385,31 +385,39 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     await expect(page.locator('#frota .img-skel')).toHaveClass(/is-loaded/, { timeout: 6000 });
   });
 
-  test('prefers-reduced-motion desliga animações mantendo conteúdo visível; com movimento ativa reveals', async ({ page }) => {
-    // 1. Reduced motion
+  test('prefers-reduced-motion desliga animações mantendo conteúdo visível; com movimento ativa splash, barra de scroll e reveals', async ({ page }) => {
+    // 1. Reduced motion: splash e barra de scroll desativados, conteúdo visível imediatamente
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await expect(page.locator('html')).not.toHaveClass(/js-motion/);
     const reduced = await page.evaluate(() => ({
+      splashDisplay: getComputedStyle(document.getElementById('page-splash')!).display,
+      progressDisplay: getComputedStyle(document.getElementById('scroll-progress')!).display,
       heroAnim: getComputedStyle(document.querySelector('.hero-title .w > span')!).animationName,
       revealOp: getComputedStyle(document.querySelector('.reveal')!).opacity,
       leafOffset: parseFloat(getComputedStyle(document.querySelector('.hero-leaf .leaf-blade')!).strokeDashoffset),
       glyphOffset: parseFloat(getComputedStyle(document.querySelector('.diff-glyph path')!).strokeDashoffset),
       overflowX: document.documentElement.scrollWidth > window.innerWidth,
     }));
+    expect(reduced.splashDisplay).toBe('none');
+    expect(reduced.progressDisplay).toBe('none');
     expect(reduced.heroAnim).toBe('none');
     expect(reduced.revealOp).toBe('1');
     expect(reduced.leafOffset).toBe(0);
     expect(reduced.glyphOffset).toBe(0);
     expect(reduced.overflowX).toBe(false);
 
-    // 2. Com movimento
+    // 2. Com movimento: splash encerra em <1s, barra de progresso responde ao scroll e reveals ativam
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/');
     await expect(page.locator('html')).toHaveClass(/js-motion/);
+    await expect(page.locator('#page-splash')).toBeHidden({ timeout: 1000 });
     await expect(page.locator('.hero-leaf')).toHaveClass(/is-visible/, { timeout: 3000 });
     await page.locator('#diferenciais .diff-item').first().scrollIntoViewIfNeeded();
     await expect(page.locator('#diferenciais .diff-item').first()).toHaveClass(/is-visible/, { timeout: 3000 });
+    const progressTransform = await page.locator('#scroll-progress-bar').evaluate((el) => getComputedStyle(el).transform);
+    expect(progressTransform).toMatch(/^matrix\(/);
+    expect(progressTransform).not.toBe('matrix(0, 0, 0, 1, 0, 0)');
   });
 
   test('axe-core: sem violações serious/critical (WCAG 2.2 AA) em desktop e mobile', async ({ page }) => {

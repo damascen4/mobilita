@@ -5,6 +5,42 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobileUA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
+  /* 0. Loading inicial curto (<1s, não bloqueia conteúdo) */
+  const splash = document.getElementById('page-splash');
+  if (splash) {
+    if (prefersReducedMotion) {
+      splash.hidden = true;
+    } else {
+      window.setTimeout(() => {
+        splash.classList.add('is-done');
+        window.setTimeout(() => {
+          splash.hidden = true;
+        }, 440);
+      }, 260);
+    }
+  }
+
+  /* 0b. Barra de progresso de scroll (GPU scaleX, rAF throttled) */
+  const progressBar = document.getElementById('scroll-progress-bar');
+  if (progressBar && !prefersReducedMotion) {
+    let progTicking = false;
+    const updateProgress = () => {
+      progTicking = false;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const ratio = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+      progressBar.style.transform = `scaleX(${ratio.toFixed(4)})`;
+    };
+    const requestProgress = () => {
+      if (!progTicking) {
+        progTicking = true;
+        requestAnimationFrame(updateProgress);
+      }
+    };
+    window.addEventListener('scroll', requestProgress, { passive: true });
+    window.addEventListener('resize', requestProgress);
+    updateProgress();
+  }
+
   /* 1. Header elevation on scroll */
   const header = document.getElementById('topo');
   if (header) {
