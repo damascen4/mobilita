@@ -152,9 +152,9 @@
     trackedSections.forEach(({ section }) => navObserver.observe(section));
   }
 
-  /* 4. Scroll reveal & SVG stroke-draw trigger */
+  /* 4. Scroll reveal & SVG stroke-draw trigger (também aciona fade suave de opacidade em reduced-motion) */
   const reveals = Array.from(document.querySelectorAll('.reveal, [data-draw]'));
-  if (!prefersReducedMotion && 'IntersectionObserver' in window && reveals.length) {
+  if ('IntersectionObserver' in window && reveals.length) {
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
@@ -163,11 +163,43 @@
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -32px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
     );
     reveals.forEach((el) => revealObserver.observe(el));
   } else {
     reveals.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  /* 4b. Contadores numéricos sutis no scroll (somente com movimento completo) */
+  const counters = Array.from(document.querySelectorAll('[data-count-to]'));
+  if (!prefersReducedMotion && 'IntersectionObserver' in window && counters.length) {
+    const animateCounter = (el) => {
+      const target = parseInt(el.getAttribute('data-count-to') || '0', 10);
+      const suffix = el.getAttribute('data-count-suffix') || '';
+      if (!target) return;
+      const duration = 900;
+      const start = performance.now();
+      const step = (now) => {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.max(1, Math.round(eased * target));
+        el.textContent = `${value}${suffix}`;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = `${target}${suffix}`;
+      };
+      requestAnimationFrame(step);
+    };
+    const counterObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          animateCounter(entry.target);
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.2 }
+    );
+    counters.forEach((el) => counterObserver.observe(el));
   }
 
   /* 5. Skeleton shimmer resolution for lazy images */
@@ -214,6 +246,32 @@
       window.addEventListener('resize', request);
       update();
     }
+  }
+
+  /* 6b. Spotlight radial no hover (pointermove + rAF, apenas pointer:fine e sem reduced-motion) */
+  if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const glowTargets = document.querySelectorAll('.service-card, .diff-item, .contact-channel, .fleet-vehicle');
+    glowTargets.forEach((el) => {
+      let rafId = 0;
+      let lastEvent = null;
+      const updateGlow = () => {
+        rafId = 0;
+        if (!lastEvent) return;
+        const rect = el.getBoundingClientRect();
+        const x = lastEvent.clientX - rect.left;
+        const y = lastEvent.clientY - rect.top;
+        el.style.setProperty('--x', `${x.toFixed(1)}px`);
+        el.style.setProperty('--y', `${y.toFixed(1)}px`);
+      };
+      el.addEventListener(
+        'pointermove',
+        (event) => {
+          lastEvent = event;
+          if (!rafId) rafId = requestAnimationFrame(updateGlow);
+        },
+        { passive: true }
+      );
+    });
   }
 
   /* 7. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */

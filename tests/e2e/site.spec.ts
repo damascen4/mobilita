@@ -385,36 +385,55 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     await expect(page.locator('#frota .img-skel')).toHaveClass(/is-loaded/, { timeout: 6000 });
   });
 
-  test('prefers-reduced-motion desliga animações mantendo conteúdo visível; com movimento ativa splash, barra de scroll e reveals', async ({ page }) => {
-    // 1. Reduced motion: splash e barra de scroll desativados, conteúdo visível imediatamente
+  test('prefers-reduced-motion mantém fades curtos de opacidade sem movimento; com movimento ativa splash, parallax, barra de scroll e reveals', async ({ page }) => {
+    // 1. Reduced motion: splash e barra de scroll desativados; hero e reveals mantêm fade suave de opacidade sem transform
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await expect(page.locator('html')).not.toHaveClass(/js-motion/);
+    await expect(page.locator('html')).toHaveClass(/js-reduced-motion/);
     const reduced = await page.evaluate(() => ({
       splashDisplay: getComputedStyle(document.getElementById('page-splash')!).display,
       progressDisplay: getComputedStyle(document.getElementById('scroll-progress')!).display,
       heroAnim: getComputedStyle(document.querySelector('.hero-title .w > span')!).animationName,
-      revealOp: getComputedStyle(document.querySelector('.reveal')!).opacity,
+      heroImgAnim: getComputedStyle(document.querySelector('.hero-img')!).animationName,
+      revealTransform: getComputedStyle(document.querySelector('.reveal')!).transform,
       leafOffset: parseFloat(getComputedStyle(document.querySelector('.hero-leaf .leaf-blade')!).strokeDashoffset),
       glyphOffset: parseFloat(getComputedStyle(document.querySelector('.diff-glyph path')!).strokeDashoffset),
       overflowX: document.documentElement.scrollWidth > window.innerWidth,
     }));
     expect(reduced.splashDisplay).toBe('none');
     expect(reduced.progressDisplay).toBe('none');
-    expect(reduced.heroAnim).toBe('none');
-    expect(reduced.revealOp).toBe('1');
+    expect(reduced.heroAnim).toBe('reducedFade');
+    expect(reduced.heroImgAnim).toBe('none');
+    expect(reduced.revealTransform).toBe('none');
     expect(reduced.leafOffset).toBe(0);
     expect(reduced.glyphOffset).toBe(0);
     expect(reduced.overflowX).toBe(false);
 
-    // 2. Com movimento: splash encerra em <1s, barra de progresso responde ao scroll e reveals ativam
+    await page.locator('#quemsomos .about-copy').scrollIntoViewIfNeeded();
+    await expect(page.locator('#quemsomos .about-copy')).toHaveClass(/is-visible/, { timeout: 3000 });
+
+    // 2. Com movimento: splash encerra em <1s, hero coreografado, parallax, barra de progresso e reveals por toda a página
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/');
     await expect(page.locator('html')).toHaveClass(/js-motion/);
     await expect(page.locator('#page-splash')).toBeHidden({ timeout: 1000 });
+    const heroMotion = await page.evaluate(() => ({
+      wordAnim: getComputedStyle(document.querySelector('.hero-title .w > span')!).animationName,
+      imgAnim: getComputedStyle(document.querySelector('.hero-img')!).animationName,
+    }));
+    expect(heroMotion.wordAnim).toBe('wordUp');
+    expect(heroMotion.imgAnim).toBe('kenburns');
     await expect(page.locator('.hero-leaf')).toHaveClass(/is-visible/, { timeout: 3000 });
-    await page.locator('#diferenciais .diff-item').first().scrollIntoViewIfNeeded();
-    await expect(page.locator('#diferenciais .diff-item').first()).toHaveClass(/is-visible/, { timeout: 3000 });
+
+    for (const sel of ['#quemsomos .about-visual', '#oquefazemos .service-card', '#diferenciais .diff-item', '#frota .fleet-media', '#contato .contact-info']) {
+      const target = page.locator(sel).first();
+      await target.scrollIntoViewIfNeeded();
+      await expect(target).toHaveClass(/is-visible/, { timeout: 3000 });
+    }
+
+    const parallaxTransform = await page.locator('.about-photo-media').evaluate((el) => el.style.transform);
+    expect(parallaxTransform).toMatch(/translate3d\(/);
     const progressTransform = await page.locator('#scroll-progress-bar').evaluate((el) => getComputedStyle(el).transform);
     expect(progressTransform).toMatch(/^matrix\(/);
     expect(progressTransform).not.toBe('matrix(0, 0, 0, 1, 0, 0)');
@@ -424,6 +443,11 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    for (const sel of ['#quemsomos', '#oquefazemos', '#diferenciais', '#frota', '#contato', 'footer']) {
+      await page.locator(sel).scrollIntoViewIfNeeded();
+    }
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(450);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
       .analyze();
@@ -431,28 +455,62 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     expect(blocking.map((v) => v.id + ': ' + v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | '))).toEqual([]);
   });
 
-  test('v14: hero editorial com faixa de fatos, CTAs por serviço, especificações da frota e topbar', async ({ page }) => {
+  test('v14.2: sem topbar, sobre editorial com foto real, frota sem card branco e lineup de veículos', async ({ page }) => {
     await page.goto('/');
+    await expect(page.locator('.topbar')).toHaveCount(0);
     await expect(page.locator('.hero-card')).toHaveCount(0);
     await expect(page.locator('.hero-facts li')).toHaveCount(3);
+    await expect(page.locator('.about-emblem-frame')).toHaveCount(0);
+    await expect(page.locator('#quemsomos .about-photo')).toHaveCount(1);
+    await expect(page.locator('#quemsomos .about-pillars .about-pillar')).toHaveCount(3);
     await expect(page.locator('#oquefazemos .service-link')).toHaveCount(5);
     await expect(page.locator('#frota .fleet-specs li')).toHaveCount(6);
-    const gap = await page.locator('.topbar-link').evaluate((el) => parseFloat(getComputedStyle(el).columnGap));
-    expect(gap).toBeGreaterThan(0);
+    await expect(page.locator('#frota .fleet-lineup .fleet-vehicle')).toHaveCount(3);
+    const fleetStage = await page.locator('.fleet-stage').evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundColor, borderW: parseFloat(s.borderTopWidth) };
+    });
+    expect(fleetStage.bg).toBe('rgba(0, 0, 0, 0)');
+    expect(fleetStage.borderW).toBe(0);
+
+    // cursor:pointer em todos os itens interativos/clicáveis
+    const cursors = await page.evaluate(() => {
+      const selectors = [
+        '.btn',
+        '.nav-link',
+        '.service-card',
+        '.service-link',
+        '.diff-item',
+        '.fleet-vehicle',
+        '.fleet-specs li',
+        '.contact-channel',
+        '.social-btn',
+        '.footer-link',
+      ];
+      return selectors.map((sel) => {
+        const el = document.querySelector(sel);
+        return { sel, cursor: el ? getComputedStyle(el).cursor : 'missing' };
+      });
+    });
+    for (const item of cursors) {
+      expect(item.cursor, `Esperado cursor:pointer em ${item.sel}`).toBe('pointer');
+    }
   });
 
-  test('captura screenshots 1440 e 375 em test-results/v14', async ({ page }, testInfo) => {
+  test('captura screenshots 1440 e 375 em test-results/v14-2', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-chrome', 'Screenshots gerados uma única vez no projeto desktop-chrome');
 
-    fs.mkdirSync('test-results/v14', { recursive: true });
-    await page.emulateMedia({ reducedMotion: 'reduce' });
+    fs.mkdirSync('test-results/v14-2', { recursive: true });
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
 
-    const loadAllImages = async () => {
-      for (const sel of ['#quemsomos', '#oquefazemos', '#diferenciais', '#frota', '#contato', 'footer']) {
+    const loadAllImagesAndReveals = async () => {
+      await expect(page.locator('#page-splash')).toBeHidden({ timeout: 1500 });
+      for (const sel of ['#quemsomos', '#quemsomos .about-pillars', '#oquefazemos', '#diferenciais', '#frota', '#contato', 'footer']) {
         await page.locator(sel).scrollIntoViewIfNeeded();
-        await page.waitForTimeout(150);
+        await page.waitForTimeout(260);
       }
       await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(450);
       await page.evaluate(async () => {
         const imgs = Array.from(document.querySelectorAll('img')).filter((img) => {
           const r = img.getBoundingClientRect();
@@ -476,16 +534,16 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await loadAllImages();
-    await page.screenshot({ path: 'test-results/v14/v14-1440-fold.png' });
-    await page.screenshot({ path: 'test-results/v14/v14-1440-full.png', fullPage: true });
+    await loadAllImagesAndReveals();
+    await page.screenshot({ path: 'test-results/v14-2/v14-2-1440-fold.png' });
+    await page.screenshot({ path: 'test-results/v14-2/v14-2-1440-full.png', fullPage: true });
 
     // Mobile 375
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await loadAllImages();
-    await page.screenshot({ path: 'test-results/v14/v14-375-fold.png' });
-    await page.screenshot({ path: 'test-results/v14/v14-375-full.png', fullPage: true });
+    await loadAllImagesAndReveals();
+    await page.screenshot({ path: 'test-results/v14-2/v14-2-375-fold.png' });
+    await page.screenshot({ path: 'test-results/v14-2/v14-2-375-full.png', fullPage: true });
   });
 });

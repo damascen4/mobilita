@@ -91,17 +91,17 @@
   --mb-dur-press: 120ms;
   --mb-dur-hover: 180ms;
   --mb-dur-ui: 240ms;
-  --mb-dur-reveal: 650ms;
-  --mb-stagger: 60ms;
+  --mb-dur-reveal: 780ms;
+  --mb-stagger: 65ms;
   --mb-tap-min: 48px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
     --mb-dur-press: 0ms;
-    --mb-dur-hover: 0ms;
-    --mb-dur-ui: 0ms;
-    --mb-dur-reveal: 0ms;
+    --mb-dur-hover: 160ms;
+    --mb-dur-ui: 200ms;
+    --mb-dur-reveal: 360ms;
     --mb-stagger: 0ms;
   }
 }

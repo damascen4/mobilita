@@ -49,13 +49,6 @@
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"><span class="scroll-progress-bar" id="scroll-progress-bar"></span></div>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
 
-<div class="topbar">
-<div class="container topbar-in">
-<span class="topbar-area">Campinas, Grande São Paulo e interior · Plantão 24h</span>
-<a class="topbar-link" href="https://wa.me/5519998108070?text=Ol%C3%A1%2C%20gostaria%20de%20informacoes%20sobre%20transporte%20executivo." data-wa-phone="5519998108070" data-wa-text="Olá, gostaria de informações sobre transporte executivo." target="_blank" rel="noopener noreferrer">WhatsApp: <span class="phone-nowrap">(19) 99810-8070</span></a>
-</div>
-</div>
-
 <header class="site-header" id="topo">
 <div class="header-bar">
 <a class="brand-link" href="#inicio" aria-label="Mobilità Transporte Executivo — Início">
@@ -105,7 +98,7 @@
 
 <main id="conteudo">
 <section id="inicio" class="hero" aria-labelledby="hero-title">
-<picture class="hero-media" data-parallax="0.1">
+<picture class="hero-media" data-parallax="0.14">
 <source media="(max-width: 719px)" srcset="assets/brand/hero-passageiro-executivo-960.webp 960w" sizes="100vw" type="image/webp">
 <source srcset="assets/brand/hero-passageiro-executivo-480.webp 480w, assets/brand/hero-passageiro-executivo-960.webp 960w, assets/brand/hero-passageiro-executivo-1600.webp 1600w" sizes="100vw" type="image/webp">
 <img class="hero-img" src="assets/brand/hero-passageiro-executivo.jpeg" alt="Executivo sorrindo ao telefone no banco traseiro de um veículo da Mobilità" width="1920" height="1080" fetchpriority="high" decoding="async">
@@ -136,7 +129,7 @@
 </div>
 </div>
 <ul class="hero-facts hero-enter" style="--d: 680ms" aria-label="Destaques do atendimento">
-<li><strong>Plantão 24h</strong><span>Atendimento contínuo para voos e eventos</span></li>
+<li><strong>Plantão <span data-count-to="24" data-count-suffix="h">24h</span></strong><span>Atendimento contínuo para voos e eventos</span></li>
 <li><strong>Motoristas bilíngues</strong><span>Treinamento constante e condução segura</span></li>
 <li><strong>Percursos via GPS</strong><span>Roteiros planejados e monitorados</span></li>
 </ul>
@@ -144,7 +137,8 @@
 </section>
 
 <section id="quemsomos" class="section section-about" aria-labelledby="quemsomos-title">
-<div class="container about-grid">
+<div class="container">
+<div class="about-grid">
 <div class="about-copy reveal">
 <h2 id="quemsomos-title" class="section-title">Mobilità Transporte Executivo</h2>
 <div class="about-text">
@@ -156,25 +150,28 @@
 <a class="btn btn-light" href="#contato">Entre em contato <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 </div>
 </div>
-<div class="about-emblem reveal" style="--delay: 100ms" aria-hidden="true">
-<div class="about-emblem-frame">
-<div class="img-skel img-skel--transparent about-leaf-wrap">
-<img class="about-leaf" src="assets/brand/simbolo-folha-branco.svg" alt="" width="1191" height="1080" loading="lazy" decoding="async">
+<div class="about-visual reveal" style="--delay: 110ms">
+<div class="img-skel about-photo-frame">
+<picture class="about-photo-media" data-parallax="0.08">
+<source srcset="assets/stock/chauffeur-porta-800.webp 800w, assets/stock/chauffeur-porta-1600.webp 1600w" sizes="(min-width: 960px) 44vw, 92vw" type="image/webp">
+<img class="about-photo" src="assets/stock/chauffeur-porta-800.webp" alt="Motorista executivo abrindo a porta de um sedã preto para o passageiro" width="1600" height="1067" loading="lazy" decoding="async">
+</picture>
+</div>
+<img class="about-leaf" src="assets/brand/simbolo-folha-branco.svg" alt="" width="1191" height="1080" loading="lazy" decoding="async" aria-hidden="true">
+</div>
 </div>
 <dl class="about-pillars">
-<div><dt>Pontualidade</dt><dd>Compromisso com cada horário</dd></div>
-<div><dt>Segurança</dt><dd>Motoristas treinados e frota inspecionada</dd></div>
-<div><dt>Conforto</dt><dd>Viagens tranquilas do embarque ao destino</dd></div>
+<div class="about-pillar reveal" style="--delay: 0ms"><dt>Pontualidade</dt><dd>Compromisso rigoroso com cada horário e embarque</dd></div>
+<div class="about-pillar reveal" style="--delay: 80ms"><dt>Segurança</dt><dd>Motoristas treinados e frota constantemente inspecionada</dd></div>
+<div class="about-pillar reveal" style="--delay: 160ms"><dt>Conforto</dt><dd>Viagens tranquilas e discretas do embarque ao destino</dd></div>
 </dl>
-</div>
-</div>
 </div>
 </section>
 
 <section id="oquefazemos" class="section section-services" aria-labelledby="servicos-title">
 <div class="container">
 <div class="services-banner reveal">
-<picture class="services-bg">
+<picture class="services-bg" data-parallax="0.1">
 <source srcset="assets/brand/servicos-onibus-estrada-480.webp 480w, assets/brand/servicos-onibus-estrada-960.webp 960w, assets/brand/servicos-onibus-estrada-1600.webp 1600w" sizes="(min-width: 1220px) 1220px, 94vw" type="image/webp">
 <img src="assets/brand/servicos-onibus-estrada.jpeg" alt="" width="1920" height="1080" loading="lazy" decoding="async">
 </picture>
@@ -250,6 +247,11 @@
 </picture>
 </div>
 </div>
+<dl class="fleet-lineup" aria-label="Categorias e capacidade dos veículos">
+<div class="fleet-vehicle reveal" style="--delay: 80ms"><dt>Sedã executivo</dt><dd>Até <span data-count-to="3">3</span> passageiros</dd></div>
+<div class="fleet-vehicle reveal" style="--delay: 150ms"><dt>Van Sprinter</dt><dd>Até <span data-count-to="15">15</span> passageiros</dd></div>
+<div class="fleet-vehicle reveal" style="--delay: 220ms"><dt>Ônibus rodoviário</dt><dd>Até <span data-count-to="46">46</span> passageiros</dd></div>
+</dl>
 </div>
 <div class="fleet-copy reveal" style="--delay: 80ms">
 <h2 id="frota-title" class="section-title">Nossa frota</h2>
