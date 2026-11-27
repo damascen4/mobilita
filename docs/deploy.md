@@ -92,3 +92,10 @@ curl -I https://damascena.dev/                       # esperado: 200 (placeholde
 curl -s https://damascena.dev/robots.txt             # esperado: 200 (User-agent: *, Sitemap: https://damascena.dev/sitemap.xml)
 curl -s https://damascena.dev/sitemap.xml            # esperado: 200 (lista https://damascena.dev/projetos/mobilita/)
 ```
+
+## Versão v2 (avaliação) em /projetos/mobilitav2
+
+- Build: `BASE_PATH=/projetos/mobilitav2 WEB3FORMS_ACCESS_KEY=... npm run build` (v1 usa o padrão `/projetos/mobilita`).
+- Destino no servidor: `/opt/sites/mobilitav2` (handle já no `deploy/Caddyfile.damascena.dev`).
+- A v2 é `noindex` e seu canonical aponta para si mesma.
+- E2E sob o subpath: `BASE_PATH=/projetos/mobilitav2 npx playwright test` (use `E2E_PORT` livre para não reaproveitar servidor de outro worktree).
