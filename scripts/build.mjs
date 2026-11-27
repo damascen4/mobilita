@@ -258,7 +258,10 @@ export function buildSite() {
   }
 
   fs.rmSync(outDir, { recursive: true, force: true });
-  fs.cpSync(srcDir, outDir, { recursive: true });
+  fs.cpSync(srcDir, outDir, {
+    recursive: true,
+    filter: (src) => BASE_PATH === DEFAULT_BASE_PATH || path.relative(srcDir, src) !== 'sitemap.xml',
+  });
 
   const outIndexHtml = path.join(outDir, 'index.html');
   if (!fs.existsSync(outIndexHtml)) {
@@ -277,9 +280,13 @@ export function buildSite() {
   if (BASE_PATH !== DEFAULT_BASE_PATH) {
     const baseRe = /\/projetos\/mobilita(?![\w.~-])/g;
     for (const file of walk(outDir)) {
-      if (!['.html', '.xml', '.txt'].includes(path.extname(file).toLowerCase())) continue;
+      const ext = path.extname(file).toLowerCase();
+      if (!['.html', '.xml', '.txt'].includes(ext)) continue;
       const raw = fs.readFileSync(file, 'utf8');
-      const next = raw.replace(baseRe, () => BASE_PATH);
+      let next = raw.replace(baseRe, () => BASE_PATH);
+      if (ext === '.html' && !/name=["']robots["']/i.test(next)) {
+        next = next.replace(/<head>/i, '<head>\n<meta name="robots" content="noindex">');
+      }
       if (next !== raw) fs.writeFileSync(file, next, 'utf8');
     }
   }
