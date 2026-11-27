@@ -4,14 +4,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const BASE_PATH = '/projetos/mobilita';
+const BASE_PATH = process.env.BASE_PATH || '/projetos/mobilita';
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
 const BUILD_SCRIPT = path.join(ROOT_DIR, 'scripts', 'build.mjs');
 const SERVE_SCRIPT = path.join(ROOT_DIR, 'tests', 'serve-site.mjs');
 
-const CANONICAL_URL = 'https://damascena.dev/projetos/mobilita/';
-const OG_IMAGE_URL = 'https://damascena.dev/projetos/mobilita/assets/brand/hero-passageiro-executivo.jpeg';
-const LOGO_URL = 'https://damascena.dev/projetos/mobilita/assets/brand/logo-mobilita-cor.png';
+const CANONICAL_URL = `https://damascena.dev${BASE_PATH}/`;
+const OG_IMAGE_URL = `https://damascena.dev${BASE_PATH}/assets/brand/hero-passageiro-executivo.jpeg`;
+const LOGO_URL = `https://damascena.dev${BASE_PATH}/assets/brand/logo-mobilita-cor.png`;
 const EXPECTED_TITLE = 'Transporte Executivo em Campinas e SP | Mobilità';
 
 async function startServer(siteDir: string): Promise<{ proc: ChildProcess; origin: string }> {
