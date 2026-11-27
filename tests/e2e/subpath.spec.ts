@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const BASE_PATH = '/projetos/mobilita';
+const BASE_PATH = process.env.BASE_PATH || '/projetos/mobilita';
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
 const BUILD_SCRIPT = path.join(ROOT_DIR, 'scripts', 'build.mjs');
 const SERVE_SCRIPT = path.join(ROOT_DIR, 'tests', 'serve-site.mjs');

@@ -12,6 +12,11 @@ const TEXT_EXTS = new Set(['.html', '.css', '.js']);
 const CODE_EXTS = new Set(['.css', '.js']);
 const ASSET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.svg', '.ico', '.woff2', '.woff']);
 const ROOT_RELATIVE_PATTERN = /(?:href|src|srcset|action)=["']\/(?!\/)|url\(\s*["']?\/(?!\/)/g;
+const DEFAULT_BASE_PATH = '/projetos/mobilita';
+const BASE_PATH = (process.env.BASE_PATH || DEFAULT_BASE_PATH).trim().replace(/\/+$/, '');
+if (!/^\/[A-Za-z0-9._~\/-]*[A-Za-z0-9._~-]$/.test(BASE_PATH)) {
+  throw new Error(`Invalid BASE_PATH: ${BASE_PATH} (expected e.g. /projetos/mobilita)`);
+}
 const WEB3FORMS_PLACEHOLDER = 'WEB3FORMS_ACCESS_KEY_AQUI';
 
 function toPosix(p) {
@@ -268,6 +273,16 @@ export function buildSite() {
     throw new Error(`Production build still contains placeholder ${WEB3FORMS_PLACEHOLDER} in dist/index.html`);
   }
   fs.writeFileSync(outIndexHtml, injectedHtml, 'utf8');
+
+  if (BASE_PATH !== DEFAULT_BASE_PATH) {
+    const baseRe = /\/projetos\/mobilita(?![\w.~-])/g;
+    for (const file of walk(outDir)) {
+      if (!['.html', '.xml', '.txt'].includes(path.extname(file).toLowerCase())) continue;
+      const raw = fs.readFileSync(file, 'utf8');
+      const next = raw.replace(baseRe, () => BASE_PATH);
+      if (next !== raw) fs.writeFileSync(file, next, 'utf8');
+    }
+  }
 
   const outMainJs = path.join(outDir, 'main.js');
   if (fs.existsSync(outMainJs)) {
