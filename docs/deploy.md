@@ -93,6 +93,9 @@ curl -s https://damascena.dev/robots.txt             # esperado: 200 (User-agent
 curl -s https://damascena.dev/sitemap.xml            # esperado: 200 (lista https://damascena.dev/projetos/mobilita/)
 ```
 
-## Mobilità v2 (redesign) em /projetos/mobilitav2
+## Versão v2 (avaliação) em /projetos/mobilitav2
 
-Deploy paralelo à v1 (`/projetos/mobilita`, inalterada): `APP=mobilitav2 ./scripts/deploy.sh` publica em `/opt/sites/mobilitav2`. O bloco `handle_path /projetos/mobilitav2/*` (+ redir 308 e 404 amigável) está em `deploy/Caddyfile.damascena.dev`; copiar o Caddyfile e recarregar o Caddy é passo do operador/CI.
+- Build: `BASE_PATH=/projetos/mobilitav2 WEB3FORMS_ACCESS_KEY=... npm run build` (v1 usa o padrão `/projetos/mobilita`).
+- Destino no servidor: `/opt/sites/mobilitav2` (handle já no `deploy/Caddyfile.damascena.dev`).
+- A v2 é `noindex` e seu canonical aponta para si mesma.
+- E2E sob o subpath: `BASE_PATH=/projetos/mobilitav2 npx playwright test` (use `E2E_PORT` livre para não reaproveitar servidor de outro worktree).

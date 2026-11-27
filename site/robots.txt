@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://mobilitatransportes.com.br/sitemap.xml

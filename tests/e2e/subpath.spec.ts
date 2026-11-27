@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const BASE_PATH = '/projetos/mobilitav2';
+const BASE_PATH = process.env.BASE_PATH || '/projetos/mobilita';
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
 const BUILD_SCRIPT = path.join(ROOT_DIR, 'scripts', 'build.mjs');
 const SERVE_SCRIPT = path.join(ROOT_DIR, 'tests', 'serve-site.mjs');
@@ -48,7 +48,7 @@ async function startSubpathServer(siteDir: string): Promise<{ proc: ChildProcess
   });
 }
 
-test.describe('Deploy em subpath (/projetos/mobilitav2)', () => {
+test.describe('Deploy em subpath (/projetos/mobilita)', () => {
   let serverProc: ChildProcess;
   let origin: string;
   let tempDistDir: string;
@@ -74,13 +74,13 @@ test.describe('Deploy em subpath (/projetos/mobilitav2)', () => {
     }
   });
 
-  test('redireciona /projetos/mobilitav2 para /projetos/mobilitav2/ com 308', async ({ request }) => {
+  test('redireciona /projetos/mobilita para /projetos/mobilita/ com 308', async ({ request }) => {
     const response = await request.get(`${origin}${BASE_PATH}`, { maxRedirects: 0 });
     expect(response.status()).toBe(308);
     expect(response.headers()['location']).toBe(`${BASE_PATH}/`);
   });
 
-  test('carrega build estático em /projetos/mobilitav2/ sem 404 de assets nem erros', async ({ page }) => {
+  test('carrega build estático em /projetos/mobilita/ sem 404 de assets nem erros', async ({ page }) => {
     const failedLocalResponses: string[] = [];
     const leakedRootRequests: string[] = [];
     const pageErrors: string[] = [];
@@ -141,7 +141,7 @@ test.describe('Deploy em subpath (/projetos/mobilitav2)', () => {
 
     expect(leakedRootRequests, 'Nenhum asset local deve escapar para a raiz /').toEqual([]);
     expect(failedLocalResponses, 'Nenhum asset local deve retornar 4xx/5xx').toEqual([]);
-    expect(brokenImages, 'Todas as imagens devem carregar sob /projetos/mobilitav2/').toEqual([]);
+    expect(brokenImages, 'Todas as imagens devem carregar sob /projetos/mobilita/').toEqual([]);
     expect(pageErrors, 'Sem erros JS não tratados').toEqual([]);
   });
 
@@ -192,6 +192,15 @@ test.describe('Deploy em subpath (/projetos/mobilitav2)', () => {
         const res = await request.get(assetUrl);
         expect(res.status(), `Asset ${assetUrl} deve retornar 200`).toBe(200);
       }
+    }
+
+    // Assets absolutos de SEO (og:image / JSON-LD logo) continuam acessíveis sem hash
+    for (const seoPath of [
+      'assets/brand/hero-passageiro-executivo.jpeg',
+      'assets/brand/logo-mobilita-cor.png',
+    ]) {
+      const res = await request.get(`${origin}${BASE_PATH}/${seoPath}`);
+      expect(res.status(), `Asset SEO ${seoPath} deve retornar 200`).toBe(200);
     }
   });
 });

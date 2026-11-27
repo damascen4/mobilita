@@ -12,7 +12,7 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     const isMobile = testInfo.project.name.startsWith('mobile-');
     await page.goto('/');
 
-    await expect(page).toHaveTitle('Transporte Executivo com Segurança e Conforto - Mobilità Transportes');
+    await expect(page).toHaveTitle('Transporte Executivo em Campinas e SP | Mobilità');
     await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Mobilità/);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Mobilità/);
@@ -172,6 +172,17 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
       }
     });
 
+    await page.addInitScript(() => {
+      (window as unknown as { __waOpened?: string[]; __mobilitaNavigate?: (u: string) => void }).__waOpened = [];
+      (window as unknown as { __mobilitaNavigate?: (u: string) => void }).__mobilitaNavigate = (url: string) => {
+        (window as unknown as { __waOpened: string[] }).__waOpened.push(url);
+      };
+      window.open = ((url?: string | URL) => {
+        (window as unknown as { __waOpened: string[] }).__waOpened.push(String(url ?? ''));
+        return null;
+      }) as typeof window.open;
+    });
+
     await page.goto('/');
     await page.locator('#contato').scrollIntoViewIfNeeded();
 
@@ -186,7 +197,26 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     await expect(page.locator('#nome-erro')).toBeVisible();
     await expect(page.locator('#nome')).toBeFocused();
 
-    // 1. Cenário de sucesso (mock Web3Forms 200)
+    // 0. Sem chave Web3Forms (placeholder/ausente): vai direto ao fallback WhatsApp sem POST e sem erro
+    await page.fill('#nome', 'Ana Paula');
+    await page.fill('#telefone', '19991112233');
+    await page.fill('#email', 'ana@empresa.com.br');
+    await page.fill('#mensagem', 'Transfer Campinas para Guarulhos.');
+    await page.click('#contact-submit');
+
+    await expect(page.locator('#form-status')).toBeVisible();
+    await expect(page.locator('#form-status')).toHaveClass(/is-success/);
+    await expect(page.locator('#form-status')).not.toHaveClass(/is-error/);
+    await expect(page.locator('#whatsapp-fallback-link')).toHaveAttribute('href', new RegExp(`^https://wa\\.me/${PRIMARY_PHONE}\\?text=`));
+    expect(capturedPayloads).toHaveLength(0);
+    const waOpened = await page.evaluate(() => (window as unknown as { __waOpened?: string[] }).__waOpened ?? []);
+    expect(waOpened).toHaveLength(1);
+    expect(waOpened[0]).toContain(PRIMARY_PHONE);
+
+    // 1. Cenário de sucesso (mock Web3Forms 200 com chave configurada)
+    await page.locator('#contact-form input[name="access_key"]').evaluate((el) => {
+      (el as HTMLInputElement).value = 'e2e-mock-web3forms-key';
+    });
     await page.fill('#nome', 'Carlos Mendes');
     await page.fill('#telefone', '19991234567');
     await expect(page.locator('#telefone')).toHaveValue('(19) 99123-4567');
@@ -201,7 +231,7 @@ test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2
     await expect(page.locator('#nome')).toHaveValue('');
     expect(capturedPayloads).toHaveLength(1);
     expect(capturedPayloads[0]).toMatchObject({
-      access_key: 'WEB3FORMS_ACCESS_KEY_AQUI',
+      access_key: 'e2e-mock-web3forms-key',
       botcheck: false,
       nome: 'Carlos Mendes',
       telefone: '(19) 99123-4567',

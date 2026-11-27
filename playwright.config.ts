@@ -37,7 +37,7 @@ export default defineConfig({
   webServer: {
     command: 'node tests/serve-site.mjs',
     url: baseURL,
-    env: { PORT: e2ePort },
+    env: { PORT: e2ePort, BASE_PATH: '' },
     reuseExistingServer: !process.env.CI,
     timeout: 15000,
   },
