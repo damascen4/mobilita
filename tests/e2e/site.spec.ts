@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
 const PRIMARY_PHONE = '5519998108070';
 const SECONDARY_PHONE = '5519992638676';
 
-test.describe('Mobilità Transportes — v13 SVG animado, imagens responsivas e formulário Web3Forms', () => {
+test.describe('Mobilità Transportes — v14 Arquitetura clean/moderna, WCAG 2.2 AA e conversão', () => {
   test('SEO, fontes KoHo 400-700, tokens, SVG inline/marca, <picture> srcset WebP e zero imagens quebradas', async ({ page }, testInfo) => {
     const isMobile = testInfo.project.name.startsWith('mobile-');
     await page.goto('/');
@@ -423,19 +423,20 @@ test.describe('Mobilità Transportes — v13 SVG animado, imagens responsivas e 
     expect(blocking.map((v) => v.id + ': ' + v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | '))).toEqual([]);
   });
 
-  test('v12: hero sem card, chips e indicador de scroll; "WhatsApp: (19)" com espaço', async ({ page }) => {
+  test('v14: hero editorial com faixa de fatos, CTAs por serviço, especificações da frota e topbar', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('.hero-card')).toHaveCount(0);
-    await expect(page.locator('.hero-chips li')).toHaveCount(3);
-    await expect(page.locator('.hero-scroll')).toHaveAttribute('href', '#quemsomos');
+    await expect(page.locator('.hero-facts li')).toHaveCount(3);
+    await expect(page.locator('#oquefazemos .service-link')).toHaveCount(5);
+    await expect(page.locator('#frota .fleet-specs li')).toHaveCount(6);
     const gap = await page.locator('.topbar-link').evaluate((el) => parseFloat(getComputedStyle(el).columnGap));
     expect(gap).toBeGreaterThan(0);
   });
 
-  test('captura screenshots 1440 e 375 em test-results', async ({ page }, testInfo) => {
+  test('captura screenshots 1440 e 375 em test-results/v14', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-chrome', 'Screenshots gerados uma única vez no projeto desktop-chrome');
 
-    fs.mkdirSync('test-results', { recursive: true });
+    fs.mkdirSync('test-results/v14', { recursive: true });
     await page.emulateMedia({ reducedMotion: 'reduce' });
 
     const loadAllImages = async () => {
@@ -468,15 +469,15 @@ test.describe('Mobilità Transportes — v13 SVG animado, imagens responsivas e 
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v13-1440-fold.png' });
-    await page.screenshot({ path: 'test-results/v13-1440-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v14/v14-1440-fold.png' });
+    await page.screenshot({ path: 'test-results/v14/v14-1440-full.png', fullPage: true });
 
     // Mobile 375
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await loadAllImages();
-    await page.screenshot({ path: 'test-results/v13-375-fold.png' });
-    await page.screenshot({ path: 'test-results/v13-375-full.png', fullPage: true });
+    await page.screenshot({ path: 'test-results/v14/v14-375-fold.png' });
+    await page.screenshot({ path: 'test-results/v14/v14-375-full.png', fullPage: true });
   });
 });

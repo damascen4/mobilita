@@ -1,4 +1,4 @@
-/* Mobilità Transporte Executivo — Design Tokens (v12)
+/* Mobilità Transporte Executivo — Design Tokens (v14)
  * Fonte: docs/brand-manual.md
  */
 :root {
@@ -6,21 +6,23 @@
   --mb-green: #508f3b;
   --mb-green-hover: #54963e;
   --mb-green-deep: #3c6b2c;
-  --mb-green-deep-hover: #325924;
+  --mb-green-deep-hover: #2f5523;
   --mb-green-light: #55b944;
   --mb-green-success: #3dc372;
   --mb-green-tint: #eef5ea;
-  --mb-band: #468232; /* #508f3b escurecido p/ AA com texto branco pequeno */
-  --mb-band-deep: #3f7a2e;
+  --mb-forest: #2b4e20; /* Verde executivo profundo: 9.1:1 com branco */
+  --mb-forest-soft: #345e27;
 
-  /* Neutros */
+  /* Neutros arquitetônicos */
   --mb-ink: #2d2e33;
-  --mb-ink-strong: #09090a;
-  --mb-text: #2d2e33;
+  --mb-ink-strong: #17191c;
+  --mb-footer-bg: #1e211f;
+  --mb-text: #46484f;
   --mb-text-hover: #606167;
   --mb-text-soft: #b4b5ba;
-  --mb-line: #e5e5e7;
-  --mb-surface: #f7f7f7;
+  --mb-line: #e4e6e3;
+  --mb-line-strong: #cfd4ce;
+  --mb-surface: #f6f7f5;
   --mb-surface-alt: #f2f2f2;
   --mb-white: #ffffff;
 
@@ -31,9 +33,8 @@
   --mb-warn: #ff9e45;
 
   /* Overlays */
-  --mb-overlay-green: rgba(60, 107, 44, 0.92);
-  --mb-overlay-dark: rgba(18, 22, 19, 0.68);
-  --mb-overlay-white: rgba(255, 255, 255, 0.96);
+  --mb-overlay-dark: rgba(16, 19, 17, 0.72);
+  --mb-overlay-white: rgba(255, 255, 255, 0.94);
 
   /* Tipografia */
   --mb-font-display: 'KoHo', system-ui, -apple-system, sans-serif;
@@ -43,19 +44,20 @@
   --mb-fw-semibold: 600;
   --mb-fw-bold: 700;
 
-  /* Escala modular (base 18px) */
-  --mb-fs-meta: 0.875rem;
-  --mb-fs-label: 0.875rem;
+  /* Escala modular (base 18px, legível para público executivo e 60+) */
+  --mb-fs-meta: 0.9375rem;
+  --mb-fs-label: 0.9375rem;
   --mb-fs-body: 1.125rem;
   --mb-fs-lead: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
-  --mb-fs-h3: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem);
-  --mb-fs-h2: clamp(2rem, 1.6rem + 1.5vw, 2.75rem);
-  --mb-fs-h1: clamp(2.25rem, 1.75rem + 2.2vw, 3.5rem);
+  --mb-fs-h3: clamp(1.375rem, 1.25rem + 0.45vw, 1.5625rem);
+  --mb-fs-h2: clamp(2rem, 1.55rem + 1.7vw, 2.875rem);
+  --mb-fs-h1: clamp(2.35rem, 1.65rem + 2.8vw, 4.25rem);
 
-  --mb-lh-tight: 1.12;
-  --mb-lh-head: 1.2;
+  --mb-lh-tight: 1.08;
+  --mb-lh-head: 1.16;
   --mb-lh-body: 1.65;
-  --mb-ls-label: 0.12em;
+  --mb-ls-head: -0.025em;
+  --mb-ls-label: 0.08em;
   --mb-measure: 64ch;
 
   /* Espaçamento (escala 4/8) */
@@ -68,23 +70,19 @@
   --mb-s-7: 3rem;
   --mb-s-8: 4rem;
   --mb-s-9: 6rem;
-  --mb-section-y: clamp(4.25rem, 3rem + 5.5vw, 7.5rem);
-  --mb-container: 1240px;
+  --mb-section-y: clamp(4.5rem, 3.2rem + 5vw, 7.5rem);
+  --mb-container: 1220px;
   --mb-gutter: clamp(1.25rem, 1rem + 1.5vw, 2.5rem);
 
-  /* Forma e elevação */
+  /* Forma e elevação (limpa, sem sombras pesadas) */
   --mb-r-sm: 8px;
   --mb-r-md: 12px;
   --mb-r-lg: 16px;
-  --mb-r-pill: 500px;
   --mb-r-xl: 20px;
-  --mb-r-2xl: 20px;
-  --mb-shadow-1: 0 2px 8px rgba(18, 22, 19, 0.07);
-  --mb-shadow-2: 0 10px 28px rgba(18, 22, 19, 0.1);
-  --mb-shadow-3: 0 24px 48px rgba(18, 22, 19, 0.16);
-
-  /* Grão leve (SVG inline, sem requisição) */
-  --mb-noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --mb-r-pill: 500px;
+  --mb-shadow-1: 0 2px 10px rgba(23, 25, 28, 0.05);
+  --mb-shadow-2: 0 12px 32px rgba(23, 25, 28, 0.09);
+  --mb-shadow-3: 0 24px 56px rgba(23, 25, 28, 0.14);
 
   /* Motion (emil-design-eng) */
   --mb-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -92,9 +90,9 @@
   --mb-ease-cine: cubic-bezier(0.16, 1, 0.3, 1);
   --mb-dur-press: 120ms;
   --mb-dur-hover: 180ms;
-  --mb-dur-ui: 250ms;
+  --mb-dur-ui: 240ms;
   --mb-dur-reveal: 650ms;
-  --mb-stagger: 65ms;
+  --mb-stagger: 60ms;
   --mb-tap-min: 48px;
 }
 

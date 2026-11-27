@@ -48,7 +48,7 @@
       if (prefersReducedMotion) {
         finish();
       } else {
-        window.setTimeout(finish, 220);
+        window.setTimeout(finish, 200);
       }
     };
 
@@ -116,7 +116,7 @@
     trackedSections.forEach(({ section }) => navObserver.observe(section));
   }
 
-  /* 4. Scroll reveal & SVG stroke-draw trigger (progressive enhancement) */
+  /* 4. Scroll reveal & SVG stroke-draw trigger */
   const reveals = Array.from(document.querySelectorAll('.reveal, [data-draw]'));
   if (!prefersReducedMotion && 'IntersectionObserver' in window && reveals.length) {
     const revealObserver = new IntersectionObserver(
@@ -127,7 +127,7 @@
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -32px 0px' }
     );
     reveals.forEach((el) => revealObserver.observe(el));
   } else {
@@ -150,64 +150,37 @@
     }
   });
 
-  /* 5b. Botão magnético leve (ponteiro fino + movimento permitido) */
-  if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
-    document.querySelectorAll('.btn-magnetic').forEach((btn) => {
-      btn.addEventListener('pointermove', (e) => {
-        const r = btn.getBoundingClientRect();
-        btn.style.setProperty('--mx', ((e.clientX - r.left - r.width / 2) * 0.12).toFixed(1) + 'px');
-        btn.style.setProperty('--my', ((e.clientY - r.top - r.height / 2) * 0.2).toFixed(1) + 'px');
-      });
-      btn.addEventListener('pointerleave', () => {
-        btn.style.removeProperty('--mx');
-        btn.style.removeProperty('--my');
-      });
-    });
-  }
-
-
-  /* 5c. Stagger (--i) para chips/listas */
-  document.querySelectorAll('[data-stagger]').forEach((list) => {
-    Array.from(list.children).forEach((el, i) => el.style.setProperty('--i', String(i)));
-  });
-
-  /* 5d. Parallax lento (só --py, aplicado via transform no CSS) */
+  /* 6. Parallax direto em transform (sem recalcular variáveis CSS em subárvores) */
   if (!prefersReducedMotion) {
-    const items = Array.from(document.querySelectorAll('[data-parallax]')).map((el) => ({ el, k: parseFloat(el.getAttribute('data-parallax')) || 0.1 }));
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const vh = window.innerHeight;
-      items.forEach(({ el, k }) => {
-        const r = el.getBoundingClientRect();
-        if (r.bottom < -200 || r.top > vh + 200) return;
-        const py = (vh / 2 - (r.top + r.height / 2)) * k;
-        el.style.setProperty('--py', py.toFixed(1) + 'px');
-      });
-    };
-    const request = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
-    };
-    window.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', request);
-    update();
+    const items = Array.from(document.querySelectorAll('[data-parallax]')).map((el) => ({
+      el,
+      k: parseFloat(el.getAttribute('data-parallax')) || 0.1,
+    }));
+    if (items.length) {
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const vh = window.innerHeight;
+        items.forEach(({ el, k }) => {
+          const r = el.getBoundingClientRect();
+          if (r.bottom < -120 || r.top > vh + 120) return;
+          const py = (vh / 2 - (r.top + r.height / 2)) * k;
+          el.style.transform = `translate3d(0, ${py.toFixed(1)}px, 0)`;
+        });
+      };
+      const request = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      };
+      window.addEventListener('scroll', request, { passive: true });
+      window.addEventListener('resize', request);
+      update();
+    }
   }
 
-  /* 5e. Spotlight que segue o mouse nos cards de serviço */
-  if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
-    document.querySelectorAll('.spot').forEach((card) => {
-      card.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--sx', (e.clientX - r.left).toFixed(0) + 'px');
-        card.style.setProperty('--sy', (e.clientY - r.top).toFixed(0) + 'px');
-      });
-    });
-  }
-
-  /* 6. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */
+  /* 7. Smart WhatsApp routing (keeps wa.me href as no-JS fallback) */
   const openWhatsApp = (phone, text) => {
     const encoded = encodeURIComponent(text);
     const mobileUrl = `whatsapp://send?phone=${phone}&text=${encoded}`;
@@ -234,7 +207,7 @@
     });
   });
 
-  /* 7. Light BR phone mask */
+  /* 8. Light BR phone mask */
   const phoneInput = document.getElementById('telefone');
   if (phoneInput instanceof HTMLInputElement) {
     phoneInput.addEventListener('input', () => {
@@ -247,7 +220,7 @@
     });
   }
 
-  /* 8. Accessible contact form validation + Web3Forms email submit (with WhatsApp fallback) */
+  /* 9. Accessible contact form validation + Web3Forms email submit (with WhatsApp fallback) */
   const form = document.getElementById('contact-form');
   const statusEl = document.getElementById('form-status');
   const submitBtn = document.getElementById('contact-submit');

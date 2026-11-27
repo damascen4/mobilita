@@ -1,4 +1,4 @@
-# Matriz de Testes — Site Mobilità Transportes (v13)
+# Matriz de Testes — Site Mobilità Transportes (v14)
 
 Comando de execução:
 
@@ -20,6 +20,6 @@ Projetos Playwright configurados em `playwright.config.ts`:
 | TC-05 | Menu mobile por teclado e zero overflow horizontal | `menu mobile acessível por teclado (aria-expanded, focus trap, Esc) e sem overflow horizontal` | todos | Sem scroll horizontal; no mobile, `aria-expanded`, focus trap com `Shift+Tab`, `Esc` fecha e restaura foco em `#menu-toggle`; no desktop, navegação pelas 6 âncoras. |
 | TC-06 | Lazy load, skeleton shimmer e `fetchpriority="high"` | `lazy load + skeleton shimmer abaixo da dobra e hero com fetchpriority=high` | todos | Hero com `fetchpriority="high"` sem lazy; imagens abaixo da dobra com `loading="lazy"`, `decoding="async"`, `width`/`height`; `.img-skel` resolve para `.is-loaded` via HTTP e `file://`. |
 | TC-07 | Reduced motion, scroll reveal e stroke-draw SVG | `prefers-reduced-motion desliga animações mantendo conteúdo visível; com movimento ativa reveals` | todos | Com `reduce`, `html` sem `js-motion`, animações `none`, `.reveal` opacidade 1 e `stroke-dashoffset: 0` na folha e ícones; com movimento, `.hero-leaf` e `.diff-item` recebem `.is-visible`. |
-| TC-08 | Evidência visual 1440 e 375 | `captura screenshots 1440 e 375 em test-results` | `desktop-chrome` | Gera `test-results/v13-1440-fold.png`, `test-results/v13-1440-full.png`, `test-results/v13-375-fold.png` e `test-results/v13-375-full.png`. |
-| TC-09 | Hero sem card, chips, scroll e espaço em "WhatsApp: (19)" | `v12: hero sem card, chips e indicador de scroll...` | todos | `.hero-card` ausente, 3 chips, link de scroll, gap no topbar. |
+| TC-08 | Evidência visual 1440 e 375 (v14) | `captura screenshots 1440 e 375 em test-results/v14` | `desktop-chrome` | Gera `test-results/v14/v14-1440-fold.png`, `test-results/v14/v14-1440-full.png`, `test-results/v14/v14-375-fold.png` e `test-results/v14/v14-375-full.png`. |
+| TC-09 | Hero editorial, CTAs de serviço, especificações da frota e topbar (v14) | `v14: hero editorial com faixa de fatos, CTAs por serviço, especificações da frota e topbar` | todos | `.hero-card` ausente, 3 itens `.hero-facts`, 5 links `.service-link`, 6 itens `.fleet-specs`, gap no topbar. |
 | TC-10 | Acessibilidade axe-core (serious/critical, WCAG 2.2 AA, desktop+mobile) | `axe-core: sem violações serious/critical (WCAG 2.2 AA) em desktop e mobile` | todos | Zero violações serious/critical WCAG 2.2 AA. |
