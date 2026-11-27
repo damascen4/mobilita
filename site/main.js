@@ -359,10 +359,23 @@
       }
     };
 
-    const setStatus = (kind, html) => {
+    const setStatus = (kind, message, link) => {
       statusEl.className = `form-status${kind ? ` is-${kind}` : ''}`;
       statusEl.setAttribute('role', kind === 'error' ? 'alert' : 'status');
-      statusEl.innerHTML = html;
+      statusEl.textContent = '';
+      statusEl.appendChild(document.createTextNode(message));
+      if (link) {
+        const a = document.createElement('a');
+        a.id = 'whatsapp-fallback-link';
+        a.setAttribute('href', link.href);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+        a.textContent = link.label;
+        statusEl.appendChild(a);
+        if (link.suffix) {
+          statusEl.appendChild(document.createTextNode(link.suffix));
+        }
+      }
       statusEl.hidden = false;
     };
 
@@ -414,6 +427,17 @@
       ].join('\n');
       const fallbackHref = `https://wa.me/${PRIMARY_PHONE}?text=${encodeURIComponent(composed)}`;
 
+      if (!accessKey.trim() || accessKey.trim() === 'WEB3FORMS_ACCESS_KEY_AQUI') {
+        openWhatsApp(PRIMARY_PHONE, composed);
+        setStatus(
+          'success',
+          'Abrimos o WhatsApp com sua mensagem pronta. Se não abriu automaticamente, ',
+          { href: fallbackHref, label: 'clique aqui para enviar pelo WhatsApp', suffix: '.' }
+        );
+        form.reset();
+        return;
+      }
+
       if (submitBtn instanceof HTMLButtonElement) {
         submitBtn.disabled = true;
         submitBtn.setAttribute('aria-busy', 'true');
@@ -445,13 +469,15 @@
         }
         setStatus(
           'success',
-          `Mensagem enviada com sucesso! Responderemos em breve. Se preferir atendimento imediato, <a id="whatsapp-fallback-link" href="${fallbackHref}" target="_blank" rel="noopener noreferrer">fale pelo WhatsApp</a>.`
+          'Mensagem enviada com sucesso! Responderemos em breve. Se preferir atendimento imediato, ',
+          { href: fallbackHref, label: 'fale pelo WhatsApp', suffix: '.' }
         );
         form.reset();
       } catch {
         setStatus(
           'error',
-          `Não foi possível enviar por e-mail agora. Tente novamente ou <a id="whatsapp-fallback-link" href="${fallbackHref}" target="_blank" rel="noopener noreferrer">envie sua mensagem pelo WhatsApp</a>.`
+          'Não foi possível enviar por e-mail agora. Tente novamente ou ',
+          { href: fallbackHref, label: 'envie sua mensagem pelo WhatsApp', suffix: '.' }
         );
       } finally {
         if (submitBtn instanceof HTMLButtonElement) {

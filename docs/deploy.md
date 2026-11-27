@@ -92,7 +92,3 @@ curl -I https://damascena.dev/                       # esperado: 200 (placeholde
 curl -s https://damascena.dev/robots.txt             # esperado: 200 (User-agent: *, Sitemap: https://damascena.dev/sitemap.xml)
 curl -s https://damascena.dev/sitemap.xml            # esperado: 200 (lista https://damascena.dev/projetos/mobilita/)
 ```
-
-## Mobilità v2 (redesign) em /projetos/mobilitav2
-
-Deploy paralelo à v1 (`/projetos/mobilita`, inalterada): `APP=mobilitav2 ./scripts/deploy.sh` publica em `/opt/sites/mobilitav2`. O bloco `handle_path /projetos/mobilitav2/*` (+ redir 308 e 404 amigável) está em `deploy/Caddyfile.damascena.dev`; copiar o Caddyfile e recarregar o Caddy é passo do operador/CI.
