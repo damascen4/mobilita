@@ -125,14 +125,15 @@ test.describe('Deploy em subpath (/projetos/mobilita)', () => {
         .map((img) => img.currentSrc || img.getAttribute('src') || 'unknown');
     });
 
-    // Verifica que stylesheets foram carregados sob o subpath
+    // Verifica que stylesheets com hash foram carregados sob o subpath
     const loadedStylesheets = await page.evaluate(() =>
       Array.from(document.styleSheets)
         .map((s) => s.href)
         .filter((href): href is string => Boolean(href && href.startsWith(window.location.origin)))
     );
-    expect(loadedStylesheets).toContain(`${origin}${BASE_PATH}/tokens.css`);
-    expect(loadedStylesheets).toContain(`${origin}${BASE_PATH}/styles.css`);
+    const prefix = `${origin}${BASE_PATH}/`;
+    expect(loadedStylesheets.some((href) => href.startsWith(prefix) && /^tokens\.[0-9a-f]{8}\.css$/.test(href.slice(prefix.length)))).toBe(true);
+    expect(loadedStylesheets.some((href) => href.startsWith(prefix) && /^styles\.[0-9a-f]{8}\.css$/.test(href.slice(prefix.length)))).toBe(true);
 
     // Verifica âncora interna mantendo o subpath
     await page.locator('a[href="#quemsomos"]').first().evaluate((el) => (el as HTMLAnchorElement).click());
@@ -151,5 +152,55 @@ test.describe('Deploy em subpath (/projetos/mobilita)', () => {
     await expect(accessKeyInput).not.toHaveValue('WEB3FORMS_ACCESS_KEY_AQUI');
     const html = await page.content();
     expect(html).not.toContain('WEB3FORMS_ACCESS_KEY_AQUI');
+  });
+
+  test('assets referenciados no HTML (index e 404) têm hash de conteúdo e retornam 200', async ({ page, request }) => {
+    const HASHED_ASSET_RE = /\.[0-9a-f]{8}\.[a-z0-9]+$/i;
+
+    for (const route of [`${BASE_PATH}/`, `${BASE_PATH}/404.html`]) {
+      await page.goto(`${origin}${route}`, { waitUntil: 'domcontentloaded' });
+
+      const refs = await page.evaluate(() => {
+        const urls = new Set<string>();
+        const addIfLocal = (raw: string | null) => {
+          if (!raw) return;
+          const trimmed = raw.trim();
+          if (!trimmed || trimmed.startsWith('#') || /^(?:https?:|data:|mailto:|tel:|\/\/)/i.test(trimmed)) return;
+          urls.add(trimmed);
+        };
+
+        document
+          .querySelectorAll('link[rel="stylesheet"], link[rel="preload"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]')
+          .forEach((el) => addIfLocal(el.getAttribute('href')));
+        document.querySelectorAll('script[src]').forEach((el) => addIfLocal(el.getAttribute('src')));
+        document.querySelectorAll('img[src]').forEach((el) => addIfLocal(el.getAttribute('src')));
+        document.querySelectorAll('source[srcset]').forEach((el) => {
+          const srcset = el.getAttribute('srcset') || '';
+          for (const entry of srcset.split(',')) {
+            const url = entry.trim().split(/\s+/)[0];
+            addIfLocal(url);
+          }
+        });
+        return Array.from(urls);
+      });
+
+      expect(refs.length, `Deve haver assets locais referenciados em ${route}`).toBeGreaterThan(0);
+
+      for (const ref of refs) {
+        expect(ref, `Asset ${ref} em ${route} deve conter hash de 8 hex`).toMatch(HASHED_ASSET_RE);
+        const assetUrl = new URL(ref, `${origin}${BASE_PATH}/`).toString();
+        const res = await request.get(assetUrl);
+        expect(res.status(), `Asset ${assetUrl} deve retornar 200`).toBe(200);
+      }
+    }
+
+    // Assets absolutos de SEO (og:image / JSON-LD logo) continuam acessíveis sem hash
+    for (const seoPath of [
+      'assets/brand/hero-passageiro-executivo.jpeg',
+      'assets/brand/logo-mobilita-cor.png',
+    ]) {
+      const res = await request.get(`${origin}${BASE_PATH}/${seoPath}`);
+      expect(res.status(), `Asset SEO ${seoPath} deve retornar 200`).toBe(200);
+    }
   });
 });
